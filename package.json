@@ -1,5 +1,5 @@
 {
-  "name": "react-template",
+  "name": "locktone-one",
   "private": true,
   "version": "1.0.0",
   "gitHooks": {
@@ -30,7 +30,7 @@
     "react-dom": "^18.2.0",
     "react-i18next": "^13.4.0",
     "react-router-dom": "^6.6.2",
-    "react-toastify": "^9.0.5",
+    "react-toastify": "9.0.5",
     "react-tooltip": "^5.22.0",
     "react-use": "^17.4.0",
     "uuid": "^9.0.0",

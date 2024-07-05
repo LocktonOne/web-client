@@ -78,6 +78,7 @@ $z-index-side-nodes: 1;
   background: var(--field-bg-primary);
   box-shadow: inset 0 0 0 toRem(50) var(--field-bg-primary);
   border: none;
+  border-radius: toRem(10);
 
   @include field-text;
 
