@@ -1,1 +1,1 @@
-export * from './posts.module'
+export * from './ui.module'

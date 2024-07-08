@@ -18,6 +18,15 @@
 
 @font-face {
   font-family: 'Poppins';
+  src: local('Poppins Medium'), local('Poppins-Semibold'),
+  url('Poppins/Poppins-medium.ttf') format('ttf');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Poppins';
   src: local('Poppins Semibold'), local('Poppins-Semibold'),
   url('Poppins/Poppins-Semibold.ttf') format('ttf');
   font-weight: 600;

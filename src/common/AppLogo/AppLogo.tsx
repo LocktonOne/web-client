@@ -1,5 +1,3 @@
-import './styles.scss'
-
 import { config } from '@config'
 import { FC, HTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'

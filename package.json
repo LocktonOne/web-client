@@ -21,6 +21,10 @@
   },
   "dependencies": {
     "@distributedlab/tools": "^1.0.0-rc.8",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.0",
     "downshift": "^8.2.3",
     "framer-motion": "^10.12.10",
     "i18next": "^23.7.3",

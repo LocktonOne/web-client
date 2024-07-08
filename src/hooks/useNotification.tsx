@@ -1,5 +1,4 @@
 import 'react-toastify/dist/ReactToastify.css'
-import '@/common/toasts/styles.scss'
 
 import isObject from 'lodash/isObject'
 import { useCallback, useMemo } from 'react'

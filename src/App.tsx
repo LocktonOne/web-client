@@ -1,14 +1,20 @@
-import { FC, HTMLAttributes, useEffect } from 'react'
+import { CssBaseline, ThemeProvider } from '@mui/material'
+import { FC, HTMLAttributes, useEffect, useMemo } from 'react'
 import { ToastContainer } from 'react-toastify'
 
 import { AppNavbar } from '@/common'
 import { bus, BUS_EVENTS } from '@/helpers'
 import { useNotification, useViewportSizes } from '@/hooks'
+import { useUiState } from '@/store'
+import { createTheme } from '@/theme'
 
 export const App: FC<HTMLAttributes<HTMLDivElement>> = ({ children }) => {
   useViewportSizes()
 
   const { showToast } = useNotification()
+  const { paletteMode } = useUiState()
+
+  const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
 
   useEffect(() => {
     const showSuccessToast = (payload: unknown) => showToast('success', payload)
@@ -30,11 +36,12 @@ export const App: FC<HTMLAttributes<HTMLDivElement>> = ({ children }) => {
   }, [showToast])
 
   return (
-    <div className='app'>
-      <AppNavbar className='app__navbar' />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AppNavbar />
       {children}
 
       <ToastContainer />
-    </div>
+    </ThemeProvider>
   )
 }

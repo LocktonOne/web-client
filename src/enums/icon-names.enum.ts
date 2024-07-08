@@ -1,3 +1,5 @@
+import Add from '@mui/icons-material/Add'
+
 export enum IconNames {
   academicCap = 'academic-cap',
   adjustments = 'adjustments',
@@ -25,4 +27,8 @@ export enum IconNames {
   truck = 'truck',
   xCircle = 'x-circle',
   x = 'x',
+}
+
+export const ICON_COMPONENTS = {
+  add: Add,
 }

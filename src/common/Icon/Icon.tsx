@@ -1,19 +1,55 @@
-import './style.scss'
+import { Box, BoxProps, SvgIconProps, SxProps } from '@mui/material'
+import { Theme } from '@mui/material/styles'
+import { forwardRef } from 'react'
 
-import { FC, HTMLAttributes } from 'react'
+import { ICON_COMPONENTS, IconNames } from '@/enums'
 
-import { IconNames } from '@/enums'
+type Props = {
+  size?: number
+  sx?: SxProps<Theme>
+} & (
+  | ({
+      componentName: keyof typeof ICON_COMPONENTS
+      name?: never
+    } & SvgIconProps)
+  | ({
+      name: IconNames
+      componentName?: never
+    } & BoxProps<'svg'>)
+)
 
-interface IconProps extends HTMLAttributes<HTMLOrSVGElement> {
-  name: IconNames
-}
+const Icon = forwardRef<SVGSVGElement, Props>(({ size = 6, ...props }, ref) => {
+  const sx: SxProps<Theme> = {
+    ...props.sx,
+    width: theme => theme.spacing(size),
+    height: theme => theme.spacing(size),
+    minWidth: theme => theme.spacing(size),
+    minHeight: theme => theme.spacing(size),
+    maxWidth: theme => theme.spacing(size),
+    maxHeight: theme => theme.spacing(size),
+  }
 
-const Icon: FC<IconProps> = ({ name, className = '', ...rest }) => {
+  if (props.componentName) {
+    const { componentName, ...rest } = props
+
+    const IconComponent = ICON_COMPONENTS[componentName]
+    return IconComponent && <IconComponent {...rest} ref={ref} sx={sx} />
+  }
+
+  const { className, name, ...rest } = props
+
   return (
-    <svg className={`icon ${className}`} aria-hidden='true'>
-      <use href={`#${name}-icon`} {...rest} />
-    </svg>
+    <Box
+      {...rest}
+      ref={ref}
+      component='svg'
+      sx={sx}
+      className={['icon', ...(className ? [className] : [])].join(' ')}
+      aria-hidden='true'
+    >
+      <use href={`#${name}-icon`} />
+    </Box>
   )
-}
+})
 
 export default Icon
