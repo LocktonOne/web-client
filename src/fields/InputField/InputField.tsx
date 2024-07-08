@@ -186,6 +186,16 @@ function InputField<V extends string>({
           </div>
         )}
 
+        {labelNode ||
+          (label && (
+            <label
+              className='input-field__label'
+              htmlFor={`input-field--${uid}`}
+            >
+              {label}
+            </label>
+          ))}
+
         <input
           ref={inputEl}
           className='input-field__input'
@@ -201,15 +211,6 @@ function InputField<V extends string>({
           onChange={handleChange}
           {...rest}
         />
-        {labelNode ||
-          (label && (
-            <label
-              className='input-field__label'
-              htmlFor={`input-field--${uid}`}
-            >
-              {label}
-            </label>
-          ))}
         {nodeRight ? (
           <div className='input-field__node-right-wrp'>{nodeRight}</div>
         ) : isPasswordType || errorMessage ? (

@@ -32,7 +32,7 @@
   align-items: center;
   border-radius: 50%;
 
-  @include static-icon-size(64);
+  @include static-icon-size(64px);
 
   .Toastify__toast--success & {
     background: var(--success-light);
