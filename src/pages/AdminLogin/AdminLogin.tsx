@@ -1,12 +1,12 @@
 import './styles.scss'
 
 import { motion, MotionProps } from 'framer-motion'
-import { FC, HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 
 import AdminLoginForm from '@/forms/AdminLoginForm'
 type Props = HTMLAttributes<HTMLDivElement> & MotionProps
 
-const AdminLogIn: FC<Props> = ({ ...rest }) => {
+const AdminLogin = ({ ...rest }: Props) => {
   return (
     <motion.main className='admin-login-page' {...rest}>
       <div className='admin-login-page__bg' />
@@ -17,4 +17,4 @@ const AdminLogIn: FC<Props> = ({ ...rest }) => {
   )
 }
 
-export default AdminLogIn
+export default AdminLogin

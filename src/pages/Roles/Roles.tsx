@@ -1,11 +1,11 @@
 import './styles.scss'
 
 import { motion, MotionProps } from 'framer-motion'
-import { FC, HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 type Props = HTMLAttributes<HTMLDivElement> & MotionProps
 
-const Roles: FC<Props> = ({ ...rest }) => {
+const Roles = ({ ...rest }: Props) => {
   const { t } = useTranslation()
   return (
     <motion.main className='roles-page' {...rest}>

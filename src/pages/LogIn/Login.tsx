@@ -1,10 +1,10 @@
 import './styles.scss'
 
 import { motion, MotionProps } from 'framer-motion'
-import { FC, HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 type Props = HTMLAttributes<HTMLDivElement> & MotionProps
 
-const Login: FC<Props> = ({ ...rest }) => {
+const Login = ({ ...rest }: Props) => {
   return (
     <motion.main className='login-page' {...rest}>
       Locktone One
