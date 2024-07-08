@@ -8,6 +8,7 @@ import { RoutesPaths } from '@/enums'
 export const AppRoutes = () => {
   const Login = lazy(() => import('@/pages/LogIn'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
+  const Roles = lazy(() => import('@/pages/Roles'))
 
   const pageAnimationOpts = {
     initial: 'hide',
@@ -46,6 +47,11 @@ export const AppRoutes = () => {
           index: true,
           path: RoutesPaths.adminLogin,
           element: <AdminLogin {...pageAnimationOpts} />,
+        },
+        {
+          index: true,
+          path: RoutesPaths.roles,
+          element: <Roles {...pageAnimationOpts} />,
         },
       ],
     },
