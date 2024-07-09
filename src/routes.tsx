@@ -1,57 +1,73 @@
-import { AnimatePresence } from 'framer-motion'
 import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
 
-import { App } from '@/App'
-import { RoutesPaths } from '@/enums'
+import { RoutePaths } from '@/enums'
+
+import { createDeepPath } from './helpers'
+import PublicLayout from './layouts/PublicLayout'
 
 export const AppRoutes = () => {
-  const Login = lazy(() => import('@/pages/Login'))
-  const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
-  const Roles = lazy(() => import('@/pages/Roles'))
+  const UiKit = lazy(() => import('@/pages/UiKit'))
 
-  const pageAnimationOpts = {
-    initial: 'hide',
-    animate: 'show',
-    exit: 'hide',
-    variants: {
-      hide: {
-        opacity: 0,
-      },
-      show: {
-        opacity: 1,
-      },
+  /*
+  const { isAuthorized, logout } = useAuth()
+
+  const signInGuard = useCallback(
+    ({ request }: LoaderFunctionArgs) => {
+      const requestUrl = new URL(request.url)
+
+      const from = requestUrl.searchParams.get('from')
+
+      return isAuthorized ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Root) : null
     },
-    transition: { duration: 0.5 },
-  }
+    [isAuthorized],
+  )
+  const authProtectedGuard = useCallback(
+    ({ request }: LoaderFunctionArgs) => {
+      // If the user is not logged in and tries to access protected route, we redirect
+      // them to sign in with a `from` parameter that allows login to redirect back
+      // to this page upon successful authentication
+      if (!isAuthorized) {
+        logout()
+
+        const requestUrl = new URL(request.url)
+        requestUrl.searchParams.set('from', requestUrl.pathname)
+
+        return redirect(`${RoutePaths.SignIn}${requestUrl.search}`)
+      }
+
+      return null
+    },
+    [isAuthorized, logout],
+  )
+
+  const LayoutComponent = useMemo(() => {
+    return isAuthorized ? MainLayout : PublicLayout
+  }, [isAuthorized])
+  */
 
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: RoutePaths.Root,
       element: (
-        <Suspense fallback={<></>}>
-          <App>
-            <AnimatePresence>
-              <Outlet />
-            </AnimatePresence>
-          </App>
-        </Suspense>
+        <PublicLayout>
+          <Suspense fallback={<></>}>
+            <Outlet />
+          </Suspense>
+        </PublicLayout>
       ),
       children: [
         {
-          index: true,
-          path: RoutesPaths.login,
-          element: <Login {...pageAnimationOpts} />,
+          path: createDeepPath(RoutePaths.UiKit),
+          element: <UiKit />,
         },
         {
-          index: true,
-          path: RoutesPaths.adminLogin,
-          element: <AdminLogin {...pageAnimationOpts} />,
+          path: RoutePaths.Root,
+          element: <Navigate replace to={RoutePaths.UiKit} />,
         },
         {
-          index: true,
-          path: RoutesPaths.roles,
-          element: <Roles {...pageAnimationOpts} />,
+          path: '*',
+          element: <Navigate replace to={RoutePaths.Root} />,
         },
       ],
     },

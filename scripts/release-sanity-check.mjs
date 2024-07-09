@@ -67,18 +67,18 @@ function validateChangelogHasVersionOnTop () {
 }
 
 function validateChangelogAnchorsLegend () {
-  const baseRepoUrl = 'https://gitlab.com/distributed_lab/frontend/react-template'
+  const baseRepoUrl = 'https://github.com/distributed-lab/react-mui-template'
   const anyReleaseTagRe =
     /## \[\d+\.\d+\.\d+((-rc|-x)\.\d+)?\] - \d{4}-\d{2}-\d{2}/gi
 
   const expectedAnchorsLegend =
-    `[Unreleased]: ${baseRepoUrl}/compare/${VERSION}...main\n` +
+    `[Unreleased]: ${baseRepoUrl}/compare/${VERSION}...HEAD\n` +
     CHANGELOG_MD_CONTENT
       .match(anyReleaseTagRe)
       .map(tag => tag.match(/\[(.*)\]/)[1])
       .map((cur, curId, arr) => {
         return curId === arr.length - 1
-          ? `[${cur}]: ${baseRepoUrl}/tags/${cur}`
+          ? `[${cur}]: ${baseRepoUrl}/releases/tag/${cur}`
           : `[${cur}]: ${baseRepoUrl}/compare/${arr[curId + 1]}...${cur}`
       })
       .join('\n')

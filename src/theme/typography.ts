@@ -35,12 +35,12 @@ export const typography: ExtendedTypographyOptions = {
     lineHeight: toRem(40),
   },
   h5: {
-    fontWeight: FontWeight.Medium,
+    fontWeight: FontWeight.Bold,
     fontSize: toRem(24),
     lineHeight: toRem(30),
   },
   h6: {
-    fontWeight: FontWeight.Medium,
+    fontWeight: FontWeight.Bold,
     fontSize: toRem(20),
     lineHeight: toRem(24),
   },

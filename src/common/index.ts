@@ -1,4 +1,3 @@
-export { default as AppLogo } from './AppLogo'
-export { default as AppNavbar } from './AppNavbar'
-export { default as Icon } from './Icon'
-export * from './toasts'
+export { default as NoDataView } from './NoDataView'
+export { default as PageTitles } from './PageTitles'
+export { default as UserAvatar } from './UserAvatar'
