@@ -41,52 +41,52 @@ const AdminLoginForm = () => {
   return (
     <Stack
       component='form'
-  onSubmit={submit}
-  sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-  gap={spacing(6)}
->
-  <UiIcon name={Icons.UserCircle} size={15} />
-  <Stack sx={{ alignItems: 'center' }} gap={1}>
-  <Typography variant='h5'>{t('login-form.admin-title')}</Typography>
-  <Typography variant='body3' sx={{ color: palette.primary.light }}>
-  {t('login-form.admin-desc')}
-  </Typography>
-  </Stack>
-  <Controller
-  name={FieldNames.Seed}
-  control={control}
-  render={({ field }) => (
-    <FormControl fullWidth>
-    <UiTextField
-      {...field}
-  label={FieldNames.Seed}
-  errorMessage={getErrorMessage(FieldNames.Seed)}
-  InputProps={{
-    startAdornment: (
-      <InputAdornment position='start'>
-      <UiIcon name={Icons.Lock} size={4} />
-    </InputAdornment>
-  ),
-  }}
-  placeholder={t('login-form.admin-placeholder')}
-  disabled={isFormDisabled}
-  />
-  </FormControl>
-)}
-  />
-  <Button
-  variant='contained'
-  fullWidth
-  sx={{
-    background: palette.primary.dark,
-      fontWeight: typography.fontWeightBold,
-  }}
-  disabled={isFormDisabled}
+      onSubmit={submit}
+      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      gap={spacing(6)}
     >
-    {t('login-form.submit-btn')}
-  </Button>
-  </Stack>
-)
+      <UiIcon name={Icons.UserCircle} size={15} />
+      <Stack sx={{ alignItems: 'center' }} gap={1}>
+        <Typography variant='h5'>{t('login-form.admin-title')}</Typography>
+        <Typography variant='body3' sx={{ color: palette.primary.light }}>
+          {t('login-form.admin-desc')}
+        </Typography>
+      </Stack>
+      <Controller
+        name={FieldNames.Seed}
+        control={control}
+        render={({ field }) => (
+          <FormControl fullWidth>
+            <UiTextField
+              {...field}
+              label={FieldNames.Seed}
+              errorMessage={getErrorMessage(FieldNames.Seed)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <UiIcon name={Icons.Lock} size={4} />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder={t('login-form.admin-placeholder')}
+              disabled={isFormDisabled}
+            />
+          </FormControl>
+        )}
+      />
+      <Button
+        variant='contained'
+        fullWidth
+        sx={{
+          background: palette.primary.dark,
+          fontWeight: typography.fontWeightBold,
+        }}
+        disabled={isFormDisabled}
+      >
+        {t('login-form.submit-btn')}
+      </Button>
+    </Stack>
+  )
 }
 
 export default AdminLoginForm
