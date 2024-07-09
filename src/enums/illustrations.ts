@@ -1,3 +1,3 @@
 export enum Illustrations {
-  RegistrationIntro = 'registration-intro',
+  RegistrationBg = 'registration-bg',
 }

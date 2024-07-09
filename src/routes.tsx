@@ -7,7 +7,9 @@ import { createDeepPath } from './helpers'
 import PublicLayout from './layouts/PublicLayout'
 
 export const AppRoutes = () => {
-  const UiKit = lazy(() => import('@/pages/UiKit'))
+  const Login = lazy(() => import('@/pages/Login'))
+  const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
+  const Roles = lazy(() => import('@/pages/Roles'))
 
   /*
   const { isAuthorized, logout } = useAuth()
@@ -58,12 +60,20 @@ export const AppRoutes = () => {
       ),
       children: [
         {
-          path: createDeepPath(RoutePaths.UiKit),
-          element: <UiKit />,
+          path: createDeepPath(RoutePaths.Login),
+          element: <Login />,
+        },
+        {
+          path: createDeepPath(RoutePaths.AdminLogin),
+          element: <AdminLogin />,
+        },
+        {
+          path: createDeepPath(RoutePaths.Roles),
+          element: <Roles />,
         },
         {
           path: RoutePaths.Root,
-          element: <Navigate replace to={RoutePaths.UiKit} />,
+          element: <Navigate replace to={RoutePaths.Login} />,
         },
         {
           path: '*',
