@@ -18,5 +18,16 @@
     "default-message-warning": "Something you are doing is not recommended",
     "default-message-info": "Something is happening. Just want you to know that",
     "default-message-default": "Just a message"
+  },
+  "store-overview": {
+    "loading-error-msg": "Oops... Something went wrong",
+    "no-data-msg": "Empty..."
+  },
+  "login-form": {
+    "admin-title": "Log In to Lockton One Admin Account",
+    "admin-desc": "Enter your details to login.",
+    "admin-lbl": "Seed",
+    "admin-placeholder": "Enter seed phrase",
+    "submit-btn": "Sign In"
   }
 }
