@@ -5,4 +5,5 @@ coverage
 yarn.lock
 scripts/*.js
 index.html
+stats.html
 *.md

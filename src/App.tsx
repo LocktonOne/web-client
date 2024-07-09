@@ -1,40 +1,53 @@
-import { FC, HTMLAttributes, useEffect } from 'react'
-import { ToastContainer } from 'react-toastify'
+import { CircularProgress, CssBaseline, Stack, ThemeProvider } from '@mui/material'
+import { FC, HTMLAttributes, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
-import { AppNavbar } from '@/common'
-import { bus, BUS_EVENTS } from '@/helpers'
-import { useNotification, useViewportSizes } from '@/hooks'
+import { ToastsManager } from '@/contexts'
+import { ErrorHandler } from '@/helpers'
+import { useViewportSizes } from '@/hooks'
+import { AppRoutes } from '@/routes'
+import { useUiState } from '@/store'
+import { createTheme } from '@/theme'
 
-export const App: FC<HTMLAttributes<HTMLDivElement>> = ({ children }) => {
+const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
+  const [isAppInitialized, setIsAppInitialized] = useState(false)
+
+  const { paletteMode } = useUiState()
+
   useViewportSizes()
 
-  const { showToast } = useNotification()
+  const init = useCallback(async () => {
+    try {
+      /* empty */
+    } catch (error) {
+      ErrorHandler.processWithoutFeedback(error)
+    }
+
+    setIsAppInitialized(true)
+  }, [])
+
+  const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
 
   useEffect(() => {
-    const showSuccessToast = (payload: unknown) => showToast('success', payload)
-    const showWarningToast = (payload: unknown) => showToast('warning', payload)
-    const showErrorToast = (payload: unknown) => showToast('error', payload)
-    const showInfoToast = (payload: unknown) => showToast('info', payload)
-
-    bus.on(BUS_EVENTS.success, showSuccessToast)
-    bus.on(BUS_EVENTS.warning, showWarningToast)
-    bus.on(BUS_EVENTS.error, showErrorToast)
-    bus.on(BUS_EVENTS.info, showInfoToast)
-
-    return () => {
-      bus.off(BUS_EVENTS.success, showSuccessToast)
-      bus.off(BUS_EVENTS.warning, showWarningToast)
-      bus.off(BUS_EVENTS.error, showErrorToast)
-      bus.off(BUS_EVENTS.info, showInfoToast)
-    }
-  }, [showToast])
+    init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <div className='app'>
-      <AppNavbar className='app__navbar' />
-      {children}
-
-      <ToastContainer />
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ToastsManager>
+        <div className='App'>
+          {isAppInitialized ? (
+            <AppRoutes />
+          ) : (
+            <Stack alignItems='center' justifyContent='center' flex={1}>
+              <CircularProgress color='secondary' />
+            </Stack>
+          )}
+        </div>
+      </ToastsManager>
+    </ThemeProvider>
   )
 }
+
+export default memo(App)

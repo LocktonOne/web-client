@@ -1,41 +1,22 @@
 import log from 'loglevel'
 
-import { bus, BUS_EVENTS } from '@/helpers'
-import i18n from '@/localization'
+import { BusEvents } from '@/enums'
+
+import { bus } from './event-bus'
 
 export class ErrorHandler {
-  static process(error: Error | unknown, errorMessage = ''): void {
-    const { msgTranslation, msgType } = ErrorHandler._getErrorMessage(error)
-    if (msgTranslation) {
-      bus.emit(msgType as BUS_EVENTS, msgTranslation || errorMessage)
-    }
+  static isError(error: unknown): error is Error {
+    return error instanceof Error || (error instanceof Object && 'message' in error)
+  }
 
+  static process(error: unknown, message = ''): void {
+    if (!ErrorHandler.isError(error)) return
+    bus.emit(BusEvents.error, { message: message || error.message })
     ErrorHandler.processWithoutFeedback(error)
   }
 
-  static processWithoutFeedback(error: Error | unknown): void {
+  static processWithoutFeedback(error: unknown): void {
+    if (!ErrorHandler.isError(error)) return
     log.error(error)
-  }
-
-  static _getErrorMessage(error: Error | unknown): {
-    msgTranslation: string
-    msgType: 'error' | 'warning'
-  } {
-    let errorMessage = ''
-    let msgType: 'error' | 'warning' = 'error'
-
-    if (error instanceof Error) {
-      switch (error.constructor) {
-        default: {
-          errorMessage = i18n.t('errors.default')
-          msgType = 'error'
-        }
-      }
-    }
-
-    return {
-      msgTranslation: errorMessage,
-      msgType: msgType || 'error',
-    }
   }
 }
