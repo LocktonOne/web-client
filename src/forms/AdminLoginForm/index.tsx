@@ -2,36 +2,21 @@ import { PROVIDERS } from '@distributedlab/w3p'
 import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
-import { getAuthNonce } from '@/api/modules'
 import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler, sleep } from '@/helpers'
+import { bus, ErrorHandler } from '@/helpers'
 import { useAuth } from '@/hooks'
-import { web3Store } from '@/store'
 import { UiIcon } from '@/ui'
 
 const AdminLoginForm = () => {
   const { t } = useTranslation()
   const { spacing } = useTheme()
   const { palette, typography } = useTheme()
-  const { login } = useAuth()
+  const { authorize } = useAuth()
 
   const tryConnect = async (providerType: PROVIDERS) => {
     try {
-      await web3Store.connect(providerType)
-
-      if (!web3Store.provider?.address) {
-        await sleep(1000)
-      }
-
-      if (web3Store.provider?.address) {
-        const authNonce = await getAuthNonce(web3Store.provider.address)
-        const signedMessage = await web3Store.provider.signMessage(authNonce)
-        await login(web3Store.provider.address, signedMessage!)
-        bus.emit(BusEvents.success, { message: 'Succes log in' })
-        return
-      }
-
-      throw new Error('Provider address is undefined')
+      await authorize(providerType)
+      bus.emit(BusEvents.success, { message: 'Success log in' })
     } catch (error) {
       ErrorHandler.process(error)
     }
