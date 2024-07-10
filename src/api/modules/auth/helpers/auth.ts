@@ -1,7 +1,8 @@
 import { HTTP_METHODS } from '@distributedlab/fetcher'
 
 import { api } from '@/api/clients'
-import { AuthToken, LoginResponse, RefreshTokenResponse } from '@/types'
+
+import { AuthToken, LoginResponse, RefreshTokenResponse } from '../types'
 
 export const getAuthNonce = async (message: string) => {
   const { data } = await api.post<{ message: string }>('/integrations/nonce-auth-svc/nonce', {

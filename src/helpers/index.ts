@@ -1,4 +1,3 @@
-export * from './auth'
 export * from './device'
 export * from './error-handler'
 export * from './event-bus'

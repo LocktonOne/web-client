@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 //eslint-disable-next-line
 import { isExpired } from 'react-jwt'
 
-import { login as toolkitLogin, refreshToken as toolkitRefreshToken } from '@/helpers'
+import { login as toolkitLogin, refreshToken as toolkitRefreshToken } from '@/api/modules'
 import { useWeb3State } from '@/store'
 import { authStore, useAuthState } from '@/store/modules/auth.module'
 
