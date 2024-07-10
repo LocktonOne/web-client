@@ -5249,7 +5249,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@npm:~2.3.2, fsevents@npm:~2.3.3":
+"fsevents@npm:^2.3.2, fsevents@npm:~2.3.2, fsevents@npm:~2.3.3":
   version: 2.3.3
   resolution: "fsevents@npm:2.3.3"
   dependencies:
@@ -5259,7 +5259,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@npm%3A~2.3.2#optional!builtin<compat/fsevents>, fsevents@patch:fsevents@npm%3A~2.3.3#optional!builtin<compat/fsevents>":
+"fsevents@patch:fsevents@npm%3A^2.3.2#optional!builtin<compat/fsevents>, fsevents@patch:fsevents@npm%3A~2.3.2#optional!builtin<compat/fsevents>, fsevents@patch:fsevents@npm%3A~2.3.3#optional!builtin<compat/fsevents>":
   version: 2.3.3
   resolution: "fsevents@patch:fsevents@npm%3A2.3.3#optional!builtin<compat/fsevents>::version=2.3.3&hash=df0bf1"
   dependencies:
@@ -8072,6 +8072,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-jwt@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "react-jwt@npm:1.2.1"
+  dependencies:
+    fsevents: "npm:^2.3.2"
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  checksum: cbe27de003233f42126cb55ad6e8f368cc67d477f0b316afab2f9750f66b5f0b65703f682f6e2f85149427aa74c4674f548e64707fdfcbbf7146fec0659b8324
+  languageName: node
+  linkType: hard
+
 "react-qrcode-logo@npm:^3.0.0":
   version: 3.0.0
   resolution: "react-qrcode-logo@npm:3.0.0"
@@ -10240,6 +10254,7 @@ __metadata:
     react-dom: "npm:^18.3.1"
     react-hook-form: "npm:^7.52.0"
     react-i18next: "npm:^14.1.2"
+    react-jwt: "npm:^1.2.1"
     react-qrcode-logo: "npm:^3.0.0"
     react-router-dom: "npm:^6.23.1"
     react-use: "npm:^17.5.0"

@@ -1,79 +1,47 @@
-import { Button, FormControl, InputAdornment, Stack, Typography, useTheme } from '@mui/material'
-import { FormEvent } from 'react'
-import { Controller } from 'react-hook-form'
+import { PROVIDERS } from '@distributedlab/w3p'
+import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
-import { useForm } from '@/hooks'
-import { UiIcon, UiTextField } from '@/ui'
-
-enum FieldNames {
-  Seed = 'seed',
-}
+import { bus, ErrorHandler, getAuthNonce, sleep } from '@/helpers'
+import { useAuth } from '@/hooks'
+import { web3Store } from '@/store'
+import { UiIcon } from '@/ui'
 
 const AdminLoginForm = () => {
   const { t } = useTranslation()
   const { spacing } = useTheme()
   const { palette, typography } = useTheme()
+  const { login } = useAuth()
 
-  const { isFormDisabled, disableForm, enableForm, getErrorMessage, control } = useForm(
-    {
-      [FieldNames.Seed]: '',
-    },
-    yup =>
-      yup.object().shape({
-        [FieldNames.Seed]: yup.string().required(),
-      }),
-  )
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault()
-    disableForm()
+  const tryConnect = async (providerType: PROVIDERS) => {
     try {
-      bus.emit(BusEvents.success)
+      await web3Store.connect(providerType)
+
+      if (!web3Store.provider?.address) {
+        await sleep(1000)
+      }
+
+      if (web3Store.provider?.address) {
+        const authNonce = await getAuthNonce(web3Store.provider.address)
+        const signedMessage = await web3Store.provider.signMessage(authNonce)
+        await login(web3Store.provider.address, signedMessage!)
+        bus.emit(BusEvents.success, { message: 'Succes log in' })
+        return
+      }
+
+      throw new Error('Provider address is undefined')
     } catch (error) {
       ErrorHandler.process(error)
     }
-    enableForm()
   }
 
   return (
-    <Stack
-      component='form'
-      onSubmit={submit}
-      sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-      gap={spacing(6)}
-    >
+    <Stack sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} gap={spacing(6)}>
       <UiIcon name={Icons.UserCircle} size={15} />
       <Stack sx={{ alignItems: 'center' }} gap={1}>
         <Typography variant='h5'>{t('login-form.admin-title')}</Typography>
-        <Typography variant='body3' sx={{ color: palette.primary.light }}>
-          {t('login-form.admin-desc')}
-        </Typography>
       </Stack>
-      <Controller
-        name={FieldNames.Seed}
-        control={control}
-        render={({ field }) => (
-          <FormControl fullWidth>
-            <UiTextField
-              {...field}
-              label={FieldNames.Seed}
-              errorMessage={getErrorMessage(FieldNames.Seed)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <UiIcon name={Icons.Lock} size={4} />
-                  </InputAdornment>
-                ),
-              }}
-              placeholder={t('login-form.admin-placeholder')}
-              disabled={isFormDisabled}
-            />
-          </FormControl>
-        )}
-      />
       <Button
         variant='contained'
         fullWidth
@@ -81,9 +49,9 @@ const AdminLoginForm = () => {
           background: palette.primary.dark,
           fontWeight: typography.fontWeightBold,
         }}
-        disabled={isFormDisabled}
+        onClick={() => tryConnect(PROVIDERS.Metamask)}
       >
-        {t('login-form.submit-btn')}
+        {t('login-form.admin-login-btn')}
       </Button>
     </Stack>
   )

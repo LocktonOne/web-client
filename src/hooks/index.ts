@@ -1,3 +1,4 @@
+export * from './auth'
 export * from './copy-to-clipboard'
 export * from './form'
 export * from './interval'
