@@ -1,7 +1,15 @@
-import { lazy, Suspense } from 'react'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider } from 'react-router-dom'
+import { lazy, Suspense, useCallback } from 'react'
+import {
+  createBrowserRouter,
+  LoaderFunctionArgs,
+  Navigate,
+  Outlet,
+  redirect,
+  RouterProvider,
+} from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
+import { useAuth } from '@/hooks/auth'
 
 import { createDeepPath } from './helpers'
 import PublicLayout from './layouts/PublicLayout'
@@ -11,8 +19,7 @@ export const AppRoutes = () => {
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
 
-  /*
-  const { isAuthorized, logout } = useAuth()
+  const { isAuthorized } = useAuth()
 
   const signInGuard = useCallback(
     ({ request }: LoaderFunctionArgs) => {
@@ -30,23 +37,20 @@ export const AppRoutes = () => {
       // them to sign in with a `from` parameter that allows login to redirect back
       // to this page upon successful authentication
       if (!isAuthorized) {
-        logout()
-
         const requestUrl = new URL(request.url)
         requestUrl.searchParams.set('from', requestUrl.pathname)
 
-        return redirect(`${RoutePaths.SignIn}${requestUrl.search}`)
+        return redirect(`${RoutePaths.AdminLogin}${requestUrl.search}`)
       }
 
       return null
     },
-    [isAuthorized, logout],
+    [isAuthorized],
   )
 
-  const LayoutComponent = useMemo(() => {
-    return isAuthorized ? MainLayout : PublicLayout
-  }, [isAuthorized])
-  */
+  // const LayoutComponent = useMemo(() => {
+  //   return isAuthorized ? MainLayout : PublicLayout
+  // }, [isAuthorized])
 
   const router = createBrowserRouter([
     {
@@ -60,20 +64,22 @@ export const AppRoutes = () => {
       ),
       children: [
         {
+          path: createDeepPath(RoutePaths.Roles),
+          element: <Roles />,
+          loader: authProtectedGuard,
+        },
+        {
+          path: RoutePaths.Root,
+          element: <Navigate replace to={RoutePaths.Roles} />,
+        },
+        {
           path: createDeepPath(RoutePaths.Login),
           element: <Login />,
         },
         {
           path: createDeepPath(RoutePaths.AdminLogin),
           element: <AdminLogin />,
-        },
-        {
-          path: createDeepPath(RoutePaths.Roles),
-          element: <Roles />,
-        },
-        {
-          path: RoutePaths.Root,
-          element: <Navigate replace to={RoutePaths.Login} />,
+          loader: signInGuard,
         },
         {
           path: '*',

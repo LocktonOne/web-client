@@ -25,9 +25,6 @@
   },
   "login-form": {
     "admin-title": "Log In to Lockton One Admin Account",
-    "admin-desc": "Enter your details to login.",
-    "admin-lbl": "Seed",
-    "admin-placeholder": "Enter seed phrase",
-    "submit-btn": "Sign In"
+    "admin-login-btn": "Sign In"
   }
 }
