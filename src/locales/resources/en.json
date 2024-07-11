@@ -26,5 +26,21 @@
   "login-form": {
     "admin-title": "Log In to Lockton One Admin Account",
     "admin-login-btn": "Sign In"
+  },
+  "roles-page": {
+    "title": "Roles",
+    "subtitle": "On this page, you can manage existing roles or create new ones"
+  },
+  "users-page": {
+    "title": "Users",
+    "subtitle": "All existing Locton One system users can be seen in the table below"
+  },
+  "administrators-page": {
+    "title": "Administrators",
+    "subtitle": "All existing Locton One system administrators can be seen in the table below"
+  },
+  "kyc-requests-page": {
+    "title": "KYC requests",
+    "subtitle": "All existing Locton One system KYC requests can be seen in the table below"
   }
 }

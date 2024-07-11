@@ -1,5 +1,5 @@
 import { config } from '@config'
-import { Box, BoxProps, Typography } from '@mui/material'
+import { Box, BoxProps, Typography, useTheme } from '@mui/material'
 import { useEffect } from 'react'
 
 interface Props extends BoxProps {
@@ -8,6 +8,7 @@ interface Props extends BoxProps {
 }
 
 export default function PageTitles({ title, subtitle, ...rest }: Props) {
+  const { spacing, palette } = useTheme()
   useEffect(() => {
     document.title = `${title} | ${config.APP_NAME}`
   }, [title])
@@ -15,7 +16,7 @@ export default function PageTitles({ title, subtitle, ...rest }: Props) {
   return (
     <Box {...rest}>
       <Typography variant='h5'>{title}</Typography>
-      <Typography variant='body3' mt={2}>
+      <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} mt={2}>
         {subtitle}
       </Typography>
     </Box>

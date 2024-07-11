@@ -10,7 +10,7 @@ export const lightPalette: PaletteOptions = {
     dark: '#272835',
     main: '#2D3441',
     light: '#666D80',
-    lighter: '#818898',
+    lighter: '#8F96A4',
     contrastText: '#202020',
   },
   secondary: {
@@ -61,7 +61,7 @@ export const lightPalette: PaletteOptions = {
   background: {
     default: '#FFFFFF',
     light: 'rgba(255, 255, 255, 0.70)',
-    paper: '#FFFFFF',
+    paper: '#F6F8FA',
   },
   divider: 'rgba(32, 32, 32, 0.05)',
   additional: {

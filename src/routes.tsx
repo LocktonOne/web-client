@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback } from 'react'
+import { lazy, Suspense, useCallback, useMemo } from 'react'
 import {
   createBrowserRouter,
   LoaderFunctionArgs,
@@ -10,6 +10,7 @@ import {
 
 import { RoutePaths } from '@/enums'
 import { useAuth } from '@/hooks/auth'
+import AdminLayout from '@/layouts/AdminLayout'
 
 import { createDeepPath } from './helpers'
 import PublicLayout from './layouts/PublicLayout'
@@ -18,6 +19,9 @@ export const AppRoutes = () => {
   const Login = lazy(() => import('@/pages/Login'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
+  const Users = lazy(() => import('@/pages/Users'))
+  const Administrators = lazy(() => import('@/pages/Administrators'))
+  const KycRequests = lazy(() => import('@/pages/KycRequests'))
 
   const { isAuthorized } = useAuth()
 
@@ -48,19 +52,19 @@ export const AppRoutes = () => {
     [isAuthorized],
   )
 
-  // const LayoutComponent = useMemo(() => {
-  //   return isAuthorized ? MainLayout : PublicLayout
-  // }, [isAuthorized])
+  const LayoutComponent = useMemo(() => {
+    return isAuthorized ? AdminLayout : PublicLayout
+  }, [isAuthorized])
 
   const router = createBrowserRouter([
     {
       path: RoutePaths.Root,
       element: (
-        <PublicLayout>
+        <LayoutComponent>
           <Suspense fallback={<></>}>
             <Outlet />
           </Suspense>
-        </PublicLayout>
+        </LayoutComponent>
       ),
       children: [
         {
@@ -80,6 +84,21 @@ export const AppRoutes = () => {
           path: createDeepPath(RoutePaths.AdminLogin),
           element: <AdminLogin />,
           loader: signInGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.Administrators),
+          element: <Administrators />,
+          loader: authProtectedGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.Users),
+          element: <Users />,
+          loader: authProtectedGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.KycRequests),
+          element: <KycRequests />,
+          loader: authProtectedGuard,
         },
         {
           path: '*',
