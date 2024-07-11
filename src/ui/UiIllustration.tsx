@@ -10,13 +10,9 @@ type Props = {
 
 const UiIllustration = forwardRef<SVGSVGElement, Props>(({ size = 6, ...props }, ref) => {
   const sx: SxProps<Theme> = {
-    ...props.sx,
     width: theme => theme.spacing(size),
     height: theme => theme.spacing(size),
-    minWidth: theme => theme.spacing(size),
-    minHeight: theme => theme.spacing(size),
-    maxWidth: theme => theme.spacing(size),
-    maxHeight: theme => theme.spacing(size),
+    ...props.sx,
   }
 
   const { className, name, ...rest } = props

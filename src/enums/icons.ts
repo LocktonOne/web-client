@@ -43,6 +43,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber'
 import Work from '@mui/icons-material/Work'
 
 export enum Icons {
+  AdministratorsFill = 'administrators-fill',
   ArrowCounterClockwise = 'arrow-counter-clockwise',
   ArrowDown = 'arrow-down',
   ArrowLeft = 'arrow-left',
@@ -86,6 +87,7 @@ export enum Icons {
   Info = 'info',
   Instagram = 'instagram',
   Key = 'key',
+  KycFill = 'kyc-fill',
   Link = 'link',
   LockFill = 'lock-fill',
   Lock = 'lock',
@@ -103,6 +105,7 @@ export enum Icons {
   Question = 'question',
   Rarime = 'rarime',
   Rarimo = 'rarimo',
+  RolesFill = 'roles-fill',
   SealCheck1 = 'seal-check-1',
   SealCheck = 'seal-check',
   Share1 = 'share-1',
@@ -131,6 +134,7 @@ export enum Icons {
   User = 'user',
   UserPlus = 'user-plus',
   Users = 'users',
+  UsersFill = 'users-fill',
   WalletFilled = 'wallet-filled',
   Wallet = 'wallet',
   Warning = 'warning',

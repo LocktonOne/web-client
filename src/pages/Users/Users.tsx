@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { PageTitles } from '@/common'
 type Props = HTMLAttributes<HTMLDivElement>
 
-const Roles = ({ ...rest }: Props) => {
+const Users = ({ ...rest }: Props) => {
   const { t } = useTranslation()
   return (
     <Stack {...rest} alignItems='flex-start'>
-      <PageTitles title={t('roles-page.title')} subtitle={t('roles-page.subtitle')} />
+      <PageTitles title={t('users-page.title')} subtitle={t('users-page.subtitle')} />
     </Stack>
   )
 }
 
-export default Roles
+export default Users
