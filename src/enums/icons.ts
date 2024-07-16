@@ -89,6 +89,7 @@ export enum Icons {
   Key = 'key',
   KycFill = 'kyc-fill',
   Link = 'link',
+  ListSettingFill = 'list-settings-fill',
   LockFill = 'lock-fill',
   Lock = 'lock',
   Logout = 'logout',

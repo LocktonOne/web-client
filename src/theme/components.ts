@@ -1,6 +1,6 @@
 import { Components, Theme } from '@mui/material'
 
-import { Transitions } from '@/theme/constants'
+import { FontWeight, Transitions } from '@/theme/constants'
 import { typography } from '@/theme/typography'
 
 import { vh } from './helpers'
@@ -49,6 +49,8 @@ export const components: Components<Omit<Theme, 'components'>> = {
         borderRadius: theme.spacing(3),
         transition: Transitions.Default,
         color: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.dark,
+        fontWeight: FontWeight.Medium,
       }),
       containedSizeLarge: ({ theme }) => ({
         ...typography.buttonLarge,
@@ -126,6 +128,59 @@ export const components: Components<Omit<Theme, 'components'>> = {
           color: 'inherit',
         },
       },
+    },
+  },
+  MuiSelect: {
+    styleOverrides: {
+      icon: ({ theme }) => ({
+        width: theme.spacing(5),
+        height: theme.spacing(5),
+        color: 'inherit',
+        pointerEvents: 'none',
+        top: theme.spacing(3.5),
+        right: theme.spacing(3),
+      }),
+      root: ({ theme }) => ({
+        ...typography.body3,
+        minHeight: theme.spacing(12),
+        borderRadius: theme.spacing(3),
+        borderColor: theme.palette.primary.light,
+        fontSize: theme.spacing(4),
+        height: theme.spacing(10),
+        '& .MuiOutlinedInput-notchedOutline': {
+          transition: Transitions.Default,
+          borderColor: theme.palette.primary.light,
+        },
+        '&.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.action.focus,
+          borderWidth: 1,
+        },
+        '&:hover:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
+          borderColor: theme.palette.action.hover,
+        },
+      }),
+    },
+  },
+  MuiMenu: {
+    styleOverrides: {
+      paper: ({ theme }) => ({
+        borderRadius: theme.spacing(2),
+        boxShadow: '0px 8px 16px 0px rgba(0, 0, 0, 0.04)',
+        padding: 0,
+        zIndex: 100,
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.divider}`,
+        overflow: 'hidden',
+      }),
+    },
+  },
+  MuiMenuItem: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '&:hover': {
+          backgroundColor: theme.palette.action.active,
+        },
+      }),
     },
   },
 }

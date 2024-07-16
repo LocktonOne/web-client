@@ -29,7 +29,9 @@
   },
   "roles-page": {
     "title": "Roles",
-    "subtitle": "On this page, you can manage existing roles or create new ones"
+    "subtitle": "On this page, you can manage existing roles or create new ones",
+    "search": "Search",
+    "create-role": "Create role"
   },
   "users-page": {
     "title": "Users",
@@ -42,5 +44,19 @@
   "kyc-requests-page": {
     "title": "KYC requests",
     "subtitle": "All existing Locton One system KYC requests can be seen in the table below"
+  },
+  "admin-permission-modal": {
+    "title-edit": "Edit KYC administrator role",
+    "title-add": "Create new role",
+    "modal-desc-edit": "Please change some fields",
+    "modal-desc-add": "Enter details and select permissions to create a role",
+    "name": "Role name",
+    "role-desc": "Role description",
+    "existing-permission": "Existing permissions",
+    "resource": "Resource",
+    "permission-type": "Permission type",
+    "add-permission": "Add permission",
+    "submit-btn": "Confirm",
+    "permissions": "Permissions"
   }
 }
