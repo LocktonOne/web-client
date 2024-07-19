@@ -58,5 +58,10 @@
     "add-permission": "Add permission",
     "submit-btn": "Confirm",
     "permissions": "Permissions"
+  },
+  "register-form": {
+    "title": "Create a new account",
+    "desc": "Enter your details to register.",
+    "submit-btn": "Sign Up"
   }
 }

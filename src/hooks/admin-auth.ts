@@ -12,7 +12,7 @@ import { sleep } from '@/helpers'
 import { useWeb3State, web3Store } from '@/store'
 import { authStore, useAuthState } from '@/store/modules/auth.module'
 
-export const useAuth = () => {
+export const useAdminAuth = () => {
   const { provider } = useWeb3State()
   const { tokens } = useAuthState()
 

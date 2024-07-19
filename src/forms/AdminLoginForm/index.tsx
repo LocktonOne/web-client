@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useAuth } from '@/hooks'
+import { useAdminAuth } from '@/hooks'
 import { UiIcon } from '@/ui'
 
 const AdminLoginForm = () => {
   const { t } = useTranslation()
   const { spacing } = useTheme()
   const { palette, typography } = useTheme()
-  const { authorize } = useAuth()
+  const { authorize } = useAdminAuth()
 
   const tryConnect = async (providerType: PROVIDERS) => {
     try {

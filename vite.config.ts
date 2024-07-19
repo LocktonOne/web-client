@@ -10,6 +10,7 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import rollupNodePolyFill from 'rollup-plugin-polyfill-node';
 
 const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = (relative: string) => path.resolve(appDirectory, relative)
@@ -93,7 +94,7 @@ export default defineConfig(({ mode }) => {
       plugins: [
         NodeGlobalsPolyfillPlugin({
           process: true,
-          buffer: true,
+          buffer: false,
         }),
         NodeModulesPolyfillPlugin(),
       ],
@@ -105,6 +106,7 @@ export default defineConfig(({ mode }) => {
           // Enable rollup polyfills plugin
           // used during production bundling
           nodePolyfills(),
+          rollupNodePolyFill(),
         ],
 
         output: {

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
-import { useAuth } from '@/hooks/auth'
+import { useAdminAuth } from '@/hooks'
 import AdminLayout from '@/layouts/AdminLayout'
 
 import { createDeepPath } from './helpers'
@@ -17,13 +17,14 @@ import PublicLayout from './layouts/PublicLayout'
 
 export const AppRoutes = () => {
   const Login = lazy(() => import('@/pages/Login'))
+  const Register = lazy(() => import('@/pages/Register'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
   const Users = lazy(() => import('@/pages/Users'))
   const Administrators = lazy(() => import('@/pages/Administrators'))
   const KycRequests = lazy(() => import('@/pages/KycRequests'))
 
-  const { isAuthorized } = useAuth()
+  const { isAuthorized } = useAdminAuth()
 
   const signInGuard = useCallback(
     ({ request }: LoaderFunctionArgs) => {
@@ -79,6 +80,10 @@ export const AppRoutes = () => {
         {
           path: createDeepPath(RoutePaths.Login),
           element: <Login />,
+        },
+        {
+          path: createDeepPath(RoutePaths.Register),
+          element: <Register />,
         },
         {
           path: createDeepPath(RoutePaths.AdminLogin),
