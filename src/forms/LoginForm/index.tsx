@@ -11,24 +11,20 @@ import { UiIcon, UiTextField } from '@/ui'
 enum FieldNames {
   Email = 'email',
   Password = 'password',
-  RepeatPassword = 'repeatPassword',
 }
 
-const RegisterForm = () => {
+const LoginForm = () => {
   const { t } = useTranslation()
   const { spacing } = useTheme()
   const { palette, typography } = useTheme()
-  const { register } = useAuth()
-
+  const { login } = useAuth()
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.Email]: string
     [FieldNames.Password]: string
-    [FieldNames.RepeatPassword]: string
   }>(
     () => ({
       [FieldNames.Email]: '',
       [FieldNames.Password]: '',
-      [FieldNames.RepeatPassword]: '',
     }),
     [],
   )
@@ -47,20 +43,14 @@ const RegisterForm = () => {
       [FieldNames.Password]: yup
         .string()
         .min(8, 'Password must be at least 8 characters long')
-        .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
-        .matches(/[0-9]/, 'Password must contain at least one number')
         .required('Password is required'),
-      [FieldNames.RepeatPassword]: yup
-        .string()
-        .oneOf([yup.ref('password')], 'Passwords must match')
-        .required('Repeat Password is required'),
     }),
   )
 
   const submit = async () => {
     disableForm()
     try {
-      await register(formState[FieldNames.Email], formState[FieldNames.Password])
+      await login(formState[FieldNames.Email], formState[FieldNames.Password])
       bus.emit(BusEvents.success, { message: 'Success log in' })
     } catch (error) {
       ErrorHandler.process(error)
@@ -85,9 +75,9 @@ const RegisterForm = () => {
     >
       <UiIcon name={Icons.UserCircle} size={20} />
       <Stack sx={{ alignItems: 'center' }} gap={1}>
-        <Typography variant='h5'>{t('register-form.title')}</Typography>
+        <Typography variant='h5'>{t('login-form.title')}</Typography>
         <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} mt={2}>
-          {t('register-form.desc')}
+          {t('login-form.desc')}
         </Typography>
       </Stack>
       <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
@@ -121,22 +111,6 @@ const RegisterForm = () => {
               />
             )}
           />
-
-          <Controller
-            name={FieldNames.RepeatPassword}
-            control={control}
-            render={({ field }) => (
-              <UiTextField
-                {...field}
-                fullWidth
-                type='password'
-                label='Confirm your password'
-                placeholder='Confirm your password'
-                disabled={isFormDisabled}
-                errorMessage={getErrorMessage(FieldNames.RepeatPassword)}
-              />
-            )}
-          />
         </Stack>
         <Button
           type='submit'
@@ -148,11 +122,11 @@ const RegisterForm = () => {
             mt: 12,
           }}
         >
-          {t('register-form.submit-btn')}
+          {t('login-form.submit-btn')}
         </Button>
       </form>
     </Stack>
   )
 }
 
-export default RegisterForm
+export default LoginForm

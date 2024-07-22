@@ -1,6 +1,5 @@
 import { Time } from '@distributedlab/tools'
 import { isString } from 'lodash-es'
-
 import {
   base64Encode,
   calculateKeys,
@@ -10,26 +9,26 @@ import {
   FromEncryptedOpts,
   KdfParams,
   randomBytes,
-} from '@/api/modules/container-vault'
+} from 'src/api/modules/keyserver'
 
 export type Credential = {
   provider: string
   credential: string
 }
 
-export class Container {
+export class Wallet {
   public email: string
   public data: Credential[] | string
   public id?: string
 
-  constructor(email: string, data: Credential[] | string, containerId?: string) {
-    if (containerId && !isString(containerId)) {
+  constructor(email: string, data: Credential[] | string, walletId?: string) {
+    if (walletId && !isString(walletId)) {
       throw new Error('Hex encoded wallet ID expected.')
     }
 
     this.email = email
     this.data = data
-    this.id = containerId
+    this.id = walletId
   }
 
   setId(id: string) {
@@ -53,7 +52,7 @@ export class Container {
   }
 
   static generate(email: string) {
-    return new Container(email, '')
+    return new Wallet(email, '')
   }
 
   static async deriveId(opts: DeriveIdOpts) {
@@ -71,11 +70,11 @@ export class Container {
   static async fromEncrypted(opts: FromEncryptedOpts) {
     const keyPair = await calculateKeys(opts.salt, opts.email, opts.password, opts.kdfParams)
 
-    const rawContainerId = keyPair.getPublic('hex')
-    const rawContainerKey = keyPair.getSecret('hex')
-    const decryptedContainerData = JSON.parse(decryptData(opts.containerData, rawContainerKey))
+    const rawWalletId = keyPair.getPublic('hex')
+    const rawWalletKey = keyPair.getSecret('hex')
+    const decryptedKeychainData = JSON.parse(decryptData(opts.decryptedKeychainData, rawWalletKey))
 
-    return new Container(opts.email, decryptedContainerData, rawContainerId)
+    return new Wallet(opts.email, decryptedKeychainData, rawWalletId)
   }
 
   static async encrypt(
@@ -91,16 +90,15 @@ export class Container {
     const salt = randomBytes(4).toString('ascii')
     const keyPair = await calculateKeys(salt, email, password, kdfParams)
 
-    const containerData = encryptData(JSON.stringify(data), keyPair.getSecret('hex'))
+    const keychainData = encryptData(JSON.stringify(data), keyPair.getSecret('hex'))
 
     const saltInBase64 = base64Encode(salt)
-
     return {
       id: keyPair.getPublic('hex'),
       email,
       saltInBase64,
       keyPair,
-      containerData,
+      keychainData,
       timestamp: new Time().timestamp,
     }
   }

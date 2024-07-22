@@ -14,7 +14,7 @@ const PublicLayout = ({ children }: PropsWithChildren) => {
       width='100%'
       bgcolor={palette.background.default}
     >
-      <Stack py={6} flex={1} overflow='hidden auto' width='100%'>
+      <Stack flex={1} overflow='hidden auto' width='100%'>
         <Stack mx='auto' width='100%' height='100%'>
           {children}
         </Stack>

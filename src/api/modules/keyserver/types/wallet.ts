@@ -1,12 +1,10 @@
 import { KdfParams } from './kdf'
 
-export type ContainerResponse = {
-  container_data: string
-  container_id: string
+export type WalletResponse = {
+  keychain_data: string
+  wallet_id: string
   email: string
-  last_updated_at: number
   salt: string
-  sig: string
   verified: boolean
 }
 
@@ -35,7 +33,7 @@ export type DeriveIdOpts = {
 }
 
 export type FromEncryptedOpts = {
-  containerData: string
+  decryptedKeychainData: string
   kdfParams: KdfParams
   salt: string
   email: string

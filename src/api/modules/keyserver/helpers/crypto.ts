@@ -2,9 +2,8 @@ import { Buffer } from 'buffer'
 import crypto from 'crypto-browserify'
 import * as elliptic from 'elliptic'
 import * as script from 'scrypt-js'
-import sjcl from 'sjcl'
-
-import { KdfParams } from '@/api/modules/container-vault'
+import sjcl from 'sjcl-tokend'
+import { KdfParams } from 'src/api/modules/keyserver'
 
 const EC = new elliptic.eddsa('ed25519')
 const ivLength = 96 / 8
@@ -45,14 +44,15 @@ export async function calculateKeys(
 }
 
 export function encryptData(data: string, key: string) {
-  // key is 64 lenght, 64 - is unsupported length for aes
+  // key is 512 lenght, 512 - is unsupported length for aes
   // if (![16, 24, 32].includes(key.length)) {
   //   throw new Error('Invalid AES key size')
   // } // FIXME!
 
   const cipherName = 'aes'
   const modeName = 'gcm'
-  const halfKey = key.substr(0, key.length / 2) // FIXME!
+
+  const halfKey = key.substr(0, 32) // FIXME!
 
   const cipher = new sjcl.cipher[cipherName](sjcl.codec.utf8String.toBits(halfKey))
 
@@ -64,14 +64,14 @@ export function encryptData(data: string, key: string) {
     rawIV as unknown as sjcl.BitArray,
   )
 
-  const container = JSON.stringify({
+  const wallet = JSON.stringify({
     IV: sjcl.codec.base64.fromBits(rawIV as unknown as sjcl.BitArray),
     cipherText: sjcl.codec.base64.fromBits(encryptedData),
     cipherName: cipherName,
     modeName: modeName,
   })
 
-  return base64Encode(container)
+  return base64Encode(wallet)
 }
 
 export function decryptData(encryptedData: string, key: string) {
@@ -89,7 +89,7 @@ export function decryptData(encryptedData: string, key: string) {
   } catch (error) {
     throw new Error('Corrupt data.')
   }
-  const halfKey = key.substr(0, key.length / 2) // FIXME!
+  const halfKey = key.substr(0, 32) // FIXME!
   const cipher = new sjcl.cipher[cipherName](sjcl.codec.utf8String.toBits(halfKey))
   if (modeName === 'ocb2progressive') throw new Error('Unsupported mode.')
   const rawData = sjcl.mode[modeName].decrypt(cipher, rawCipherText, rawIV)

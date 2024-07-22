@@ -61,6 +61,7 @@
     "react-use": "^17.5.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "sjcl": "^1.0.8",
+    "sjcl-tokend": "^1.0.6",
     "uuid": "^10.0.0",
     "valtio": "^1.13.2",
     "yup": "^1.4.0"

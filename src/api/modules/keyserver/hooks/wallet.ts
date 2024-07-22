@@ -1,17 +1,17 @@
 import { JsonApiBodyBuilder } from '@distributedlab/jac'
-
-import { api } from '@/api/clients'
 import {
   base64Decode,
-  Container,
-  ContainerResponse,
   ContainerUpdateResponse,
-  getContainerByNonce,
+  getWalletByNonce,
   loadKdfParams,
-} from '@/api/modules/container-vault'
+  Wallet,
+  WalletResponse,
+} from 'src/api/modules/keyserver'
+
+import { api } from '@/api/clients'
 // import { useContainerStore } from '@/store'
 
-export const useContainer = () => {
+export const useWallet = () => {
   const create = async (email: string, password: string) => {
     const { data: kdfParams } = await loadKdfParams('')
 
@@ -30,47 +30,45 @@ export const useContainer = () => {
       },
     ]
 
-    const container = Container.generate(email)
-    const encryptedContainer = await Container.encrypt(kdfParams, email, password, testCredentials)
+    const wallet = Wallet.generate(email)
+    const encryptedWallet = await Wallet.encrypt(kdfParams, email, password, testCredentials)
 
     const body = new JsonApiBodyBuilder()
       .setData({
-        type: 'container',
+        type: 'wallet',
         attributes: {
-          container_data: encryptedContainer.containerData,
-          container_id: encryptedContainer.id,
-          email: encryptedContainer.email,
-          last_updated_at: encryptedContainer.timestamp,
-          salt: encryptedContainer.saltInBase64,
+          keychain_data: encryptedWallet.keychainData,
+          wallet_id: encryptedWallet.id,
+          email: encryptedWallet.email,
+          salt: encryptedWallet.saltInBase64,
         },
       })
       .build()
 
-    const { data } = await api.post<ContainerResponse>(
-      '/integrations/container-vault-svc/container',
-      { body },
-    )
+    const { data } = await api.post<WalletResponse>('/integrations/keyserver-svc/wallet', {
+      body,
+    })
 
-    container.setId(data.container_id)
-    container.setData(data.container_data)
+    wallet.setId(data.wallet_id)
+    wallet.setData(data.keychain_data)
 
-    return container
+    return wallet
   }
 
   const login = async (email: string, password: string) => {
     const { data: kdfParams } = await loadKdfParams(email)
 
-    const containerId = await Container.deriveId({
+    const walletId = await Wallet.deriveId({
       email,
       password,
       kdfParams,
       salt: base64Decode(kdfParams.salt),
     })
 
-    const decryptedContainer = await getContainerByNonce(containerId)
+    const decryptedWallet = await getWalletByNonce(walletId)
 
-    return Container.fromEncrypted({
-      containerData: decryptedContainer.container_data,
+    return Wallet.fromEncrypted({
+      decryptedKeychainData: decryptedWallet.keychain_data,
       kdfParams,
       salt: base64Decode(kdfParams.salt),
       email,
@@ -83,7 +81,7 @@ export const useContainer = () => {
 
     const oldContainer = await login(email, password)
 
-    const encryptedNewContainer = await Container.encrypt(
+    const encryptedNewContainer = await Wallet.encrypt(
       kdfParams,
       email,
       newPassword,
@@ -92,23 +90,21 @@ export const useContainer = () => {
 
     const body = new JsonApiBodyBuilder()
       .setData({
-        type: 'container',
+        type: 'wallet',
         attributes: {
-          container_id: encryptedNewContainer.id,
+          wallet_id: encryptedNewContainer.id,
           email: email,
           old_password: password,
-          salt: encryptedNewContainer.saltInBase64,
-          container_data: encryptedNewContainer.containerData,
-          last_updated_at: encryptedNewContainer.timestamp,
+          keychain_data: encryptedNewContainer.keychainData,
         },
       })
       .build()
 
-    await api.patch<ContainerUpdateResponse>('/integrations/container-vault-svc/container', {
+    await api.patch<ContainerUpdateResponse>('/integrations/keyserver-svc/container', {
       body,
     })
 
-    return new Container(email, encryptedNewContainer.containerData, encryptedNewContainer.id)
+    return new Wallet(email, encryptedNewContainer.keychainData, encryptedNewContainer.id)
   }
 
   // const recoveryAccount = async (email: string, token: string) => {

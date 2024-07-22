@@ -3,6 +3,7 @@ import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfil
 import react from '@vitejs/plugin-react-swc'
 import * as fs from 'fs'
 import * as path from 'path'
+import rollupNodePolyFill from 'rollup-plugin-polyfill-node'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, loadEnv } from 'vite'
 import { checker } from 'vite-plugin-checker'
@@ -10,7 +11,6 @@ import { createHtmlPlugin } from 'vite-plugin-html'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import tsconfigPaths from 'vite-tsconfig-paths'
-import rollupNodePolyFill from 'rollup-plugin-polyfill-node';
 
 const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = (relative: string) => path.resolve(appDirectory, relative)
@@ -36,6 +36,7 @@ export default defineConfig(({ mode }) => {
         }
       : {}),
     plugins: [
+      nodePolyfills(),
       react(),
       tsconfigPaths(),
       createSvgIconsPlugin({

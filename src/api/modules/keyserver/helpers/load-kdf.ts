@@ -1,8 +1,9 @@
+import { KdfParams } from 'src/api/modules/keyserver'
+
 import { api } from '@/api/clients'
-import { KdfParams } from '@/api/modules/container-vault'
 
 export const loadKdfParams = async (email: string) => {
-  return api.get<KdfParams>('/integrations/container-vault-svc/kdf', {
+  return api.get<KdfParams>('/integrations/keyserver-svc/kdf', {
     query: {
       email: email,
     },

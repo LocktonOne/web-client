@@ -8818,6 +8818,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"sjcl-tokend@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "sjcl-tokend@npm:1.0.6"
+  checksum: 59655ff9d7a74706581cb6760b7504ae208be566c8abe949bd13aed1beab51e497d034367572c4effc775392ad76c0c77bfaf1e36bd3b5980d07de4505cf52a8
+  languageName: node
+  linkType: hard
+
 "sjcl@npm:^1.0.8":
   version: 1.0.8
   resolution: "sjcl@npm:1.0.8"
@@ -10305,6 +10312,7 @@ __metadata:
     rollup-plugin-polyfill-node: "npm:^0.13.0"
     rollup-plugin-visualizer: "npm:^5.12.0"
     sjcl: "npm:^1.0.8"
+    sjcl-tokend: "npm:^1.0.6"
     typechain: "npm:^8.3.2"
     typescript: "npm:^5.5.2"
     uuid: "npm:^10.0.0"

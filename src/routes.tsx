@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useMemo } from 'react'
+import { lazy, Suspense, useCallback } from 'react'
 import {
   createBrowserRouter,
   LoaderFunctionArgs,
@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 
 import { RoutePaths } from '@/enums'
-import { useAdminAuth } from '@/hooks'
+import { useAdminAuth, useAuth } from '@/hooks'
 import AdminLayout from '@/layouts/AdminLayout'
 
 import { createDeepPath } from './helpers'
@@ -23,8 +23,21 @@ export const AppRoutes = () => {
   const Users = lazy(() => import('@/pages/Users'))
   const Administrators = lazy(() => import('@/pages/Administrators'))
   const KycRequests = lazy(() => import('@/pages/KycRequests'))
+  const Dashboard = lazy(() => import('@/pages/Dashboard'))
 
   const { isAuthorized } = useAdminAuth()
+  const { isLoggedIn } = useAuth()
+
+  const signInGuardAdmin = useCallback(
+    ({ request }: LoaderFunctionArgs) => {
+      const requestUrl = new URL(request.url)
+
+      const from = requestUrl.searchParams.get('from')
+
+      return isAuthorized ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Roles) : null
+    },
+    [isAuthorized],
+  )
 
   const signInGuard = useCallback(
     ({ request }: LoaderFunctionArgs) => {
@@ -32,11 +45,13 @@ export const AppRoutes = () => {
 
       const from = requestUrl.searchParams.get('from')
 
-      return isAuthorized ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Root) : null
+      return isLoggedIn
+        ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Dashboard)
+        : null
     },
-    [isAuthorized],
+    [isLoggedIn],
   )
-  const authProtectedGuard = useCallback(
+  const authProtectedGuardAdmin = useCallback(
     ({ request }: LoaderFunctionArgs) => {
       // If the user is not logged in and tries to access protected route, we redirect
       // them to sign in with a `from` parameter that allows login to redirect back
@@ -53,25 +68,40 @@ export const AppRoutes = () => {
     [isAuthorized],
   )
 
-  const LayoutComponent = useMemo(() => {
-    return isAuthorized ? AdminLayout : PublicLayout
-  }, [isAuthorized])
+  const authProtectedGuard = useCallback(
+    ({ request }: LoaderFunctionArgs) => {
+      // If the user is not logged in and tries to access protected route, we redirect
+      // them to sign in with a `from` parameter that allows login to redirect back
+      // to this page upon successful authentication
+      if (!isLoggedIn) {
+        const requestUrl = new URL(request.url)
+        requestUrl.searchParams.set('from', requestUrl.pathname)
+
+        return redirect(`${RoutePaths.Login}${requestUrl.search}`)
+      }
+
+      return null
+    },
+    [isLoggedIn],
+  )
 
   const router = createBrowserRouter([
     {
       path: RoutePaths.Root,
       element: (
-        <LayoutComponent>
-          <Suspense fallback={<></>}>
-            <Outlet />
-          </Suspense>
-        </LayoutComponent>
+        <Suspense fallback={<></>}>
+          <Outlet />
+        </Suspense>
       ),
       children: [
         {
           path: createDeepPath(RoutePaths.Roles),
-          element: <Roles />,
-          loader: authProtectedGuard,
+          element: (
+            <AdminLayout>
+              <Roles />
+            </AdminLayout>
+          ),
+          loader: authProtectedGuardAdmin,
         },
         {
           path: RoutePaths.Root,
@@ -79,35 +109,70 @@ export const AppRoutes = () => {
         },
         {
           path: createDeepPath(RoutePaths.Login),
-          element: <Login />,
-        },
-        {
-          path: createDeepPath(RoutePaths.Register),
-          element: <Register />,
-        },
-        {
-          path: createDeepPath(RoutePaths.AdminLogin),
-          element: <AdminLogin />,
+          element: (
+            <PublicLayout>
+              <Login />
+            </PublicLayout>
+          ),
           loader: signInGuard,
         },
         {
+          path: createDeepPath(RoutePaths.Register),
+          element: (
+            <PublicLayout>
+              <Register />
+            </PublicLayout>
+          ),
+          loader: signInGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.AdminLogin),
+          element: (
+            <PublicLayout>
+              <AdminLogin />
+            </PublicLayout>
+          ),
+          loader: signInGuardAdmin,
+        },
+        {
           path: createDeepPath(RoutePaths.Administrators),
-          element: <Administrators />,
-          loader: authProtectedGuard,
+          element: (
+            <AdminLayout>
+              <Administrators />
+            </AdminLayout>
+          ),
+          loader: authProtectedGuardAdmin,
         },
         {
           path: createDeepPath(RoutePaths.Users),
-          element: <Users />,
-          loader: authProtectedGuard,
+          element: (
+            <AdminLayout>
+              <Users />
+            </AdminLayout>
+          ),
+          loader: authProtectedGuardAdmin,
         },
         {
           path: createDeepPath(RoutePaths.KycRequests),
-          element: <KycRequests />,
+          element: (
+            <AdminLayout>
+              <KycRequests />
+            </AdminLayout>
+          ),
+          loader: authProtectedGuardAdmin,
+        },
+        {
+          path: createDeepPath(RoutePaths.Dashboard),
+          element: (
+            <PublicLayout>
+              <Dashboard />
+            </PublicLayout>
+          ),
           loader: authProtectedGuard,
         },
         {
           path: '*',
-          element: <Navigate replace to={RoutePaths.Root} />,
+          element: <Navigate replace to={RoutePaths.Dashboard} />,
         },
       ],
     },
