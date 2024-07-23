@@ -70,6 +70,7 @@ export enum Icons {
   Discord = 'discord',
   DotsSixVertical = 'dots-six-vertical',
   DotsThreeOutline = 'dots-three-outline',
+  Eye = 'eye',
   Facebook = 'facebook',
   Fingerprint = 'fingerprint',
   Flag = 'flag',

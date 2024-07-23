@@ -3,6 +3,7 @@ import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfil
 import react from '@vitejs/plugin-react-swc'
 import * as fs from 'fs'
 import * as path from 'path'
+import rollupNodePolyFill from 'rollup-plugin-polyfill-node'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig, loadEnv } from 'vite'
 import { checker } from 'vite-plugin-checker'
@@ -35,6 +36,7 @@ export default defineConfig(({ mode }) => {
         }
       : {}),
     plugins: [
+      nodePolyfills(),
       react(),
       tsconfigPaths(),
       createSvgIconsPlugin({
@@ -93,7 +95,7 @@ export default defineConfig(({ mode }) => {
       plugins: [
         NodeGlobalsPolyfillPlugin({
           process: true,
-          buffer: true,
+          buffer: false,
         }),
         NodeModulesPolyfillPlugin(),
       ],
@@ -105,6 +107,7 @@ export default defineConfig(({ mode }) => {
           // Enable rollup polyfills plugin
           // used during production bundling
           nodePolyfills(),
+          rollupNodePolyFill(),
         ],
 
         output: {

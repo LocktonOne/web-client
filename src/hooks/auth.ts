@@ -1,74 +1,34 @@
-import { PROVIDERS } from '@distributedlab/w3p'
 import { useCallback, useMemo } from 'react'
-//eslint-disable-next-line
-import { isExpired } from 'react-jwt'
 
-import {
-  getAuthNonce,
-  login as toolkitLogin,
-  refreshToken as toolkitRefreshToken,
-} from '@/api/modules'
-import { sleep } from '@/helpers'
-import { useWeb3State, web3Store } from '@/store'
-import { authStore, useAuthState } from '@/store/modules/auth.module'
+import { useWallet } from '@/api/modules'
+import { useWalletState, walletStore } from '@/store'
 
 export const useAuth = () => {
-  const { provider } = useWeb3State()
-  const { tokens } = useAuthState()
+  const { wallet } = useWalletState()
+  const _wallet = useWallet()
 
-  const isAuthorized = useMemo(() => {
-    if (!tokens.accessToken) return false
-
-    return !isExpired(tokens.accessToken)
-  }, [tokens.accessToken])
+  const isLoggedIn = useMemo(() => {
+    return Boolean(wallet)
+  }, [wallet])
 
   const logout = useCallback(async () => {
-    authStore.addTokensGroup({ id: '', type: 'token', refreshToken: '', accessToken: '' })
-
-    provider?.disconnect()
-  }, [provider])
-
-  const login = useCallback(async (accountAddress: string, signedMessage: string) => {
-    const { accessToken, refreshToken } = await toolkitLogin(accountAddress, signedMessage)
-    authStore.addTokensGroup({
-      id: '',
-      type: 'token',
-      refreshToken: refreshToken.id,
-      accessToken: accessToken.id,
-    })
+    walletStore.setWallet(null)
   }, [])
 
-  const refreshToken = async () => {
-    const { accessToken, refreshToken } = await toolkitRefreshToken(authStore.tokens.refreshToken)
-
-    authStore.addTokensGroup({
-      id: '',
-      type: 'token',
-      refreshToken: refreshToken.id,
-      accessToken: accessToken.id,
-    })
+  const login = async (email: string, password: string) => {
+    const generatedWallet = await _wallet.login(email, password)
+    walletStore.setWallet(generatedWallet)
   }
 
-  const authorize = async (providerType: PROVIDERS) => {
-    await web3Store.connect(providerType)
-
-    if (!web3Store.provider?.address) {
-      await sleep(1000)
-    }
-
-    if (!web3Store.provider?.address) {
-      throw new Error('Provider address is undefined')
-    }
-    const authNonce = await getAuthNonce(web3Store.provider.address)
-    const signedMessage = await web3Store.provider.signMessage(authNonce)
-    await login(web3Store.provider.address, signedMessage!)
+  const register = async (email: string, password: string) => {
+    const generatedWallet = await _wallet.create(email, password)
+    walletStore.setWallet(generatedWallet)
   }
 
   return {
-    isAuthorized,
+    isLoggedIn,
     login,
     logout,
-    refreshToken,
-    authorize,
+    register,
   }
 }

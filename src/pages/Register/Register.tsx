@@ -4,9 +4,9 @@ import { NavLink } from 'react-router-dom'
 
 import bg from '@/assets/illustrations/login-bg.webp'
 import { RoutePaths } from '@/enums'
-import LoginForm from '@/forms/LoginForm'
+import RegisterForm from '@/forms/RegisterForm'
 
-const Login = () => {
+const Register = () => {
   const { t } = useTranslation()
   const { palette } = useTheme()
 
@@ -16,15 +16,15 @@ const Login = () => {
         <Box component='img' src='/branding/logo.svg' />
         <Stack direction='row'>
           <Typography variant='body3' sx={{ color: palette.primary.light }}>
-            {t('login.header-text')}
+            {t('register.header-text')}
           </Typography>
           <Typography
             component={NavLink}
-            to={RoutePaths.Register}
+            to={RoutePaths.Login}
             variant='body3'
             sx={{ textDecoration: 'underline', color: palette.primary.main, ml: 2 }}
           >
-            {t('login.register')}
+            {t('register.login')}
           </Typography>
         </Stack>
       </Box>
@@ -41,10 +41,10 @@ const Login = () => {
         }}
       />
       <Stack sx={{ alignItems: 'center', height: '100%', mt: 20 }}>
-        <LoginForm />
+        <RegisterForm />
       </Stack>
     </Stack>
   )
 }
 
-export default Login
+export default Register

@@ -25,7 +25,10 @@
   },
   "login-form": {
     "admin-title": "Log In to Lockton One Admin Account",
-    "admin-login-btn": "Sign In"
+    "admin-login-btn": "Sign In",
+    "title": "Log In to your account",
+    "desc": "Enter your details to login.",
+    "submit-btn": "Sign In"
   },
   "roles-page": {
     "title": "Roles",
@@ -58,5 +61,18 @@
     "add-permission": "Add permission",
     "submit-btn": "Confirm",
     "permissions": "Permissions"
-  }
+  },
+  "register-form": {
+    "title": "Create a new account",
+    "desc": "Enter your details to register.",
+    "submit-btn": "Sign Up"
+  },
+  "login": {
+    "register": "Register",
+    "header-text": "Don’t have an account?"
+  },
+  "register": {
+  "login": "Login",
+  "header-text": "Already have an account?"
+}
 }
