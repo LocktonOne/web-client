@@ -9,7 +9,6 @@ import {
 } from 'src/api/modules/keyserver'
 
 import { api } from '@/api/clients'
-// import { useContainerStore } from '@/store'
 
 export const useWallet = () => {
   const create = async (email: string, password: string) => {
@@ -107,31 +106,9 @@ export const useWallet = () => {
     return new Wallet(email, encryptedNewContainer.keychainData, encryptedNewContainer.id)
   }
 
-  // const recoveryAccount = async (email: string, token: string) => {
-  // const containerStore = useContainerStore()
-
-  // const body = new JsonApiBodyBuilder()
-  //   .setData({
-  //     type: 'container',
-  //     attributes: {
-  //       container_id: containerStore.container?.id,
-  //       container_data: containerStore.container?.data,
-  //       email: email,
-  //       token: token,
-  //     },
-  //   })
-  //   .build()
-  // await api.patch('/integrations/container-vault-svc/container/recovery', {
-  //   body,
-  // })
-  //
-  // return new Container('', '', '')
-  // }
-
   return {
     create,
     login,
     updatePassword,
-    // recoveryAccount,
   }
 }
