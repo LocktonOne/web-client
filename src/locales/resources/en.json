@@ -74,5 +74,9 @@
   "register": {
   "login": "Login",
   "header-text": "Already have an account?"
-}
+},
+  "dashboard-page": {
+    "title": "Lockton One Dashboard",
+    "subtitle": "Welcome back"
+  }
 }

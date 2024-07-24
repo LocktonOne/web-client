@@ -8,4 +8,5 @@ export enum RoutePaths {
   Administrators = '/administrators',
   Users = '/users',
   KycRequests = '/kyc-requests',
+  Account = '/account',
 }

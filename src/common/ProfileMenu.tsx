@@ -1,17 +1,24 @@
-import { Stack, Typography } from '@mui/material'
+import { Stack, StackProps, Typography } from '@mui/material'
 
 import { UserAvatar } from '@/common'
+import { Icons } from '@/enums'
+import { UiIcon } from '@/ui'
 
-export default function ProfileMenu() {
+type Props = StackProps & {
+  email: string
+  name: string
+  type: 'admin' | 'user'
+}
+
+export default function ProfileMenu({ email, type, name, ...rest }: Props) {
   return (
-    <>
-      <Stack flexDirection='row' gap={4}>
-        <UserAvatar userDid='mock' size={10} />
-        <Stack>
-          <Typography variant='body3'>adminsmail@gmail.com</Typography>
-          <Typography variant='caption2'>Master Admin</Typography>
-        </Stack>
+    <Stack {...rest} flexDirection='row' gap={4} justifyContent='center' alignItems='center' p={2}>
+      <UserAvatar userDid='mock' size={10} />
+      <Stack justifyContent='center'>
+        <Typography variant='body3'>{email}</Typography>
+        <Typography variant='caption2'>{name}</Typography>
       </Stack>
-    </>
+      {type === 'user' && <UiIcon name={Icons.CaretRight} size={4} sx={{ ml: 10 }} />}
+    </Stack>
   )
 }

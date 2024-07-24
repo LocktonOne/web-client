@@ -183,4 +183,33 @@ export const components: Components<Omit<Theme, 'components'>> = {
       }),
     },
   },
+  MuiTabs: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '&.MuiTabs-root': {
+          borderRadius: 8,
+          backgroundColor: theme.palette.secondary.lighter,
+        },
+      }),
+    },
+  },
+  MuiTab: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        '&.MuiTab-root.Mui-selected': {
+          backgroundColor: theme.palette.common.white,
+        },
+        '&.MuiTab-root': {
+          borderBottom: 0,
+          borderRadius: 8,
+          margin: 6,
+          minHeight: 38,
+          padding: 0,
+        },
+        '&.MuiTabs-indicator': {
+          borderColor: 'none',
+        },
+      }),
+    },
+  },
 }
