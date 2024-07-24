@@ -190,6 +190,9 @@ export const components: Components<Omit<Theme, 'components'>> = {
           borderRadius: 8,
           backgroundColor: theme.palette.secondary.lighter,
         },
+        '& .MuiTabs-indicator': {
+          backgroundColor: 'transparent',
+        },
       }),
     },
   },
@@ -205,9 +208,6 @@ export const components: Components<Omit<Theme, 'components'>> = {
           margin: 6,
           minHeight: 38,
           padding: 0,
-        },
-        '&.MuiTabs-indicator': {
-          borderColor: 'none',
         },
       }),
     },

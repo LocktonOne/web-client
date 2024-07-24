@@ -1,16 +1,16 @@
-import { Stack, Tab, Tabs, Typography, useTheme } from '@mui/material'
+import { Stack, Tab, Tabs, useTheme } from '@mui/material'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { ProfileMenu } from '@/common'
+import { PageTitles, ProfileMenu } from '@/common'
 import { RoutePaths } from '@/enums'
 import { useWalletState } from '@/store'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0)
   const { t } = useTranslation()
-  const { palette, spacing } = useTheme()
+  const { palette } = useTheme()
   const { wallet } = useWalletState()
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -20,12 +20,11 @@ const Dashboard = () => {
   return (
     <Stack sx={{ alignItems: 'center', py: 10, px: 15 }}>
       <Stack direction='row' justifyContent='space-between' width='100%'>
-        <Stack>
-          <Typography variant='h4'>{t('dashboard-page.title')}</Typography>
-          <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} mt={2}>
-            {`${t('dashboard-page.subtitle')}, Unverified User!`}
-          </Typography>
-        </Stack>
+        <PageTitles
+          title={t('dashboard-page.title')}
+          subtitle={t('dashboard-page.title')}
+          variant='h4'
+        />
         <NavLink to={RoutePaths.Account}>
           <ProfileMenu
             sx={{

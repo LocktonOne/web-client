@@ -78,5 +78,22 @@
   "dashboard-page": {
     "title": "Lockton One Dashboard",
     "subtitle": "Welcome back"
+  },
+  "account-page": {
+    "title": "My Account",
+    "subtitle": "On this page, you can view your data that has been approved by the KYC administrator"
+  },
+  "account-info": {
+    "title": "Account information",
+    "account-id": "Account ID",
+    "unverified-text": "Please note that you cannot use all features of the Lockton One system at this time. In order to access all features you must complete the KYC process.",
+    "btn-text": "Go to KYC procedure",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "passport-number": "Passport serial number",
+    "passport-date": "Passport issuance date",
+    "user-did": "DID"
+
+
   }
 }
