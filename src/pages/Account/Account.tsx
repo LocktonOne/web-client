@@ -2,12 +2,10 @@ import { IconButton, Stack, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { PageTitles } from '@/common'
+import { AccountInformation, PageTitles } from '@/common'
 import { Icons } from '@/enums'
 import { useWalletState } from '@/store'
 import { UiIcon } from '@/ui'
-
-import AccountInformation from '../../common/AccountInformation'
 
 const userInfo = {
   type: 'Personal',

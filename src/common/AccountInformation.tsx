@@ -31,7 +31,7 @@ interface Props extends StackProps {
 const PART_LENGTH = 16
 
 export default function AccountInformation({ address, userInfo, ...rest }: Props) {
-  const { palette, spacing } = useTheme()
+  const { palette } = useTheme()
   const { t } = useTranslation()
   const { copy, isCopied } = useCopyToClipboard()
 
@@ -77,7 +77,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             label={userInfo.type}
           />
         </Stack>
-        <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 7 }}>
+        <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 7 }}>
           {t('account-info.account-id')}
         </Typography>
         <Stack direction='row' spacing={1} alignItems='center'>
@@ -89,7 +89,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
           </IconButton>
         </Stack>
         <Divider sx={{ my: 5 }} />
-        {(userInfo.type === 'unverified') ? (
+        {userInfo.type === 'unverified' ? (
           <>
             <Stack direction='row' gap={3}>
               <UiIcon name={Icons.WarningInSquare} size={14} />
@@ -116,7 +116,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
           </>
         ) : (
           <Stack>
-            <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 5 }}>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.first-name')}
             </Typography>
             <Typography
@@ -128,7 +128,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             >
               {userInfo.firstName}
             </Typography>
-            <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 5 }}>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.last-name')}
             </Typography>
             <Typography
@@ -140,7 +140,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             >
               {userInfo.lastName}
             </Typography>
-            <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 5 }}>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.passport-number')}
             </Typography>
             <Typography
@@ -152,7 +152,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             >
               {userInfo.passportNumber}
             </Typography>
-            <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 5 }}>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.passport-date')}
             </Typography>
             <Typography
@@ -164,7 +164,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             >
               {userInfo.passportDate}
             </Typography>
-            <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light, mt: 5 }}>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.user-did')}
             </Typography>
             <Typography
