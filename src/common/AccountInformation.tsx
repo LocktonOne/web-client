@@ -9,8 +9,9 @@ import {
   useTheme,
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
 
-import { BusEvents, Icons } from '@/enums'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
 import { bus, formatDid } from '@/helpers'
 import { useCopyToClipboard } from '@/hooks'
 import { FontWeight } from '@/theme/constants'
@@ -19,7 +20,7 @@ import { UiIcon } from '@/ui'
 interface Props extends StackProps {
   address: string
   userInfo: {
-    type: 'unverified' | 'personal' | 'company'
+    type: string
     firstName: string
     lastName: string
     passportNumber: string
@@ -97,22 +98,24 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 {t('account-info.unverified-text')}
               </Typography>
             </Stack>
-            <Button
-              variant='text'
-              sx={{
-                mt: 9,
-                ml: 15,
-                backgroundColor: 'transparent',
-                color: palette.primary.dark,
-                border: '1px solid',
-                borderColor: palette.secondary.lighter,
-                maxWidth: 230,
-                p: 1,
-              }}
-              endIcon={<UiIcon name={Icons.ArrowUpRight} />}
-            >
-              {t('account-info.btn-text')}
-            </Button>
+            <NavLink to={RoutePaths.Kyc}>
+              <Button
+                variant='text'
+                sx={{
+                  mt: 9,
+                  ml: 15,
+                  backgroundColor: 'transparent',
+                  color: palette.primary.dark,
+                  border: '1px solid',
+                  borderColor: palette.secondary.lighter,
+                  maxWidth: 230,
+                  p: 1,
+                }}
+                endIcon={<UiIcon name={Icons.ArrowUpRight} />}
+              >
+                {t('account-info.btn-text')}
+              </Button>
+            </NavLink>
           </>
         ) : (
           <Stack>

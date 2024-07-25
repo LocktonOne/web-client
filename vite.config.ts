@@ -82,7 +82,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': `${root}/`,
         '@config': `${root}/config.ts`,
-        '@static': `${root}/../static`,
+        '@public': `${root}/../static`,
       },
     },
     optimizeDeps: {

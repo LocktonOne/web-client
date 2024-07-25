@@ -8,12 +8,12 @@ import { useWalletState } from '@/store'
 import { UiIcon } from '@/ui'
 
 const userInfo = {
-  type: 'Personal',
+  type: 'unverified',
   firstName: 'Test',
   lastName: 'Testovskii',
   passportNumber: 'TY78747584758',
   passportDate: '01/49',
-  DID: 'did: okkd2ii3221jkjfdj',
+  DID: 'did:okkd2ii3221jkjfdj',
 }
 
 const Account = () => {

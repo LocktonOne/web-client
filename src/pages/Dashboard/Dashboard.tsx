@@ -22,7 +22,7 @@ const Dashboard = () => {
       <Stack direction='row' justifyContent='space-between' width='100%'>
         <PageTitles
           title={t('dashboard-page.title')}
-          subtitle={t('dashboard-page.title')}
+          subtitle={`${t('dashboard-page.subtitle')}, Unverified User!`}
           variant='h4'
         />
         <NavLink to={RoutePaths.Account}>
