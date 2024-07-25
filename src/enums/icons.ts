@@ -50,6 +50,7 @@ export enum Icons {
   ArrowRight = 'arrow-right',
   ArrowSquareOut = 'arrow-square-out',
   ArrowUp = 'arrow-up',
+  ArrowUpRight = 'arrow-up-right',
   Backspace = 'backspace',
   BellFill = 'bell-fill',
   Bell = 'bell',
@@ -140,6 +141,7 @@ export enum Icons {
   WalletFilled = 'wallet-filled',
   Wallet = 'wallet',
   Warning = 'warning',
+  WarningInSquare = 'warning-square',
   XCircle = 'x-circle',
 }
 

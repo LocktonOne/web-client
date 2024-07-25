@@ -24,6 +24,7 @@ export const AppRoutes = () => {
   const Administrators = lazy(() => import('@/pages/Administrators'))
   const KycRequests = lazy(() => import('@/pages/KycRequests'))
   const Dashboard = lazy(() => import('@/pages/Dashboard'))
+  const Account = lazy(() => import('@/pages/Account'))
 
   const { isAuthorized } = useAdminAuth()
   const { isLoggedIn } = useAuth()
@@ -166,6 +167,15 @@ export const AppRoutes = () => {
           element: (
             <PublicLayout>
               <Dashboard />
+            </PublicLayout>
+          ),
+          loader: authProtectedGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.Account),
+          element: (
+            <PublicLayout>
+              <Account />
             </PublicLayout>
           ),
           loader: authProtectedGuard,

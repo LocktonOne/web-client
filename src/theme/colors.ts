@@ -18,7 +18,7 @@ export const lightPalette: PaletteOptions = {
     dark: '#161616',
     main: '#202020',
     light: '#D2D2D2',
-    lighter: '#F4F4F4',
+    lighter: '#ECEFF3',
     contrastText: '#FFFFFF',
   },
   success: {
