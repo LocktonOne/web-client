@@ -1,3 +1,4 @@
+import { PROVIDERS } from '@distributedlab/w3p'
 import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
@@ -6,8 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
+import { useKycUser } from '@/hooks/kyc/user'
+import { web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
+import { RequestDescriptionCompanyKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
+import { BlobUtil } from '@/utils'
 
 type Props = {
   isActive: boolean
@@ -23,6 +28,7 @@ enum FieldNames {
 const KycCompanyForm = ({ isActive, handleChange }: Props) => {
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
+  const { init, loadAllKyc, requestKYCRole } = useKycUser()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.CompanyName]: string
@@ -56,7 +62,24 @@ const KycCompanyForm = ({ isActive, handleChange }: Props) => {
   const submit = async () => {
     disableForm()
     try {
-      bus.emit(BusEvents.success, { message: 'Success log in' })
+      if (!web3Store.provider?.address) {
+        await web3Store.connect(PROVIDERS.Metamask)
+      }
+      const kycBlob = new BlobUtil<RequestDescriptionCompanyKyc>({
+        rawData: {
+          companyName: formState[FieldNames.CompanyName],
+          companyAddress: formState[FieldNames.CompanyAddress],
+          companyMainActivity: formState[FieldNames.CompanyMainActivity],
+        },
+        owner: web3Store.provider?.address,
+      })
+      await kycBlob.create()
+
+      await init()
+
+      await requestKYCRole(kycBlob.id!)
+      await loadAllKyc()
+      bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {
       ErrorHandler.process(error)
     }

@@ -1,5 +1,6 @@
 export * from './device'
 export * from './error-handler'
+export * from './ethereum'
 export * from './event-bus'
 export * from './format'
 export * from './metamask'

@@ -1,3 +1,4 @@
+import { PROVIDERS } from '@distributedlab/w3p'
 import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
@@ -6,8 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
+import { useKycUser } from '@/hooks/kyc/user'
+import { web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
+import { RequestDescriptionKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
+import { BlobUtil } from '@/utils'
 
 type Props = {
   isActive: boolean
@@ -24,6 +29,7 @@ enum FieldNames {
 const KycPersonalForm = ({ isActive, handleChange }: Props) => {
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
+  const { requestKYCRole, loadAllKyc, init } = useKycUser()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.Name]: string
@@ -50,7 +56,7 @@ const KycPersonalForm = ({ isActive, handleChange }: Props) => {
     control,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
-      [FieldNames.Name]: yup.string().email().required(),
+      [FieldNames.Name]: yup.string().required(),
       [FieldNames.Surname]: yup.string().required(),
       [FieldNames.PassportSerialNumber]: yup.string().required(),
       [FieldNames.PassportIssuanceDate]: yup.string().required(),
@@ -60,6 +66,25 @@ const KycPersonalForm = ({ isActive, handleChange }: Props) => {
   const submit = async () => {
     disableForm()
     try {
+      if (!web3Store.provider?.address) {
+        await web3Store.connect(PROVIDERS.Metamask)
+      }
+      const kycBlob = new BlobUtil<RequestDescriptionKyc>({
+        rawData: {
+          firstName: formState[FieldNames.Name],
+          lastName: formState[FieldNames.Surname],
+          passportSerialNumber: formState[FieldNames.PassportSerialNumber],
+          passportIssuanceDate: formState[FieldNames.PassportIssuanceDate],
+        },
+        owner: web3Store.provider?.address,
+      })
+      await kycBlob.create()
+
+      await init()
+
+      await requestKYCRole(kycBlob.id!)
+      await loadAllKyc()
+
       bus.emit(BusEvents.success, { message: 'Success log in' })
     } catch (error) {
       ErrorHandler.process(error)

@@ -1,29 +1,44 @@
+import { config } from '@config'
+import { PROVIDERS } from '@distributedlab/w3p'
 import { CircularProgress, CssBaseline, Stack, ThemeProvider } from '@mui/material'
 import { FC, HTMLAttributes, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
+import { initApi } from '@/api/clients'
+import { init as initGraph } from '@/api/graphql'
+import { bearerAttachInterceptor, refreshTokenInterceptor } from '@/api/interceptors'
 import { ToastsManager } from '@/contexts'
 import { ErrorHandler } from '@/helpers'
-import { useViewportSizes } from '@/hooks'
+import { useAuth, useViewportSizes } from '@/hooks'
 import { AppRoutes } from '@/routes'
-import { useUiState } from '@/store'
+import { useUiState, web3Store } from '@/store'
 import { createTheme } from '@/theme'
 
 const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
   const [isAppInitialized, setIsAppInitialized] = useState(false)
 
   const { paletteMode } = useUiState()
+  const { getAccessToken, refreshAccessToken, logout } = useAuth()
 
   useViewportSizes()
 
   const init = useCallback(async () => {
     try {
-      /* empty */
+      initApi(config.API_URL, [
+        {
+          request: bearerAttachInterceptor(getAccessToken),
+          error: refreshTokenInterceptor(getAccessToken, refreshAccessToken, logout),
+        },
+      ])
+      if (!web3Store.provider?.address) {
+        await web3Store.connect(PROVIDERS.Metamask)
+      }
+      initGraph()
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }
 
     setIsAppInitialized(true)
-  }, [])
+  }, [getAccessToken, logout, refreshAccessToken])
 
   const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
 

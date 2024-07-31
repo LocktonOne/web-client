@@ -31,6 +31,8 @@ module.exports = [
       "**/*.md",
       "static/env.js",
       "**/node_modules",
+      "src/types/contracts",
+      "src/types/graphql"
     ],
   },
 

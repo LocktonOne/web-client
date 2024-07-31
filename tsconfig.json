@@ -41,5 +41,5 @@
     "index.d.ts",
     "package.json",
     "src/**/*.json"
-  ]
+  ],
 }
