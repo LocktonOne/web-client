@@ -1,21 +1,16 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
-import { coreApolloClient } from '@/api/graphql'
 import { RequestsStatuses } from '@/enums'
-import { useCoreContracts } from '@/hooks'
-import { web3Store } from '@/store'
-import {
-  GetUserKycRequestsByStatus,
-  type GetUserKycRequestsByStatusQuery,
-  type Kyc,
-  type RequestDescriptionKyc,
-} from '@/types'
-import { BlobUtil } from '@/utils'
+import { createKycRequestsContracts } from '@/modules/sdk'
+import { type Kyc, type RequestDescriptionKyc } from '@/types'
 
-import { useKycRequests } from './requests'
+import { coreApolloClient } from '../api'
+import { coreContracts } from '../globals'
+import { GetUserKycRequestsByStatus, GetUserKycRequestsByStatusQuery } from '../types'
+import { BlobUtil } from '../utils'
 
 export const useKycUser = () => {
-  const [contractAddress, setContractAddress] = useState('')
+  const contractAddress = useRef('')
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -26,14 +21,6 @@ export const useKycUser = () => {
 
   const [isLoaded, setIsLoaded] = useState(false)
   const [isLoadFailed, setIsLoadedFailed] = useState(false)
-
-  const coreContracts = useCoreContracts(web3Store.provider!, web3Store.provider!.rawProvider!)
-
-  const kycRequestsContract = useKycRequests(
-    contractAddress,
-    coreContracts.provider,
-    coreContracts.rawProvider,
-  )
 
   const loadActualKyc = async () => {
     const { data } = await coreApolloClient.query<GetUserKycRequestsByStatusQuery>({
@@ -120,6 +107,11 @@ export const useKycUser = () => {
   }
 
   const dropKYCRequest = async () => {
+    const kycRequestsContract = createKycRequestsContracts(
+      contractAddress.current,
+      coreContracts.rawProvider,
+      coreContracts.provider,
+    )
     setIsSubmitting(true)
 
     await kycRequestsContract.dropKYCRequest()
@@ -127,19 +119,30 @@ export const useKycUser = () => {
   }
 
   const requestKYCRole = async (description: string) => {
+    const kycRequestsContract = createKycRequestsContracts(
+      contractAddress.current,
+      coreContracts.rawProvider,
+      coreContracts.provider,
+    )
+
     setIsSubmitting(true)
     await kycRequestsContract.requestKYC(description)
     setIsSubmitting(false)
   }
 
   const usersRequestInfo = async () => {
+    const kycRequestsContract = createKycRequestsContracts(
+      contractAddress.current,
+      coreContracts.rawProvider,
+      coreContracts.provider,
+    )
+
     await kycRequestsContract.usersRequestInfo(coreContracts.provider.address!)
   }
 
   const init = async (extensionName?: string) => {
-    await coreContracts.initContracts()
-    setContractAddress(
-      await coreContracts.getContractAddressByName(extensionName ?? 'REVIEWABLE_REQUESTS'),
+    contractAddress.current = await coreContracts.getContractAddressByName(
+      extensionName ?? 'KYC_REQUESTS',
     )
   }
 

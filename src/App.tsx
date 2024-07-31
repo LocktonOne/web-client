@@ -4,11 +4,11 @@ import { CircularProgress, CssBaseline, Stack, ThemeProvider } from '@mui/materi
 import { FC, HTMLAttributes, memo, useCallback, useEffect, useMemo, useState } from 'react'
 
 import { initApi } from '@/api/clients'
-import { init as initGraph } from '@/api/graphql'
 import { bearerAttachInterceptor, refreshTokenInterceptor } from '@/api/interceptors'
 import { ToastsManager } from '@/contexts'
 import { ErrorHandler } from '@/helpers'
 import { useAuth, useViewportSizes } from '@/hooks'
+import { init as initGraph, initCoreContracts } from '@/modules/sdk'
 import { AppRoutes } from '@/routes'
 import { useUiState, web3Store } from '@/store'
 import { createTheme } from '@/theme'
@@ -33,6 +33,7 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
         await web3Store.connect(PROVIDERS.Metamask)
       }
       initGraph()
+      await initCoreContracts(web3Store.provider!, web3Store.provider!.rawProvider!)
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }

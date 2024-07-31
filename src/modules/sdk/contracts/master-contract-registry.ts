@@ -1,0 +1,32 @@
+import { RawProvider } from '@distributedlab/w3p'
+
+import { createContract } from '../helpers'
+import { MasterContractsRegistry__factory as MasterContractsRegistry } from '../types'
+
+export const createMasterContractsRegistry = (address: string, rawProvider: RawProvider) => {
+  const { contractInstance, contractInterface } = createContract(
+    address,
+    rawProvider,
+    MasterContractsRegistry,
+  )
+  return {
+    contractInstance,
+    contractInterface,
+
+    getContractAddressByName: async (name: string) => {
+      return contractInstance.getContract(name)
+    },
+
+    getMasterAccessManagement: async () => {
+      return contractInstance.getMasterAccessManagement()
+    },
+
+    getConstantsRegistry: async () => {
+      return contractInstance.getConstantsRegistry()
+    },
+
+    getReviewableRequests: async () => {
+      return contractInstance.getReviewableRequests()
+    },
+  }
+}

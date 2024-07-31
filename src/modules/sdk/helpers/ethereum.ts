@@ -1,7 +1,7 @@
-import { BN, DECIMALS } from "@distributedlab/tools";
-import type { TransactionRequest } from "@ethersproject/abstract-provider";
-import type { Deferrable } from "@ethersproject/properties";
-import { type providers } from "ethers";
+import { BN, DECIMALS } from '@distributedlab/tools'
+import type { TransactionRequest } from '@ethersproject/abstract-provider'
+import type { Deferrable } from '@ethersproject/properties'
+import { type providers } from 'ethers'
 
 export async function increaseGasLimit(
   addressFrom: string,

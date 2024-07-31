@@ -7,12 +7,11 @@ import { useTranslation } from 'react-i18next'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
-import { useKycUser } from '@/hooks/kyc/user'
+import { BlobUtil, useKycUser } from '@/modules/sdk'
 import { web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
 import { RequestDescriptionCompanyKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
-import { BlobUtil } from '@/utils'
 
 type Props = {
   isActive: boolean

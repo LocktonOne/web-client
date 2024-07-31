@@ -12,7 +12,7 @@ const config: CodegenConfig = {
     path.resolve(__dirname, `./graphql/**/**/*.graphql`),
   ],
   generates: {
-    [`src/types/graphql/index.ts`]: {
+    [`src/modules/sdk/types/graphql/index.ts`]: {
       plugins: ['typescript', 'typescript-operations', 'typescript-document-nodes'],
     },
   },
