@@ -22,9 +22,11 @@
     "lint:scripts": "eslint \"{src,config}/**/*.{js,ts,jsx,tsx}\" --cache --fix --max-warnings=0",
     "preview": "vite preview",
     "rsc": "node scripts/release-sanity-check.mjs",
-    "generate:ether-types": "typechain --target=ethers-v5 'abis/**/*.json' --out-dir src/types/contracts"
+    "generate-ether-types": "typechain --target=ethers-v5 'abi/**/*.json' --out-dir src/modules/sdk/types/contracts",
+    "generate-graphql-types": "graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.1",
     "@distributedlab/jac": "^1.0.0-rc.15",
     "@distributedlab/tools": "^1.0.0-rc.15",
     "@distributedlab/w3p": "^1.0.0-rc.15",
@@ -33,6 +35,10 @@
     "@dnd-kit/sortable": "^8.0.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.0",
+    "@graphql-codegen/typescript-document-nodes": "^4.0.0",
+    "@graphql-codegen/typescript-operations": "^4.0.0",
     "@hookform/resolvers": "^3.6.0",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
@@ -42,6 +48,8 @@
     "copy-to-clipboard": "^3.3.3",
     "crypto-browserify": "^3.12.0",
     "ethers": "^5.7.2",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
     "i18next": "^23.11.5",
     "jdenticon": "^3.3.0",
     "lodash": "^4.17.21",

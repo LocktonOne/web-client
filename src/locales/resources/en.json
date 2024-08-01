@@ -93,7 +93,17 @@
     "passport-number": "Passport serial number",
     "passport-date": "Passport issuance date",
     "user-did": "DID"
-
-
+  },
+  "kyc-page": {
+    "title": "KYC procedure",
+    "subtitle": "Please provide some information to set up your account"
+  },
+  "kyc-personal-form": {
+    "title": "Personal",
+    "submit-btn": "Confirm"
+  },
+  "kyc-company-form": {
+    "title": "Corporate",
+    "submit-btn": "Confirm"
   }
 }

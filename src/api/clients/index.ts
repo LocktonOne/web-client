@@ -1,7 +1,17 @@
-import { JsonApiClient } from '@distributedlab/jac'
+import { FetcherInterceptor } from '@distributedlab/fetcher'
+import { JsonApiClient, type JsonApiClientConfig } from '@distributedlab/jac'
+export let api: JsonApiClient
 
-import { config } from '@/config'
-
-export const api = new JsonApiClient({
-  baseUrl: config.API_URL,
-})
+export const initApi = (
+  baseUrl: string,
+  interceptors?: FetcherInterceptor[],
+  config?: JsonApiClientConfig,
+) => {
+  api = new JsonApiClient(
+    {
+      baseUrl: baseUrl,
+      ...(config ? { config } : {}),
+    },
+    [...(interceptors?.length ? interceptors : [])],
+  )
+}
