@@ -1,6 +1,4 @@
-export { default as AccountInformation } from './AccountInformation'
 export { default as AdminNavbar } from './AdminNavbar'
-export { default as AdminPermissionModal } from './AdminPermissionModal'
 export { default as NoDataView } from './NoDataView'
 export { default as PageTitles } from './PageTitles'
 export { default as ProfileMenu } from './ProfileMenu'

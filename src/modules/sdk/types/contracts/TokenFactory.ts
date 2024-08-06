@@ -85,7 +85,7 @@ export interface TokenFactoryInterface extends utils.Interface {
     "getInjector()": FunctionFragment;
     "requestTERC20((string,string,string,uint8,uint256),string)": FunctionFragment;
     "requestTERC721((string,string,string,string,uint256),string)": FunctionFragment;
-    "setDependencies(address)": FunctionFragment;
+    "setDependencies(address,bytes)": FunctionFragment;
     "setInjector(address)": FunctionFragment;
   };
 
@@ -142,7 +142,7 @@ export interface TokenFactoryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setDependencies",
-    values: [string]
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "setInjector", values: [string]): string;
 
@@ -192,8 +192,8 @@ export interface TokenFactoryInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "DeployedTERC20(address)": EventFragment;
-    "DeployedTERC721(address)": EventFragment;
+    "DeployedTERC20(address,(string,string,string,uint8,uint256))": EventFragment;
+    "DeployedTERC721(address,(string,string,string,string,uint256))": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "DeployedTERC20"): EventFragment;
@@ -202,9 +202,10 @@ export interface TokenFactoryInterface extends utils.Interface {
 
 export interface DeployedTERC20EventObject {
   token: string;
+  params: ITERC20.ConstructorParamsStructOutput;
 }
 export type DeployedTERC20Event = TypedEvent<
-  [string],
+  [string, ITERC20.ConstructorParamsStructOutput],
   DeployedTERC20EventObject
 >;
 
@@ -212,9 +213,10 @@ export type DeployedTERC20EventFilter = TypedEventFilter<DeployedTERC20Event>;
 
 export interface DeployedTERC721EventObject {
   token: string;
+  params: ITERC721.ConstructorParamsStructOutput;
 }
 export type DeployedTERC721Event = TypedEvent<
-  [string],
+  [string, ITERC721.ConstructorParamsStructOutput],
   DeployedTERC721EventObject
 >;
 
@@ -267,7 +269,7 @@ export interface TokenFactory extends BaseContract {
 
     getInjector(
       overrides?: CallOverrides
-    ): Promise<[string] & { _injector: string }>;
+    ): Promise<[string] & { injector_: string }>;
 
     requestTERC20(
       params_: ITERC20.ConstructorParamsStruct,
@@ -283,11 +285,12 @@ export interface TokenFactory extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -326,11 +329,12 @@ export interface TokenFactory extends BaseContract {
 
   setDependencies(
     registryAddress_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setInjector(
-    _injector: string,
+    injector_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -369,18 +373,25 @@ export interface TokenFactory extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setInjector(_injector: string, overrides?: CallOverrides): Promise<void>;
+    setInjector(injector_: string, overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
-    "DeployedTERC20(address)"(token?: null): DeployedTERC20EventFilter;
-    DeployedTERC20(token?: null): DeployedTERC20EventFilter;
+    "DeployedTERC20(address,(string,string,string,uint8,uint256))"(
+      token?: null,
+      params?: null
+    ): DeployedTERC20EventFilter;
+    DeployedTERC20(token?: null, params?: null): DeployedTERC20EventFilter;
 
-    "DeployedTERC721(address)"(token?: null): DeployedTERC721EventFilter;
-    DeployedTERC721(token?: null): DeployedTERC721EventFilter;
+    "DeployedTERC721(address,(string,string,string,string,uint256))"(
+      token?: null,
+      params?: null
+    ): DeployedTERC721EventFilter;
+    DeployedTERC721(token?: null, params?: null): DeployedTERC721EventFilter;
   };
 
   estimateGas: {
@@ -418,11 +429,12 @@ export interface TokenFactory extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -468,11 +480,12 @@ export interface TokenFactory extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

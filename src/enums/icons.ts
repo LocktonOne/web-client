@@ -72,6 +72,7 @@ export enum Icons {
   CopySimple = 'copy-simple',
   Company = 'company',
   Discord = 'discord',
+  DeployedContracts = 'deployed-contracts',
   DotsSixVertical = 'dots-six-vertical',
   DotsThreeOutline = 'dots-three-outline',
   Eye = 'eye',

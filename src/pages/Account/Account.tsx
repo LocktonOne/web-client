@@ -2,10 +2,12 @@ import { IconButton, Stack, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
-import { AccountInformation, PageTitles } from '@/common'
+import { PageTitles } from '@/common'
 import { Icons } from '@/enums'
 import { useWalletState } from '@/store'
 import { UiIcon } from '@/ui'
+
+import { AccountInformation } from './components'
 
 const userInfo = {
   type: 'unverified',

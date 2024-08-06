@@ -106,10 +106,10 @@ export const createMasterAccessManagement = (
         to: address,
         data,
       }
-
+      // TODO: Fix gas limit
       return provider.signAndSendTx({
         ...txBody,
-        gasLimit: await increaseGasLimit(provider.address!, providerInstance, txBody, 1.5),
+        gasLimit: 250000,
       })
     },
 

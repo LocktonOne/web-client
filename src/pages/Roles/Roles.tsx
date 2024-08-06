@@ -2,8 +2,9 @@ import { Button, IconButton, InputAdornment, Stack, useTheme } from '@mui/materi
 import { HTMLAttributes, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { AdminPermissionModal, PageTitles } from '@/common'
+import { PageTitles } from '@/common'
 import { Icons } from '@/enums'
+import { AdminPermissionModal } from '@/modals'
 import { UiIcon, UiTextField } from '@/ui'
 type Props = HTMLAttributes<HTMLDivElement>
 
