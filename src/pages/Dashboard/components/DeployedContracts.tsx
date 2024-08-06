@@ -1,10 +1,9 @@
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
+import { NoDataView } from '@/common'
 import { Icons } from '@/enums'
 import { UiIcon } from '@/ui'
-
-import NoDataView from './NoDataView'
 
 type Props = {
   handleOpenModal: () => void

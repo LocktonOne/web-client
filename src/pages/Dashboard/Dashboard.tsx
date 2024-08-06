@@ -3,10 +3,12 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { DeployedContracts, PageTitles, ProfileMenu, UserBalance } from '@/common'
-import DeployNewContractModal from '@/common/DeployNewContractModal'
+import { PageTitles, ProfileMenu } from '@/common'
 import { RoutePaths } from '@/enums'
+import { DeployNewContractModal } from '@/modals'
 import { useWalletState } from '@/store'
+
+import { DeployedContracts, UserBalance } from './components'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0)

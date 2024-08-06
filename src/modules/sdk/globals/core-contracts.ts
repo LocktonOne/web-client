@@ -37,7 +37,7 @@ export class CoreContracts {
 
   async loadCoreContractsAddresses() {
     const masterContractsRegistry = this.getMasterContractsRegistryContract()
-
+    // FIXME: wait graph
     // const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
     //   query: GetCoreContracts,
     // })

@@ -77,6 +77,8 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const submit = async () => {
     disableForm()
     try {
+      // FIXME: wait for contracts
+
       // await requestTokenDeployment(
       //   formState[FieldNames.TokenName],
       //   formState[FieldNames.TokenSymbol],
