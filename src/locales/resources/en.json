@@ -105,5 +105,30 @@
   "kyc-company-form": {
     "title": "Corporate",
     "submit-btn": "Confirm"
+  },
+  "user-balance": {
+    "my-balance": "My Balance",
+    "send": "Send"
+  },
+  "deployed-contracts": {
+    "title": "Deployed Contracts",
+    "new-contract": "New Contract",
+    "view-all": "See All"
+  },
+  "new-contract-modal": {
+    "title": "Deploy new Contract",
+    "modal-desc": "Please fill in all required fields",
+    "token-name": "Token name",
+    "token-symbol": "Token symbol",
+    "amount": "Amount of tokens",
+    "submit-btn": "Confirm"
+  },
+  "send-tokens-modal": {
+    "title": "Send tokens",
+    "modal-desc": "Please fill in all required fields",
+    "address": "Recipient address",
+    "token-name": "Select token",
+    "amount": "Amount of tokens",
+    "submit-btn": "Confirm"
   }
 }

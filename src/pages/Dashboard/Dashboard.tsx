@@ -3,12 +3,15 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { PageTitles, ProfileMenu } from '@/common'
+import { DeployedContracts, PageTitles, ProfileMenu, UserBalance } from '@/common'
+import DeployNewContractModal from '@/common/DeployNewContractModal'
 import { RoutePaths } from '@/enums'
 import { useWalletState } from '@/store'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0)
+  const [isDeployContractOpen, setIsDeployContractOpen] = useState(false)
+
   const { t } = useTranslation()
   const { palette } = useTheme()
   const { wallet } = useWalletState()
@@ -47,6 +50,14 @@ const Dashboard = () => {
           <Tab label='24 hours' />
         </Tabs>
       </Stack>
+      <Stack direction='row' mt={6} gap={5} width='100%'>
+        <UserBalance />
+        <DeployedContracts handleOpenModal={() => setIsDeployContractOpen(true)} />
+      </Stack>
+      <DeployNewContractModal
+        isOpen={isDeployContractOpen}
+        handleClose={() => setIsDeployContractOpen(false)}
+      />
     </Stack>
   )
 }
