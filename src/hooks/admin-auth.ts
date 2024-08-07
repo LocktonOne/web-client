@@ -8,19 +8,23 @@ import {
   login as toolkitLogin,
   refreshToken as toolkitRefreshToken,
 } from '@/api/modules'
+import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
+import { coreContracts } from '@/modules/sdk'
 import { useWeb3State, web3Store } from '@/store'
 import { authStore, useAuthState } from '@/store/modules/auth.module'
 
 export const useAdminAuth = () => {
   const { provider } = useWeb3State()
-  const { tokens } = useAuthState()
+  const { tokens, roles } = useAuthState()
 
   const isAuthorized = useMemo(() => {
     if (!tokens.accessToken) return false
 
     return !isExpired(tokens.accessToken)
   }, [tokens.accessToken])
+
+  const isAdmin = useMemo(() => roles.includes(Roles.ADMIN), [roles])
 
   const logout = useCallback(async () => {
     authStore.addTokensGroup({ id: '', type: 'token', refreshToken: '', accessToken: '' })
@@ -30,6 +34,9 @@ export const useAdminAuth = () => {
 
   const login = useCallback(async (accountAddress: string, signedMessage: string) => {
     const { accessToken, refreshToken } = await toolkitLogin(accountAddress, signedMessage)
+    const MasterAccessManagementContract = coreContracts.getMasterAccessManagementContract()
+    const roles = await MasterAccessManagementContract.getUserRoles(accountAddress)
+    authStore.addRole(roles)
     authStore.addTokensGroup({
       id: '',
       type: 'token',
@@ -66,6 +73,7 @@ export const useAdminAuth = () => {
 
   return {
     isAuthorized,
+    isAdmin,
     login,
     logout,
     refreshToken,

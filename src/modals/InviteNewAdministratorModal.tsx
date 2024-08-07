@@ -1,7 +1,6 @@
 import {
   Button,
   CircularProgress,
-  Grid,
   IconButton,
   Modal,
   Stack,
@@ -12,9 +11,10 @@ import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { BusEvents, Icons } from '@/enums'
+import { BusEvents, Icons, Roles } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
+import { coreContracts } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
 import { UiIcon, UiTextField } from '@/ui'
 
@@ -36,30 +36,24 @@ const style = {
 }
 
 enum FieldNames {
-  TokenName = 'tokenName',
-  TokenSymbol = 'tokenSymbol',
-  AmountToken = 'amountTokens',
+  Address = 'address',
 }
 
-const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
+const InviteNewAdministratorModal = ({ isOpen, handleClose }: Props) => {
   const { palette } = useTheme()
   const { t } = useTranslation()
 
   const DEFAULT_VALUES = useMemo<{
-    [FieldNames.TokenName]: string
-    [FieldNames.TokenSymbol]: string
-    [FieldNames.AmountToken]: number
+    [FieldNames.Address]: string
   }>(
     () => ({
-      [FieldNames.TokenName]: '',
-      [FieldNames.TokenSymbol]: '',
-      [FieldNames.AmountToken]: 0,
+      [FieldNames.Address]: '',
     }),
     [],
   )
 
   const {
-    // formState,
+    formState,
     isFormDisabled,
     handleSubmit,
     disableForm,
@@ -68,22 +62,23 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
     control,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
-      [FieldNames.TokenName]: yup.string().required(),
-      [FieldNames.TokenSymbol]: yup.string().required(),
-      [FieldNames.AmountToken]: yup.number().required(),
+      [FieldNames.Address]: yup
+        .string()
+        .matches(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid ether address')
+        .required(),
     }),
   )
+
+  const addRole = async (addr: string) => {
+    const masterAccess = coreContracts.getMasterAccessManagementContract()
+    await masterAccess.grantRoles(addr, [Roles.ADMIN])
+  }
 
   const submit = async () => {
     disableForm()
     try {
-      // FIXME: wait for contracts
-
-      // await requestTokenDeployment(
-      //   formState[FieldNames.TokenName],
-      //   formState[FieldNames.TokenSymbol],
-      //   formState[FieldNames.AmountToken],
-      // )
+      await addRole(formState[FieldNames.Address])
+      handleClose()
       bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {
       ErrorHandler.process(error)
@@ -97,67 +92,34 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
         <Stack sx={{ opacity: isFormDisabled ? 0.5 : 1 }}>
           <Stack direction='row' justifyContent='space-between'>
             <Typography variant='h5' fontWeight={FontWeight.Regular}>
-              {t('new-contract-modal.title')}
+              {t('new-admin-modal.title')}
             </Typography>
             <IconButton onClick={handleClose}>
               <UiIcon name={Icons.Close} color={palette.primary.light} />
             </IconButton>
           </Stack>
           <Typography sx={{ fontSize: 16, color: palette.primary.light }} mt={7}>
-            {t('new-contract-modal.modal-desc')}
+            {t('new-admin-modal.desc')}
           </Typography>
         </Stack>
         <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
-          <Grid container mt={7} spacing={6}>
-            <Grid item xs={6}>
-              <Controller
-                name={FieldNames.TokenName}
-                control={control}
-                render={({ field }) => (
-                  <UiTextField
-                    {...field}
-                    placeholder='Enter token name'
-                    label={t('new-contract-modal.token-name')}
-                    errorMessage={getErrorMessage(FieldNames.TokenName)}
-                    disabled={isFormDisabled}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Controller
-                name={FieldNames.TokenSymbol}
-                control={control}
-                render={({ field }) => (
-                  <UiTextField
-                    {...field}
-                    placeholder='Enter token symbol'
-                    label={t('new-contract-modal.token-symbol')}
-                    errorMessage={getErrorMessage(FieldNames.TokenSymbol)}
-                    disabled={isFormDisabled}
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
           <Stack mt={4}>
             <Controller
-              name={FieldNames.AmountToken}
+              name={FieldNames.Address}
               control={control}
               render={({ field }) => (
                 <UiTextField
                   {...field}
-                  fullWidth
-                  placeholder='Enter amoun of token'
-                  label={t('new-contract-modal.amount')}
-                  errorMessage={getErrorMessage(FieldNames.AmountToken)}
+                  placeholder='Enter recipient address'
+                  label={t('new-admin-modal.address')}
+                  errorMessage={getErrorMessage(FieldNames.Address)}
                   disabled={isFormDisabled}
                 />
               )}
             />
           </Stack>
           <Button type='submit' disabled={isFormDisabled} sx={{ mt: 8, width: 160 }}>
-            {t('new-contract-modal.submit-btn')}
+            {t('new-admin-modal.submit-btn')}
           </Button>
         </form>
         {isFormDisabled && (
@@ -168,4 +130,4 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   )
 }
 
-export default DeployNewContractModal
+export default InviteNewAdministratorModal

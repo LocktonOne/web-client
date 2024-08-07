@@ -127,6 +127,10 @@ export const createMasterAccessManagement = (
       })
     },
 
+    getUserRoles: async (addr: string) => {
+      return contractInstance.getUserRoles(addr)
+    },
+
     getMasterRoleId: async () => {
       return contractInstance.MASTER_ROLE()
     },

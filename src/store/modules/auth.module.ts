@@ -12,12 +12,14 @@ type AuthState = {
     accessToken: string
     refreshToken: string
   }
+  roles: string[]
 }
 
 const [authStore, useAuthState] = createStore(
   'auth',
   {
     tokens: {},
+    roles: [''],
   } as AuthState,
   state => ({
     addTokensGroup: (authTokensGroup: AuthTokensGroup) => {
@@ -25,6 +27,9 @@ const [authStore, useAuthState] = createStore(
         accessToken: authTokensGroup.accessToken,
         refreshToken: authTokensGroup.refreshToken,
       }
+    },
+    addRole: (roles: string[]) => {
+      state.roles = roles
     },
   }),
 )

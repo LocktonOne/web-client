@@ -27,7 +27,7 @@ export const AppRoutes = () => {
   const Account = lazy(() => import('@/pages/Account'))
   const Kyc = lazy(() => import('@/pages/Kyc'))
 
-  const { isAuthorized } = useAdminAuth()
+  const { isAuthorized, isAdmin } = useAdminAuth()
   const { isLoggedIn } = useAuth()
 
   const signInGuardAdmin = useCallback(
@@ -35,10 +35,11 @@ export const AppRoutes = () => {
       const requestUrl = new URL(request.url)
 
       const from = requestUrl.searchParams.get('from')
-
-      return isAuthorized ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Roles) : null
+      return isAuthorized && isAdmin
+        ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Roles)
+        : null
     },
-    [isAuthorized],
+    [isAdmin, isAuthorized],
   )
 
   const signInGuard = useCallback(
@@ -58,7 +59,7 @@ export const AppRoutes = () => {
       // If the user is not logged in and tries to access protected route, we redirect
       // them to sign in with a `from` parameter that allows login to redirect back
       // to this page upon successful authentication
-      if (!isAuthorized) {
+      if (!isAuthorized || !isAdmin) {
         const requestUrl = new URL(request.url)
         requestUrl.searchParams.set('from', requestUrl.pathname)
 
@@ -67,7 +68,7 @@ export const AppRoutes = () => {
 
       return null
     },
-    [isAuthorized],
+    [isAdmin, isAuthorized],
   )
 
   const authProtectedGuard = useCallback(

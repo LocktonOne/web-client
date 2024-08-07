@@ -9,9 +9,9 @@ import { UiIcon } from '@/ui'
 
 const AdminLoginForm = () => {
   const { t } = useTranslation()
-  const { spacing } = useTheme()
-  const { palette, typography } = useTheme()
+  const { palette, typography, spacing } = useTheme()
   const { authorize } = useAdminAuth()
+  const { isAuthorized, isAdmin } = useAdminAuth()
 
   const tryConnect = async (providerType: PROVIDERS) => {
     try {
@@ -39,6 +39,11 @@ const AdminLoginForm = () => {
       >
         {t('login-form.admin-login-btn')}
       </Button>
+      {isAuthorized && !isAdmin && (
+        <Typography variant='body3' color={palette.error.main}>
+          {t('login-form.admin-error-msg')}
+        </Typography>
+      )}
     </Stack>
   )
 }
