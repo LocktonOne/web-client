@@ -28,7 +28,8 @@
     "admin-login-btn": "Sign In",
     "title": "Log In to your account",
     "desc": "Enter your details to login.",
-    "submit-btn": "Sign In"
+    "submit-btn": "Sign In",
+    "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet."
   },
   "roles-page": {
     "title": "Roles",
@@ -42,7 +43,9 @@
   },
   "administrators-page": {
     "title": "Administrators",
-    "subtitle": "All existing Locton One system administrators can be seen in the table below"
+    "subtitle": "All existing Locton One system administrators can be seen in the table below",
+    "search": "Search",
+    "invite-admin": "Invite Admin"
   },
   "kyc-requests-page": {
     "title": "KYC requests",
@@ -129,6 +132,12 @@
     "address": "Recipient address",
     "token-name": "Select token",
     "amount": "Amount of tokens",
+    "submit-btn": "Confirm"
+  },
+  "new-admin-modal": {
+    "title": "Invite new administrator",
+    "desc": "Please enter all required information",
+    "address": "Admin’s address",
     "submit-btn": "Confirm"
   }
 }

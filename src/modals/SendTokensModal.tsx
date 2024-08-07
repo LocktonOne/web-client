@@ -99,7 +99,7 @@ const SendTokensModal = ({ isOpen, handleClose }: Props) => {
   return (
     <Modal open={isOpen} onClose={handleClose} aria-labelledby='Deploy new Contract'>
       <Stack sx={style}>
-        <Stack>
+        <Stack sx={{ opacity: isFormDisabled ? 0.5 : 1 }}>
           <Stack direction='row' justifyContent='space-between'>
             <Typography variant='h5' fontWeight={FontWeight.Regular}>
               {t('send-tokens-modal.title')}

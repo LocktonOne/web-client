@@ -8,7 +8,7 @@ import { bearerAttachInterceptor, refreshTokenInterceptor } from '@/api/intercep
 import { ToastsManager } from '@/contexts'
 import { ErrorHandler } from '@/helpers'
 import { useAuth, useViewportSizes } from '@/hooks'
-import { init as initGraph, initCoreContracts } from '@/modules/sdk'
+import { coreContracts, init as initGraph, initCoreContracts } from '@/modules/sdk'
 import { AppRoutes } from '@/routes'
 import { useUiState, web3Store } from '@/store'
 import { createTheme } from '@/theme'
@@ -34,6 +34,7 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
       }
       initGraph()
       await initCoreContracts(web3Store.provider!, web3Store.provider!.rawProvider!)
+      await coreContracts.loadCoreContractsAddresses()
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }
