@@ -1,24 +1,31 @@
-import { Stack, Tab, Tabs, useTheme } from '@mui/material'
-import React, { useState } from 'react'
+import { CircularProgress, Stack, Tab, Tabs, useTheme } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
 import { PageTitles, ProfileMenu } from '@/common'
+import { tokensListContext } from '@/contexts'
 import { RoutePaths } from '@/enums'
+import { useTokens } from '@/hooks'
 import { useWalletState } from '@/store'
 
 import { DeployedContracts, UserBalance } from './components'
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0)
-
   const { t } = useTranslation()
   const { palette } = useTheme()
   const { wallet } = useWalletState()
+  const { loadTokens, isLoading, tokensList, setTokensList, setIsLoading } = useTokens()
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue)
   }
+
+  useEffect(() => {
+    loadTokens()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Stack sx={{ alignItems: 'center', py: 10, px: 15 }}>
@@ -51,8 +58,20 @@ const Dashboard = () => {
         </Tabs>
       </Stack>
       <Stack direction='row' mt={6} gap={5} width='100%'>
-        <UserBalance />
-        <DeployedContracts />
+        {!isLoading ? (
+          <tokensListContext.Provider
+            value={{ setTokensList, setIsLoading, isLoading, tokensList, loadTokens }}
+          >
+            <UserBalance />
+            <DeployedContracts />
+          </tokensListContext.Provider>
+        ) : (
+          <Stack
+            sx={{ width: '100%', height: 500, alignItems: 'center', justifyContent: 'center' }}
+          >
+            <CircularProgress />
+          </Stack>
+        )}
       </Stack>
     </Stack>
   )

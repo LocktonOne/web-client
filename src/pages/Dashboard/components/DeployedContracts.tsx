@@ -1,27 +1,18 @@
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { NoDataView } from '@/common'
 import { Icons } from '@/enums'
-import { getTokens } from '@/helpers'
+import { useTokensListContext } from '@/hooks'
 import { DeployNewContractModal } from '@/modals'
-import { TokenInfo } from '@/types'
 import { UiIcon } from '@/ui'
 
 const DeployedContracts = () => {
+  const [isDeployContractOpen, setIsDeployContractOpen] = useState(false)
   const { palette } = useTheme()
   const { t } = useTranslation()
-  const [tokenList, setTokenList] = useState<TokenInfo[]>([])
-  const [isDeployContractOpen, setIsDeployContractOpen] = useState(false)
-
-  const loadTokens = async () => {
-    setTokenList(await getTokens())
-  }
-
-  useEffect(() => {
-    loadTokens()
-  }, [])
+  const { tokensList } = useTokensListContext()
 
   return (
     <Stack
@@ -48,8 +39,8 @@ const DeployedContracts = () => {
           height={130}
           gap={2}
         >
-          {tokenList.length ? (
-            tokenList.map((token, idx) => (
+          {tokensList.length ? (
+            tokensList.map((token, idx) => (
               <Stack
                 sx={{
                   border: '1px solid',
@@ -80,10 +71,7 @@ const DeployedContracts = () => {
       </Stack>
       <DeployNewContractModal
         isOpen={isDeployContractOpen}
-        handleClose={async () => {
-          await loadTokens()
-          setIsDeployContractOpen(false)
-        }}
+        handleClose={() => setIsDeployContractOpen(false)}
       />
     </Stack>
   )

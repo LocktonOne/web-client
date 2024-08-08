@@ -14,14 +14,14 @@ import { useTranslation } from 'react-i18next'
 
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
-import { useForm } from '@/hooks'
+import { useForm, useTokensListContext } from '@/hooks'
 import { coreContracts } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
 import { UiIcon, UiTextField } from '@/ui'
 
 type Props = {
   isOpen: boolean
-  handleClose: () => Promise<void>
+  handleClose: () => void
 }
 
 const style = {
@@ -45,6 +45,7 @@ enum FieldNames {
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const { palette } = useTheme()
   const { t } = useTranslation()
+  const { loadTokens } = useTokensListContext()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.TokenName]: string
@@ -89,7 +90,8 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
         permissions: 15,
       }
       await tokenFactory.deployTERC20(tokenParams)
-      await handleClose()
+      await loadTokens()
+      handleClose()
       reset()
       bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {

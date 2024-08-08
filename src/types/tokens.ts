@@ -5,4 +5,5 @@ export type TokenInfo = {
   totalSupply: number
   totalSupplyCap: number
   permissions: string[]
+  address: string
 }

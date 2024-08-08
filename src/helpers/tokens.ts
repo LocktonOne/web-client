@@ -7,7 +7,7 @@ export const getTokens = async () => {
   const _tokenList: TokenInfo[] = []
   for (const token of deployedTokens) {
     const tokenInfo = await tokenFactory.getTokenInfo(token)
-    _tokenList.push(tokenInfo)
+    _tokenList.push({ ...tokenInfo, address: token })
   }
   return _tokenList
 }
