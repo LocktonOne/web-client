@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { getTokens } from '@/helpers'
+import { coreContracts } from '@/modules/sdk'
 import { TokenInfo } from '@/types'
 
 export const useTokens = () => {
@@ -9,7 +9,16 @@ export const useTokens = () => {
 
   const loadTokens = async () => {
     setIsLoading(true)
-    setTokensList(await getTokens())
+
+    const tokenFactory = coreContracts.getTokenFactoryContract()
+    const deployedTokens = await tokenFactory.getDeployedTokens()
+    const _tokenList: TokenInfo[] = []
+    for (const token of deployedTokens) {
+      const tokenInfo = await tokenFactory.getTokenInfo(token)
+      _tokenList.push({ ...tokenInfo, address: token })
+    }
+
+    setTokensList(_tokenList)
     setIsLoading(false)
   }
 
