@@ -8,6 +8,7 @@ import {
   createMasterAccessManagement,
   createMasterContractsRegistry,
   createReviewableRequests,
+  createTokenFactory,
 } from '../contracts'
 // import { GetCoreContracts, type GetCoreContractsQuery } from '../types'
 
@@ -18,6 +19,7 @@ export class CoreContracts {
   #masterAccessManagementContractAddress = ''
   #constantsRegistryContractAddress = ''
   #reviewableRequestsContractAddress = ''
+  #tokenFactoryContractAddress = ''
 
   public masterRoleId = ''
   public bannedRoleId = ''
@@ -53,6 +55,10 @@ export class CoreContracts {
     this.#reviewableRequestsContractAddress =
       // data?.contracts?.find(el => el.id === 'REVIEWABLE_REQUESTS')?.address ||
       await masterContractsRegistry.getReviewableRequests()
+
+    this.#tokenFactoryContractAddress =
+      // data?.contracts?.find(el => el.id === 'TOKEN_FACTORY')?.address ||
+      await masterContractsRegistry.getTokenFactory()
   }
 
   async getContractAddressByName(name: string) {
@@ -97,6 +103,10 @@ export class CoreContracts {
       this.#rawProvider,
       this.#provider,
     )
+  }
+
+  getTokenFactoryContract() {
+    return createTokenFactory(this.#tokenFactoryContractAddress, this.#rawProvider, this.#provider)
   }
 }
 

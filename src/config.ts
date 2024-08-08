@@ -6,6 +6,7 @@ export type Config = {
   BUILD_VERSION: string
   CORE_GRAPH_URL: string
   MASTER_CONTRACTS_REGISTRY_CONTRACT_ADDRESS: string
+  NATIVE_TOKEN: string
 }
 
 export const config: Config = {
@@ -15,4 +16,5 @@ export const config: Config = {
   MASTER_CONTRACTS_REGISTRY_CONTRACT_ADDRESS: import.meta.env
     .VITE_MASTER_CONTRACTS_REGISTRY_CONTRACT_ADDRESS,
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_BUILD_VERSION,
+  NATIVE_TOKEN: import.meta.env.VITE_NATIVE_TOKEN,
 }

@@ -33,6 +33,7 @@ export declare namespace ITERC20 {
     contractURI: string;
     decimals: BigNumberish;
     totalSupplyCap: BigNumberish;
+    permissions: BigNumberish;
   };
 
   export type ConstructorParamsStructOutput = [
@@ -40,13 +41,15 @@ export declare namespace ITERC20 {
     string,
     string,
     number,
-    BigNumber
+    BigNumber,
+    number
   ] & {
     name: string;
     symbol: string;
     contractURI: string;
     decimals: number;
     totalSupplyCap: BigNumber;
+    permissions: number;
   };
 }
 
@@ -58,7 +61,7 @@ export interface TERC20Interface extends utils.Interface {
     "RECEIVE_PERMISSION()": FunctionFragment;
     "SPEND_PERMISSION()": FunctionFragment;
     "TERC20_RESOURCE()": FunctionFragment;
-    "__TERC20_init((string,string,string,uint8,uint256),string)": FunctionFragment;
+    "__TERC20_init((string,string,string,uint8,uint256,uint8),string)": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
@@ -67,13 +70,15 @@ export interface TERC20Interface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "getInjector()": FunctionFragment;
+    "getTokenPermissions()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "mintTo(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "setContractMetadata(string)": FunctionFragment;
-    "setDependencies(address)": FunctionFragment;
+    "setDependencies(address,bytes)": FunctionFragment;
     "setInjector(address)": FunctionFragment;
     "symbol()": FunctionFragment;
+    "tokenPermissions()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "totalSupplyCap()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
@@ -97,6 +102,7 @@ export interface TERC20Interface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "getInjector"
+      | "getTokenPermissions"
       | "increaseAllowance"
       | "mintTo"
       | "name"
@@ -104,6 +110,7 @@ export interface TERC20Interface extends utils.Interface {
       | "setDependencies"
       | "setInjector"
       | "symbol"
+      | "tokenPermissions"
       | "totalSupply"
       | "totalSupplyCap"
       | "transfer"
@@ -165,6 +172,10 @@ export interface TERC20Interface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "getTokenPermissions",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
@@ -179,10 +190,14 @@ export interface TERC20Interface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setDependencies",
-    values: [string]
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "setInjector", values: [string]): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenPermissions",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
     values?: undefined
@@ -246,6 +261,10 @@ export interface TERC20Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getTokenPermissions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
@@ -265,6 +284,10 @@ export interface TERC20Interface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "tokenPermissions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
   ): Result;
@@ -281,11 +304,13 @@ export interface TERC20Interface extends utils.Interface {
   events: {
     "Approval(address,address,uint256)": EventFragment;
     "ContractURIChanged(string)": EventFragment;
+    "Initialized(uint8)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ContractURIChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -311,6 +336,13 @@ export type ContractURIChangedEvent = TypedEvent<
 
 export type ContractURIChangedEventFilter =
   TypedEventFilter<ContractURIChangedEvent>;
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -401,7 +433,11 @@ export interface TERC20 extends BaseContract {
 
     getInjector(
       overrides?: CallOverrides
-    ): Promise<[string] & { _injector: string }>;
+    ): Promise<[string] & { injector_: string }>;
+
+    getTokenPermissions(
+      overrides?: CallOverrides
+    ): Promise<[string[]] & { permissions_: string[] }>;
 
     increaseAllowance(
       spender: string,
@@ -424,15 +460,18 @@ export interface TERC20 extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenPermissions(overrides?: CallOverrides): Promise<[number]>;
 
     totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -502,6 +541,8 @@ export interface TERC20 extends BaseContract {
 
   getInjector(overrides?: CallOverrides): Promise<string>;
 
+  getTokenPermissions(overrides?: CallOverrides): Promise<string[]>;
+
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -523,15 +564,18 @@ export interface TERC20 extends BaseContract {
 
   setDependencies(
     registryAddress_: string,
+    arg1: BytesLike,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setInjector(
-    _injector: string,
+    injector_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
+
+  tokenPermissions(overrides?: CallOverrides): Promise<number>;
 
   totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -601,6 +645,8 @@ export interface TERC20 extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<string>;
 
+    getTokenPermissions(overrides?: CallOverrides): Promise<string[]>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -622,12 +668,15 @@ export interface TERC20 extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setInjector(_injector: string, overrides?: CallOverrides): Promise<void>;
+    setInjector(injector_: string, overrides?: CallOverrides): Promise<void>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
+
+    tokenPermissions(overrides?: CallOverrides): Promise<number>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -663,6 +712,9 @@ export interface TERC20 extends BaseContract {
       contractURI?: null
     ): ContractURIChangedEventFilter;
     ContractURIChanged(contractURI?: null): ContractURIChangedEventFilter;
+
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: string | null,
@@ -727,6 +779,8 @@ export interface TERC20 extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getTokenPermissions(overrides?: CallOverrides): Promise<BigNumber>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -748,15 +802,18 @@ export interface TERC20 extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenPermissions(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -834,6 +891,10 @@ export interface TERC20 extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getTokenPermissions(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -855,15 +916,18 @@ export interface TERC20 extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenPermissions(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

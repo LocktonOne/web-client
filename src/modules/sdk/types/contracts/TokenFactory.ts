@@ -33,6 +33,7 @@ export declare namespace ITERC20 {
     contractURI: string;
     decimals: BigNumberish;
     totalSupplyCap: BigNumberish;
+    permissions: BigNumberish;
   };
 
   export type ConstructorParamsStructOutput = [
@@ -40,37 +41,15 @@ export declare namespace ITERC20 {
     string,
     string,
     number,
-    BigNumber
+    BigNumber,
+    number
   ] & {
     name: string;
     symbol: string;
     contractURI: string;
     decimals: number;
     totalSupplyCap: BigNumber;
-  };
-}
-
-export declare namespace ITERC721 {
-  export type ConstructorParamsStruct = {
-    name: string;
-    symbol: string;
-    contractURI: string;
-    baseURI: string;
-    totalSupplyCap: BigNumberish;
-  };
-
-  export type ConstructorParamsStructOutput = [
-    string,
-    string,
-    string,
-    string,
-    BigNumber
-  ] & {
-    name: string;
-    symbol: string;
-    contractURI: string;
-    baseURI: string;
-    totalSupplyCap: BigNumber;
+    permissions: number;
   };
 }
 
@@ -80,11 +59,13 @@ export interface TokenFactoryInterface extends utils.Interface {
     "EXECUTE_PERMISSION()": FunctionFragment;
     "TOKEN_FACTORY_RESOURCE()": FunctionFragment;
     "TOKEN_REGISTRY_DEP()": FunctionFragment;
-    "deployTERC20((string,string,string,uint8,uint256))": FunctionFragment;
-    "deployTERC721((string,string,string,string,uint256))": FunctionFragment;
+    "countTokens()": FunctionFragment;
+    "deployTERC20((string,string,string,uint8,uint256,uint8))": FunctionFragment;
+    "getDeployedTokens()": FunctionFragment;
     "getInjector()": FunctionFragment;
-    "requestTERC20((string,string,string,uint8,uint256),string)": FunctionFragment;
-    "requestTERC721((string,string,string,string,uint256),string)": FunctionFragment;
+    "isTokenExist(address)": FunctionFragment;
+    "listTokens(uint256,uint256)": FunctionFragment;
+    "requestTERC20((string,string,string,uint8,uint256,uint8),string)": FunctionFragment;
     "setDependencies(address,bytes)": FunctionFragment;
     "setInjector(address)": FunctionFragment;
   };
@@ -95,11 +76,13 @@ export interface TokenFactoryInterface extends utils.Interface {
       | "EXECUTE_PERMISSION"
       | "TOKEN_FACTORY_RESOURCE"
       | "TOKEN_REGISTRY_DEP"
+      | "countTokens"
       | "deployTERC20"
-      | "deployTERC721"
+      | "getDeployedTokens"
       | "getInjector"
+      | "isTokenExist"
+      | "listTokens"
       | "requestTERC20"
-      | "requestTERC721"
       | "setDependencies"
       | "setInjector"
   ): FunctionFragment;
@@ -121,24 +104,32 @@ export interface TokenFactoryInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "countTokens",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "deployTERC20",
     values: [ITERC20.ConstructorParamsStruct]
   ): string;
   encodeFunctionData(
-    functionFragment: "deployTERC721",
-    values: [ITERC721.ConstructorParamsStruct]
+    functionFragment: "getDeployedTokens",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getInjector",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "requestTERC20",
-    values: [ITERC20.ConstructorParamsStruct, string]
+    functionFragment: "isTokenExist",
+    values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "requestTERC721",
-    values: [ITERC721.ConstructorParamsStruct, string]
+    functionFragment: "listTokens",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "requestTERC20",
+    values: [ITERC20.ConstructorParamsStruct, string]
   ): string;
   encodeFunctionData(
     functionFragment: "setDependencies",
@@ -163,11 +154,15 @@ export interface TokenFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "countTokens",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "deployTERC20",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "deployTERC721",
+    functionFragment: "getDeployedTokens",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -175,11 +170,12 @@ export interface TokenFactoryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "requestTERC20",
+    functionFragment: "isTokenExist",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "listTokens", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "requestTERC721",
+    functionFragment: "requestTERC20",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -192,12 +188,10 @@ export interface TokenFactoryInterface extends utils.Interface {
   ): Result;
 
   events: {
-    "DeployedTERC20(address,(string,string,string,uint8,uint256))": EventFragment;
-    "DeployedTERC721(address,(string,string,string,string,uint256))": EventFragment;
+    "DeployedTERC20(address,(string,string,string,uint8,uint256,uint8))": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "DeployedTERC20"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "DeployedTERC721"): EventFragment;
 }
 
 export interface DeployedTERC20EventObject {
@@ -210,17 +204,6 @@ export type DeployedTERC20Event = TypedEvent<
 >;
 
 export type DeployedTERC20EventFilter = TypedEventFilter<DeployedTERC20Event>;
-
-export interface DeployedTERC721EventObject {
-  token: string;
-  params: ITERC721.ConstructorParamsStructOutput;
-}
-export type DeployedTERC721Event = TypedEvent<
-  [string, ITERC721.ConstructorParamsStructOutput],
-  DeployedTERC721EventObject
->;
-
-export type DeployedTERC721EventFilter = TypedEventFilter<DeployedTERC721Event>;
 
 export interface TokenFactory extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -257,28 +240,31 @@ export interface TokenFactory extends BaseContract {
 
     TOKEN_REGISTRY_DEP(overrides?: CallOverrides): Promise<[string]>;
 
+    countTokens(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     deployTERC20(
       params_: ITERC20.ConstructorParamsStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    deployTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
+    getDeployedTokens(
+      overrides?: CallOverrides
+    ): Promise<[string[]] & { tokens_: string[] }>;
 
     getInjector(
       overrides?: CallOverrides
     ): Promise<[string] & { injector_: string }>;
 
+    isTokenExist(token_: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    listTokens(
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string[]] & { tokens_: string[] }>;
+
     requestTERC20(
       params_: ITERC20.ConstructorParamsStruct,
-      description_: string,
-      overrides?: Overrides & { from?: string }
-    ): Promise<ContractTransaction>;
-
-    requestTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
       description_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
@@ -303,26 +289,27 @@ export interface TokenFactory extends BaseContract {
 
   TOKEN_REGISTRY_DEP(overrides?: CallOverrides): Promise<string>;
 
+  countTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
   deployTERC20(
     params_: ITERC20.ConstructorParamsStruct,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  deployTERC721(
-    params_: ITERC721.ConstructorParamsStruct,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
+  getDeployedTokens(overrides?: CallOverrides): Promise<string[]>;
 
   getInjector(overrides?: CallOverrides): Promise<string>;
 
+  isTokenExist(token_: string, overrides?: CallOverrides): Promise<boolean>;
+
+  listTokens(
+    offset_: BigNumberish,
+    limit_: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string[]>;
+
   requestTERC20(
     params_: ITERC20.ConstructorParamsStruct,
-    description_: string,
-    overrides?: Overrides & { from?: string }
-  ): Promise<ContractTransaction>;
-
-  requestTERC721(
-    params_: ITERC721.ConstructorParamsStruct,
     description_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
@@ -347,26 +334,27 @@ export interface TokenFactory extends BaseContract {
 
     TOKEN_REGISTRY_DEP(overrides?: CallOverrides): Promise<string>;
 
+    countTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
     deployTERC20(
       params_: ITERC20.ConstructorParamsStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    deployTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
-      overrides?: CallOverrides
-    ): Promise<void>;
+    getDeployedTokens(overrides?: CallOverrides): Promise<string[]>;
 
     getInjector(overrides?: CallOverrides): Promise<string>;
 
+    isTokenExist(token_: string, overrides?: CallOverrides): Promise<boolean>;
+
+    listTokens(
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string[]>;
+
     requestTERC20(
       params_: ITERC20.ConstructorParamsStruct,
-      description_: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    requestTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
       description_: string,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -381,17 +369,11 @@ export interface TokenFactory extends BaseContract {
   };
 
   filters: {
-    "DeployedTERC20(address,(string,string,string,uint8,uint256))"(
+    "DeployedTERC20(address,(string,string,string,uint8,uint256,uint8))"(
       token?: null,
       params?: null
     ): DeployedTERC20EventFilter;
     DeployedTERC20(token?: null, params?: null): DeployedTERC20EventFilter;
-
-    "DeployedTERC721(address,(string,string,string,string,uint256))"(
-      token?: null,
-      params?: null
-    ): DeployedTERC721EventFilter;
-    DeployedTERC721(token?: null, params?: null): DeployedTERC721EventFilter;
   };
 
   estimateGas: {
@@ -403,26 +385,27 @@ export interface TokenFactory extends BaseContract {
 
     TOKEN_REGISTRY_DEP(overrides?: CallOverrides): Promise<BigNumber>;
 
+    countTokens(overrides?: CallOverrides): Promise<BigNumber>;
+
     deployTERC20(
       params_: ITERC20.ConstructorParamsStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    deployTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
-      overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
+    getDeployedTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
     getInjector(overrides?: CallOverrides): Promise<BigNumber>;
 
-    requestTERC20(
-      params_: ITERC20.ConstructorParamsStruct,
-      description_: string,
-      overrides?: Overrides & { from?: string }
+    isTokenExist(token_: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    listTokens(
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    requestTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
+    requestTERC20(
+      params_: ITERC20.ConstructorParamsStruct,
       description_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
@@ -454,26 +437,30 @@ export interface TokenFactory extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    countTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     deployTERC20(
       params_: ITERC20.ConstructorParamsStruct,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
-    deployTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
-      overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
+    getDeployedTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getInjector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    requestTERC20(
-      params_: ITERC20.ConstructorParamsStruct,
-      description_: string,
-      overrides?: Overrides & { from?: string }
+    isTokenExist(
+      token_: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    requestTERC721(
-      params_: ITERC721.ConstructorParamsStruct,
+    listTokens(
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    requestTERC20(
+      params_: ITERC20.ConstructorParamsStruct,
       description_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;

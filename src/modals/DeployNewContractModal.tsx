@@ -15,12 +15,13 @@ import { useTranslation } from 'react-i18next'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
+import { coreContracts } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
 import { UiIcon, UiTextField } from '@/ui'
 
 type Props = {
   isOpen: boolean
-  handleClose: () => void
+  handleClose: () => Promise<void>
 }
 
 const style = {
@@ -59,13 +60,14 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   )
 
   const {
-    // formState,
+    formState,
     isFormDisabled,
     handleSubmit,
     disableForm,
     enableForm,
     getErrorMessage,
     control,
+    reset,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
       [FieldNames.TokenName]: yup.string().required(),
@@ -77,13 +79,18 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const submit = async () => {
     disableForm()
     try {
-      // FIXME: wait for contracts
-
-      // await requestTokenDeployment(
-      //   formState[FieldNames.TokenName],
-      //   formState[FieldNames.TokenSymbol],
-      //   formState[FieldNames.AmountToken],
-      // )
+      const tokenFactory = coreContracts.getTokenFactoryContract()
+      const tokenParams = {
+        name: formState[FieldNames.TokenName],
+        symbol: formState[FieldNames.TokenSymbol],
+        contractURI: 'https://example.com/token-metadata',
+        decimals: 18,
+        totalSupplyCap: formState[FieldNames.AmountToken],
+        permissions: 15,
+      }
+      await tokenFactory.deployTERC20(tokenParams)
+      await handleClose()
+      reset()
       bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {
       ErrorHandler.process(error)

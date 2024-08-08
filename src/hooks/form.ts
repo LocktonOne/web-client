@@ -9,6 +9,7 @@ import {
   useForm as useFormHook,
   UseFormHandleSubmit,
   UseFormRegister,
+  UseFormReset,
   UseFormSetError,
 } from 'react-hook-form'
 // eslint-disable-next-line import/namespace
@@ -25,6 +26,7 @@ export type Form<T extends FieldValues> = {
   handleSubmit: UseFormHandleSubmit<T>
   setError: UseFormSetError<T>
   control: Control<T>
+  reset: UseFormReset<T>
 }
 
 export const useForm = <T extends Yup.AnyObjectSchema, R extends FieldValues>(
@@ -40,6 +42,7 @@ export const useForm = <T extends Yup.AnyObjectSchema, R extends FieldValues>(
     watch,
     setError,
     formState: { errors },
+    reset,
   } = useFormHook<R>({
     mode: 'onTouched',
     reValidateMode: 'onChange',
@@ -72,5 +75,6 @@ export const useForm = <T extends Yup.AnyObjectSchema, R extends FieldValues>(
     handleSubmit,
     setError,
     control,
+    reset,
   }
 }

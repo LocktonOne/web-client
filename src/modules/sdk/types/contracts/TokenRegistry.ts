@@ -13,7 +13,11 @@ import type {
   Signer,
   utils,
 } from "ethers";
-import type { FunctionFragment, Result } from "@ethersproject/abi";
+import type {
+  FunctionFragment,
+  Result,
+  EventFragment,
+} from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -26,7 +30,6 @@ export interface TokenRegistryInterface extends utils.Interface {
   functions: {
     "CREATE_PERMISSION()": FunctionFragment;
     "TERC20_NAME()": FunctionFragment;
-    "TERC721_NAME()": FunctionFragment;
     "TOKEN_FACTORY_DEP()": FunctionFragment;
     "TOKEN_REGISTRY_RESOURCE()": FunctionFragment;
     "addProxyPool(string,address)": FunctionFragment;
@@ -35,8 +38,9 @@ export interface TokenRegistryInterface extends utils.Interface {
     "getInjector()": FunctionFragment;
     "getProxyBeacon(string)": FunctionFragment;
     "injectDependenciesToExistingPools(string,uint256,uint256)": FunctionFragment;
+    "injectDependenciesToExistingPoolsWithData(string,bytes,uint256,uint256)": FunctionFragment;
     "listPools(string,uint256,uint256)": FunctionFragment;
-    "setDependencies(address)": FunctionFragment;
+    "setDependencies(address,bytes)": FunctionFragment;
     "setInjector(address)": FunctionFragment;
     "setNewImplementations(string[],address[])": FunctionFragment;
   };
@@ -45,7 +49,6 @@ export interface TokenRegistryInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "CREATE_PERMISSION"
       | "TERC20_NAME"
-      | "TERC721_NAME"
       | "TOKEN_FACTORY_DEP"
       | "TOKEN_REGISTRY_RESOURCE"
       | "addProxyPool"
@@ -54,6 +57,7 @@ export interface TokenRegistryInterface extends utils.Interface {
       | "getInjector"
       | "getProxyBeacon"
       | "injectDependenciesToExistingPools"
+      | "injectDependenciesToExistingPoolsWithData"
       | "listPools"
       | "setDependencies"
       | "setInjector"
@@ -66,10 +70,6 @@ export interface TokenRegistryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "TERC20_NAME",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "TERC721_NAME",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -102,12 +102,16 @@ export interface TokenRegistryInterface extends utils.Interface {
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "injectDependenciesToExistingPoolsWithData",
+    values: [string, BytesLike, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "listPools",
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setDependencies",
-    values: [string]
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "setInjector", values: [string]): string;
   encodeFunctionData(
@@ -121,10 +125,6 @@ export interface TokenRegistryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "TERC20_NAME",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "TERC721_NAME",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -156,6 +156,10 @@ export interface TokenRegistryInterface extends utils.Interface {
     functionFragment: "injectDependenciesToExistingPools",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "injectDependenciesToExistingPoolsWithData",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "listPools", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setDependencies",
@@ -170,8 +174,19 @@ export interface TokenRegistryInterface extends utils.Interface {
     data: BytesLike
   ): Result;
 
-  events: {};
+  events: {
+    "Initialized(uint8)": EventFragment;
+  };
+
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface TokenRegistry extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -204,58 +219,65 @@ export interface TokenRegistry extends BaseContract {
 
     TERC20_NAME(overrides?: CallOverrides): Promise<[string]>;
 
-    TERC721_NAME(overrides?: CallOverrides): Promise<[string]>;
-
     TOKEN_FACTORY_DEP(overrides?: CallOverrides): Promise<[string]>;
 
     TOKEN_REGISTRY_RESOURCE(overrides?: CallOverrides): Promise<[string]>;
 
     addProxyPool(
-      name: string,
-      poolAddress: string,
+      name_: string,
+      poolAddress_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
-    countPools(name: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+    countPools(name_: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getImplementation(
-      name: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     getInjector(
       overrides?: CallOverrides
-    ): Promise<[string] & { _injector: string }>;
+    ): Promise<[string] & { injector_: string }>;
 
-    getProxyBeacon(name: string, overrides?: CallOverrides): Promise<[string]>;
+    getProxyBeacon(name_: string, overrides?: CallOverrides): Promise<[string]>;
 
     injectDependenciesToExistingPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<ContractTransaction>;
+
+    injectDependenciesToExistingPoolsWithData(
+      name_: string,
+      data_: BytesLike,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     listPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string[]] & { pools: string[] }>;
+    ): Promise<[string[]] & { pools_: string[] }>;
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setNewImplementations(
-      names: string[],
-      newImplementations: string[],
+      names_: string[],
+      newImplementations_: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
   };
@@ -264,53 +286,60 @@ export interface TokenRegistry extends BaseContract {
 
   TERC20_NAME(overrides?: CallOverrides): Promise<string>;
 
-  TERC721_NAME(overrides?: CallOverrides): Promise<string>;
-
   TOKEN_FACTORY_DEP(overrides?: CallOverrides): Promise<string>;
 
   TOKEN_REGISTRY_RESOURCE(overrides?: CallOverrides): Promise<string>;
 
   addProxyPool(
-    name: string,
-    poolAddress: string,
+    name_: string,
+    poolAddress_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
-  countPools(name: string, overrides?: CallOverrides): Promise<BigNumber>;
+  countPools(name_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  getImplementation(name: string, overrides?: CallOverrides): Promise<string>;
+  getImplementation(name_: string, overrides?: CallOverrides): Promise<string>;
 
   getInjector(overrides?: CallOverrides): Promise<string>;
 
-  getProxyBeacon(name: string, overrides?: CallOverrides): Promise<string>;
+  getProxyBeacon(name_: string, overrides?: CallOverrides): Promise<string>;
 
   injectDependenciesToExistingPools(
-    name: string,
-    offset: BigNumberish,
-    limit: BigNumberish,
+    name_: string,
+    offset_: BigNumberish,
+    limit_: BigNumberish,
+    overrides?: Overrides & { from?: string }
+  ): Promise<ContractTransaction>;
+
+  injectDependenciesToExistingPoolsWithData(
+    name_: string,
+    data_: BytesLike,
+    offset_: BigNumberish,
+    limit_: BigNumberish,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   listPools(
-    name: string,
-    offset: BigNumberish,
-    limit: BigNumberish,
+    name_: string,
+    offset_: BigNumberish,
+    limit_: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string[]>;
 
   setDependencies(
     registryAddress_: string,
+    data_: BytesLike,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setInjector(
-    _injector: string,
+    injector_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setNewImplementations(
-    names: string[],
-    newImplementations: string[],
+    names_: string[],
+    newImplementations_: string[],
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -319,111 +348,134 @@ export interface TokenRegistry extends BaseContract {
 
     TERC20_NAME(overrides?: CallOverrides): Promise<string>;
 
-    TERC721_NAME(overrides?: CallOverrides): Promise<string>;
-
     TOKEN_FACTORY_DEP(overrides?: CallOverrides): Promise<string>;
 
     TOKEN_REGISTRY_RESOURCE(overrides?: CallOverrides): Promise<string>;
 
     addProxyPool(
-      name: string,
-      poolAddress: string,
+      name_: string,
+      poolAddress_: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    countPools(name: string, overrides?: CallOverrides): Promise<BigNumber>;
+    countPools(name_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    getImplementation(name: string, overrides?: CallOverrides): Promise<string>;
+    getImplementation(
+      name_: string,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     getInjector(overrides?: CallOverrides): Promise<string>;
 
-    getProxyBeacon(name: string, overrides?: CallOverrides): Promise<string>;
+    getProxyBeacon(name_: string, overrides?: CallOverrides): Promise<string>;
 
     injectDependenciesToExistingPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    injectDependenciesToExistingPoolsWithData(
+      name_: string,
+      data_: BytesLike,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
     listPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string[]>;
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setInjector(_injector: string, overrides?: CallOverrides): Promise<void>;
+    setInjector(injector_: string, overrides?: CallOverrides): Promise<void>;
 
     setNewImplementations(
-      names: string[],
-      newImplementations: string[],
+      names_: string[],
+      newImplementations_: string[],
       overrides?: CallOverrides
     ): Promise<void>;
   };
 
-  filters: {};
+  filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+  };
 
   estimateGas: {
     CREATE_PERMISSION(overrides?: CallOverrides): Promise<BigNumber>;
 
     TERC20_NAME(overrides?: CallOverrides): Promise<BigNumber>;
 
-    TERC721_NAME(overrides?: CallOverrides): Promise<BigNumber>;
-
     TOKEN_FACTORY_DEP(overrides?: CallOverrides): Promise<BigNumber>;
 
     TOKEN_REGISTRY_RESOURCE(overrides?: CallOverrides): Promise<BigNumber>;
 
     addProxyPool(
-      name: string,
-      poolAddress: string,
+      name_: string,
+      poolAddress_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
-    countPools(name: string, overrides?: CallOverrides): Promise<BigNumber>;
+    countPools(name_: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     getImplementation(
-      name: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getInjector(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getProxyBeacon(name: string, overrides?: CallOverrides): Promise<BigNumber>;
+    getProxyBeacon(
+      name_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     injectDependenciesToExistingPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<BigNumber>;
+
+    injectDependenciesToExistingPoolsWithData(
+      name_: string,
+      data_: BytesLike,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     listPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setNewImplementations(
-      names: string[],
-      newImplementations: string[],
+      names_: string[],
+      newImplementations_: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
   };
@@ -433,8 +485,6 @@ export interface TokenRegistry extends BaseContract {
 
     TERC20_NAME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    TERC721_NAME(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     TOKEN_FACTORY_DEP(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     TOKEN_REGISTRY_RESOURCE(
@@ -442,55 +492,64 @@ export interface TokenRegistry extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     addProxyPool(
-      name: string,
-      poolAddress: string,
+      name_: string,
+      poolAddress_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     countPools(
-      name: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getImplementation(
-      name: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getInjector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getProxyBeacon(
-      name: string,
+      name_: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     injectDependenciesToExistingPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
+      overrides?: Overrides & { from?: string }
+    ): Promise<PopulatedTransaction>;
+
+    injectDependenciesToExistingPoolsWithData(
+      name_: string,
+      data_: BytesLike,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     listPools(
-      name: string,
-      offset: BigNumberish,
-      limit: BigNumberish,
+      name_: string,
+      offset_: BigNumberish,
+      limit_: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setDependencies(
       registryAddress_: string,
+      data_: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setNewImplementations(
-      names: string[],
-      newImplementations: string[],
+      names_: string[],
+      newImplementations_: string[],
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
   };

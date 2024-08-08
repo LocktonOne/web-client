@@ -1,3 +1,4 @@
+import { config } from '@config'
 import {
   Button,
   CircularProgress,
@@ -41,7 +42,7 @@ enum FieldNames {
   AmountToken = 'amountTokens',
 }
 
-const SelectOptions = [{ label: 'ETH', value: 'ETH' }]
+const SelectOptions = [{ label: config.NATIVE_TOKEN, value: config.NATIVE_TOKEN }]
 
 const SendTokensModal = ({ isOpen, handleClose }: Props) => {
   const { palette } = useTheme()
