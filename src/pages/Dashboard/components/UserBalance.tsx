@@ -1,3 +1,4 @@
+import { config } from '@config'
 import { EthereumProvider } from '@distributedlab/w3p'
 import { Button, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { ethers } from 'ethers'
@@ -5,37 +6,77 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Icons } from '@/enums'
+import { useTokensListContext } from '@/hooks'
 import { SendTokensModal } from '@/modals'
 import { coreContracts } from '@/modules/sdk'
 import { web3Store } from '@/store'
 import { UiIcon, UiSelect } from '@/ui'
 
-const EXCHANGE_RATE_ETH_USDT = 3000
-const SelectOptions = [{ label: 'ETH', value: 'ETH' }]
+const EXCHANGE_RATE = 1
+
+type SelectOption = {
+  label: string
+  value: string
+  addr: string
+}
+
+const defaultSelectOptions = [{ label: config.NATIVE_TOKEN, value: config.NATIVE_TOKEN, addr: '0' }]
 
 const UserBalance = () => {
-  const [balance, setBalance] = useState('')
-  const [balanceInUSD, setBalanceInUSD] = useState('')
+  const [balance, setBalance] = useState<string | number>('')
+  const [balanceInUSD, setBalanceInUSD] = useState<string | number>('')
   const [isSendTokenModalOpen, setIsOpenModalOpen] = useState(false)
+  const [activeToken, setActiveToken] = useState(config.NATIVE_TOKEN)
+  const [selectOptions, setSelectOptions] = useState<SelectOption[]>(defaultSelectOptions)
 
   const { palette, spacing } = useTheme()
   const { t } = useTranslation()
+  const { tokensList } = useTokensListContext()
 
-  const checkBalance = async () => {
+  const checkNativeBalance = async () => {
     const provider = new ethers.providers.Web3Provider(
       web3Store.provider?.rawProvider as EthereumProvider,
     )
     const balance = await provider.getBalance(coreContracts.provider.address!)
-    const balanceInEth = ethers.utils.formatEther(balance)
-    const formattedBalanceInEth = parseFloat(balanceInEth).toFixed(4)
+    const balanceInNativeToken = ethers.utils.formatEther(balance)
+    const formattedBalanceInNativeToken = parseFloat(balanceInNativeToken).toFixed(4)
 
-    const _balanceInUSD = (parseFloat(balanceInEth) * EXCHANGE_RATE_ETH_USDT).toFixed(2)
+    const _balanceInUSD = (parseFloat(balanceInNativeToken) * EXCHANGE_RATE).toFixed(2)
     setBalanceInUSD(_balanceInUSD)
-    setBalance(formattedBalanceInEth)
+    setBalance(formattedBalanceInNativeToken)
+  }
+
+  const checkOtherTokenBalance = async (addr: string) => {
+    const tokenFactory = coreContracts.getTokenFactoryContract()
+    const balance = await tokenFactory.getTokenBalance(addr, coreContracts.provider.address!)
+    const _balanceInUSD = (parseFloat(balance.toString()) * EXCHANGE_RATE).toFixed(2)
+    setBalanceInUSD(_balanceInUSD)
+    setBalance(balance)
+  }
+
+  const checkBalance = async (activeToken: string) => {
+    const _token = selectOptions.find(token => token.value === activeToken)
+    if (_token) {
+      _token.addr !== '0' ? await checkOtherTokenBalance(_token.addr) : await checkNativeBalance()
+    }
+  }
+
+  const getListTokens = () => {
+    const _selectOptions = [...defaultSelectOptions]
+    for (const token of tokensList) {
+      _selectOptions.push({ label: token.symbol, value: token.symbol, addr: token.address })
+    }
+    setSelectOptions(_selectOptions)
   }
 
   useEffect(() => {
-    checkBalance()
+    checkBalance(activeToken)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeToken])
+
+  useEffect(() => {
+    getListTokens()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -55,8 +96,9 @@ const UserBalance = () => {
         </Stack>
         <Stack width={200}>
           <UiSelect
-            options={SelectOptions}
-            value={SelectOptions[0].value}
+            options={selectOptions}
+            value={activeToken}
+            updateValue={value => setActiveToken(value)}
             sx={{ maxHeight: 30, minHeight: 30 }}
           />
         </Stack>
@@ -64,7 +106,7 @@ const UserBalance = () => {
       <Divider sx={{ my: 5, borderColor: palette.secondary.light }} />
       <Stack justifyContent='space-between' height='100%'>
         <Stack direction='row' alignItems='center'>
-          <Typography variant='h4'>{`${balance} ETH`}</Typography>
+          <Typography variant='h4'>{`${balance} ${activeToken}`}</Typography>
           <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} ml={3}>
             {`$${balanceInUSD}`}
           </Typography>

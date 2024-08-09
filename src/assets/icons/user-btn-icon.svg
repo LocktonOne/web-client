@@ -11,12 +11,12 @@
       <feBlend mode="normal" in="SourceGraphic" in2="effect_dropShadow_1" result="shape"/>
     </filter>
     <clipPath id="clip234_802">
-      <rect id="account-circle-fill" rx="-0.500000" width="19.000000" height="19.000000" transform="translate(16.500000 15.500000)" fill="white" fill-opacity="0"/>
+      <rect id="account-circle-fill" rx="0.500000" width="19.000000" height="19.000000" transform="translate(16.500000 15.500000)" fill="white" fill-opacity="0"/>
     </clipPath>
   </defs>
   <g filter="url(#filter_26_1496_dd)">
     <rect id="Button" rx="23.500000" width="47.000000" height="47.000000" transform="translate(2.500000 1.500000)" fill="#FFFFFF" fill-opacity="1.000000"/>
-    <rect id="account-circle-fill" rx="-0.500000" width="19.000000" height="19.000000" transform="translate(16.500000 15.500000)" fill="#FFFFFF" fill-opacity="0"/>
+    <rect id="account-circle-fill" rx="0.500000" width="19.000000" height="19.000000" transform="translate(16.500000 15.500000)" fill="#FFFFFF" fill-opacity="0"/>
     <g clip-path="url(#clip234_802)">
       <path id="Vector" d="M28 17C33.52 17 38 21.48 38 27C38 32.52 33.52 37 28 37C22.48 37 18 32.52 18 27C18 21.48 22.48 17 28 17ZM22.02 30.41C23.49 32.6 25.69 34 28.15 34C30.62 34 32.82 32.6 34.29 30.41C32.68 28.91 30.53 28 28.15 28C25.78 28 23.63 28.91 22.02 30.41ZM28 26C29.65 26 31 24.65 31 23C31 21.34 29.65 20 28 20C26.34 20 25 21.34 25 23C25 24.65 26.34 26 28 26Z" fill="#000000" fill-opacity="1.000000" fill-rule="nonzero"/>
     </g>
