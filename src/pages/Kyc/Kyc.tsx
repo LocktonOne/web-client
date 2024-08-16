@@ -30,14 +30,14 @@ const Kyc = () => {
           <KycPersonalForm
             isActive={isPersonalFormActive}
             handleChange={() => setIsPersonalFormActive(true)}
-            openModal={() => setIsSuccessKYCModalOpen(true)}
+            openSuccessModal={() => setIsSuccessKYCModalOpen(true)}
           />
         </Grid>
         <Grid item xs={6}>
           <KycCompanyForm
             isActive={!isPersonalFormActive}
             handleChange={() => setIsPersonalFormActive(false)}
-            openModal={() => setIsSuccessKYCModalOpen(true)}
+            openSuccessModal={() => setIsSuccessKYCModalOpen(true)}
           />
         </Grid>
       </Grid>

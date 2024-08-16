@@ -39,9 +39,7 @@ export const useAuth = () => {
     if (!web3Store.provider?.address) {
       await web3Store.connect(PROVIDERS.Metamask)
     }
-    const MasterAccessManagementContract = coreContracts.getMasterAccessManagementContract()
-    const roles = await MasterAccessManagementContract.getUserRoles(coreContracts.provider.address!)
-    rolesStore.addRoles(roles)
+    await getRoles()
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
@@ -53,9 +51,7 @@ export const useAuth = () => {
       await web3Store.connect(PROVIDERS.Metamask)
     }
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
-    const MasterAccessManagementContract = coreContracts.getMasterAccessManagementContract()
-    const roles = await MasterAccessManagementContract.getUserRoles(coreContracts.provider.address!)
-    rolesStore.addRoles(roles)
+    await getRoles()
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
   }
@@ -65,6 +61,12 @@ export const useAuth = () => {
   const refreshAccessToken = async () => {
     const tokens = await refreshToken()
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+  }
+
+  const getRoles = async () => {
+    const MasterAccessManagementContract = coreContracts.getMasterAccessManagementContract()
+    const roles = await MasterAccessManagementContract.getUserRoles(coreContracts.provider.address!)
+    rolesStore.addRoles(roles)
   }
 
   return {

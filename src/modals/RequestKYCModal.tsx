@@ -41,7 +41,7 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
   const { t } = useTranslation()
   const { acceptRequest, rejectRequest } = useKycManagement()
 
-  const addRole = async (addr: string) => {
+  const addCorporateRole = async (addr: string) => {
     const masterAccess = coreContracts.getMasterAccessManagementContract()
     await masterAccess.grantRoles(addr, [Roles.CORPORATE])
   }
@@ -51,7 +51,7 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
     try {
       await acceptRequest(info.id)
       if (info.requestType === 'company') {
-        await addRole(info.address)
+        await addCorporateRole(info.address)
       }
       bus.emit(BusEvents.success, { message: 'Success' })
       handleClose()

@@ -16,7 +16,7 @@ import { UiIcon, UiTextField } from '@/ui'
 type Props = {
   isActive: boolean
   handleChange: () => void
-  openModal: () => void
+  openSuccessModal: () => void
 }
 
 enum FieldNames {
@@ -26,7 +26,7 @@ enum FieldNames {
   PassportIssuanceDate = 'passportIssuanceDate',
 }
 
-const KycPersonalForm = ({ isActive, handleChange, openModal }: Props) => {
+const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) => {
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
   const { requestKYCRole, init } = useKycUser()
@@ -85,7 +85,7 @@ const KycPersonalForm = ({ isActive, handleChange, openModal }: Props) => {
       await kycBlob.create()
       await init()
       await requestKYCRole(kycBlob.id!)
-      openModal()
+      openSuccessModal()
       reset()
       bus.emit(BusEvents.success, { message: 'Success log in' })
     } catch (error) {

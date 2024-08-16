@@ -57,9 +57,6 @@ export const useUsers = (defaultFilters?: {
   return {
     filters,
 
-    isLoaded,
-    isLoadFailed,
-
     users,
     user,
 

@@ -156,6 +156,9 @@
     "name": "Name",
     "surname": "Surname",
     "passport-date": "Passport serial number",
-    "passport-number": "Passport issuance date"
+    "passport-number": "Passport issuance date",
+    "company-name": "Company name",
+    "company-address": "Company registration address",
+    "company-activity": "Company main activity"
   }
 }
