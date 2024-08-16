@@ -5,8 +5,8 @@ import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Icons } from '@/enums'
-import { useTokensListContext } from '@/hooks'
+import { Icons, Roles } from '@/enums'
+import { useAuth, useTokensListContext } from '@/hooks'
 import { SendTokensModal } from '@/modals'
 import { coreContracts } from '@/modules/sdk'
 import { web3Store } from '@/store'
@@ -32,6 +32,7 @@ const UserBalance = () => {
   const { palette, spacing } = useTheme()
   const { t } = useTranslation()
   const { tokensList } = useTokensListContext()
+  const { role } = useAuth()
 
   const checkNativeBalance = async () => {
     const provider = new ethers.providers.Web3Provider(
@@ -111,10 +112,19 @@ const UserBalance = () => {
             {`$${balanceInUSD}`}
           </Typography>
         </Stack>
-        <Button sx={{ width: 200 }} onClick={() => setIsOpenModalOpen(true)}>
-          <UiIcon name={Icons.ArrowUpRight} size={5} mr={2} />
-          {t('user-balance.send')}
-        </Button>
+        <Stack direction='row' alignItems='center' spacing={5}>
+          <Button
+            sx={{ width: 200 }}
+            disabled={role === Roles.UNVERIFIED}
+            onClick={() => setIsOpenModalOpen(true)}
+          >
+            <UiIcon name={Icons.ArrowUpRight} size={5} mr={2} />
+            {t('user-balance.send')}
+          </Button>
+          {role === Roles.UNVERIFIED && (
+            <UiIcon name={Icons.LockFill} sx={{ color: palette.primary.light }} />
+          )}
+        </Stack>
       </Stack>
       <SendTokensModal
         isOpen={isSendTokenModalOpen}

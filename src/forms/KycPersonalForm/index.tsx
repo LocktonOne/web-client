@@ -8,7 +8,7 @@ import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
 import { BlobUtil, useKycUser } from '@/modules/sdk'
-import { web3Store } from '@/store'
+import { useWalletState, web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
 import { RequestDescriptionKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
@@ -16,6 +16,7 @@ import { UiIcon, UiTextField } from '@/ui'
 type Props = {
   isActive: boolean
   handleChange: () => void
+  openSuccessModal: () => void
 }
 
 enum FieldNames {
@@ -25,10 +26,11 @@ enum FieldNames {
   PassportIssuanceDate = 'passportIssuanceDate',
 }
 
-const KycPersonalForm = ({ isActive, handleChange }: Props) => {
+const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) => {
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
-  const { requestKYCRole, loadAllKyc, init } = useKycUser()
+  const { requestKYCRole, init } = useKycUser()
+  const { wallet } = useWalletState()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.Name]: string
@@ -53,6 +55,7 @@ const KycPersonalForm = ({ isActive, handleChange }: Props) => {
     enableForm,
     getErrorMessage,
     control,
+    reset,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
       [FieldNames.Name]: yup.string().required(),
@@ -74,15 +77,16 @@ const KycPersonalForm = ({ isActive, handleChange }: Props) => {
           lastName: formState[FieldNames.Surname],
           passportSerialNumber: formState[FieldNames.PassportSerialNumber],
           passportIssuanceDate: formState[FieldNames.PassportIssuanceDate],
+          email: wallet?.email ?? '',
+          requestType: 'personal',
         },
         owner: web3Store.provider?.address,
       })
       await kycBlob.create()
-
       await init()
       await requestKYCRole(kycBlob.id!)
-      await loadAllKyc()
-
+      openSuccessModal()
+      reset()
       bus.emit(BusEvents.success, { message: 'Success log in' })
     } catch (error) {
       ErrorHandler.process(error)

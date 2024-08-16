@@ -2,7 +2,7 @@ import { type Provider, type RawProvider } from '@distributedlab/w3p'
 
 import { config } from '@/config'
 
-// import { coreApolloClient } from '../api'
+import { coreApolloClient } from '../api'
 import {
   createConstantsRegistryContract,
   createMasterAccessManagement,
@@ -10,7 +10,7 @@ import {
   createReviewableRequests,
   createTokenFactory,
 } from '../contracts'
-// import { GetCoreContracts, type GetCoreContractsQuery } from '../types'
+import { GetCoreContracts, type GetCoreContractsQuery } from '../types'
 
 export class CoreContracts {
   #provider: Provider
@@ -39,38 +39,36 @@ export class CoreContracts {
 
   async loadCoreContractsAddresses() {
     const masterContractsRegistry = this.getMasterContractsRegistryContract()
-    // FIXME: wait graph
-    // const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
-    //   query: GetCoreContracts,
-    // })
+    const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
+      query: GetCoreContracts,
+    })
 
     this.#masterAccessManagementContractAddress =
-      // data?.contracts?.find(el => el.id === 'MASTER_ACCESS_MANAGEMENT')?.address ||
-      await masterContractsRegistry.getMasterAccessManagement()
+      data?.contracts?.find(el => el.id === 'MASTER_ACCESS_MANAGEMENT')?.address ||
+      (await masterContractsRegistry.getMasterAccessManagement())
 
     this.#constantsRegistryContractAddress =
-      // data?.contracts?.find(el => el.id === 'CONSTANTS_REGISTRY')?.address ||
-      await masterContractsRegistry.getConstantsRegistry()
+      data?.contracts?.find(el => el.id === 'CONSTANTS_REGISTRY')?.address ||
+      (await masterContractsRegistry.getConstantsRegistry())
 
     this.#reviewableRequestsContractAddress =
-      // data?.contracts?.find(el => el.id === 'REVIEWABLE_REQUESTS')?.address ||
-      await masterContractsRegistry.getReviewableRequests()
+      data?.contracts?.find(el => el.id === 'REVIEWABLE_REQUESTS')?.address ||
+      (await masterContractsRegistry.getReviewableRequests())
 
     this.#tokenFactoryContractAddress =
-      // data?.contracts?.find(el => el.id === 'TOKEN_FACTORY')?.address ||
-      await masterContractsRegistry.getTokenFactory()
+      data?.contracts?.find(el => el.id === 'TOKEN_FACTORY')?.address ||
+      (await masterContractsRegistry.getTokenFactory())
   }
 
   async getContractAddressByName(name: string) {
     const masterContractsRegistry = this.getMasterContractsRegistryContract()
-
-    // const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
-    //   query: GetCoreContracts,
-    // })
+    const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
+      query: GetCoreContracts,
+    })
 
     return (
-      // data?.contracts?.find(el => el.id === name)?.address ||
-      await masterContractsRegistry.getContractAddressByName(name)
+      data?.contracts?.find(el => el.id === name)?.address ||
+      (await masterContractsRegistry.getContractAddressByName(name))
     )
   }
 

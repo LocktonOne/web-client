@@ -8,14 +8,15 @@ import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
 import { BlobUtil, useKycUser } from '@/modules/sdk'
-import { web3Store } from '@/store'
+import { useWalletState, web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
-import { RequestDescriptionCompanyKyc } from '@/types'
+import { RequestDescriptionKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
 
 type Props = {
   isActive: boolean
   handleChange: () => void
+  openSuccessModal: () => void
 }
 
 enum FieldNames {
@@ -24,10 +25,11 @@ enum FieldNames {
   CompanyMainActivity = 'companyMainActivity',
 }
 
-const KycCompanyForm = ({ isActive, handleChange }: Props) => {
+const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => {
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
-  const { init, loadAllKyc, requestKYCRole } = useKycUser()
+  const { init, requestKYCRole } = useKycUser()
+  const { wallet } = useWalletState()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.CompanyName]: string
@@ -50,6 +52,7 @@ const KycCompanyForm = ({ isActive, handleChange }: Props) => {
     enableForm,
     getErrorMessage,
     control,
+    reset,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
       [FieldNames.CompanyName]: yup.string().required(),
@@ -64,20 +67,21 @@ const KycCompanyForm = ({ isActive, handleChange }: Props) => {
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
-      const kycBlob = new BlobUtil<RequestDescriptionCompanyKyc>({
+      const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
           companyName: formState[FieldNames.CompanyName],
           companyAddress: formState[FieldNames.CompanyAddress],
           companyMainActivity: formState[FieldNames.CompanyMainActivity],
+          email: wallet?.email ?? '',
+          requestType: 'company',
         },
         owner: web3Store.provider?.address,
       })
       await kycBlob.create()
-
       await init()
-
       await requestKYCRole(kycBlob.id!)
-      await loadAllKyc()
+      openSuccessModal()
+      reset()
       bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {
       ErrorHandler.process(error)

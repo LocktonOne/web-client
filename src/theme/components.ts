@@ -51,6 +51,10 @@ export const components: Components<Omit<Theme, 'components'>> = {
         color: theme.palette.secondary.light,
         backgroundColor: theme.palette.primary.dark,
         fontWeight: FontWeight.Medium,
+        '&.Mui-disabled': {
+          backgroundColor: theme.palette.primary.light,
+          color: theme.palette.common.white,
+        },
       }),
       containedSizeLarge: ({ theme }) => ({
         ...typography.buttonLarge,

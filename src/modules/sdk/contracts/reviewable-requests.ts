@@ -25,6 +25,7 @@ export const createReviewableRequests = (
       return provider.signAndSendTx({
         to: address,
         data,
+        gasLimit: 500000,
       })
     },
 

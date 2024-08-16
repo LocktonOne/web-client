@@ -139,5 +139,26 @@
     "desc": "Please enter all required information",
     "address": "Admin’s address",
     "submit-btn": "Confirm"
+  },
+  "success-kyc-modal": {
+    "title": "Thank you!",
+    "desc": "Your details have been accepted and the account status will be changed as soon as the administrator reviews the submission"
+  },
+  "request-kyc-modal": {
+    "title": "KYC request",
+    "desc": "Please read all information and decide to approve or reject the request",
+    "role": "Role",
+    "date": "Request date",
+    "email": "Email address",
+    "address": "Account address",
+    "approve": "Approve",
+    "reject": "Reject",
+    "name": "Name",
+    "surname": "Surname",
+    "passport-date": "Passport serial number",
+    "passport-number": "Passport issuance date",
+    "company-name": "Company name",
+    "company-address": "Company registration address",
+    "company-activity": "Company main activity"
   }
 }

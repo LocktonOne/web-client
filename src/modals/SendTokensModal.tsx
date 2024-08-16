@@ -90,6 +90,7 @@ const SendTokensModal = ({ isOpen, handleClose }: Props) => {
     disableForm()
     try {
       await sendTokens(formState[FieldNames.RecipientAddress], formState[FieldNames.AmountToken])
+      handleClose()
       bus.emit(BusEvents.success, { message: 'Success' })
     } catch (error) {
       ErrorHandler.process(error)

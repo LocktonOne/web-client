@@ -7,10 +7,12 @@ import { PageTitles } from '@/common'
 import { Icons } from '@/enums'
 import KycCompanyForm from '@/forms/KycCompanyForm'
 import KycPersonalForm from '@/forms/KycPersonalForm'
+import { SuccessKYCModal } from '@/modals'
 import { UiIcon } from '@/ui'
 
 const Kyc = () => {
   const [isPersonalFormActive, setIsPersonalFormActive] = useState(true)
+  const [isSuccessKYCModalOpen, setIsSuccessKYCModalOpen] = useState(false)
   const { t } = useTranslation()
   const { palette } = useTheme()
   const router = useNavigate()
@@ -28,15 +30,21 @@ const Kyc = () => {
           <KycPersonalForm
             isActive={isPersonalFormActive}
             handleChange={() => setIsPersonalFormActive(true)}
+            openSuccessModal={() => setIsSuccessKYCModalOpen(true)}
           />
         </Grid>
         <Grid item xs={6}>
           <KycCompanyForm
             isActive={!isPersonalFormActive}
             handleChange={() => setIsPersonalFormActive(false)}
+            openSuccessModal={() => setIsSuccessKYCModalOpen(true)}
           />
         </Grid>
       </Grid>
+      <SuccessKYCModal
+        isOpen={isSuccessKYCModalOpen}
+        handleClose={() => setIsSuccessKYCModalOpen(false)}
+      />
     </Stack>
   )
 }
