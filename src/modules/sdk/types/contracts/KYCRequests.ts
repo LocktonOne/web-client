@@ -4,6 +4,7 @@
 import type {
   BaseContract,
   BigNumber,
+  BigNumberish,
   BytesLike,
   CallOverrides,
   ContractTransaction,
@@ -25,6 +26,18 @@ import type {
   OnEvent,
 } from "./common";
 
+export declare namespace IKYCRequests {
+  export type UserRequestInfoStruct = {
+    requestId: BigNumberish;
+    existingRequest: boolean;
+  };
+
+  export type UserRequestInfoStructOutput = [BigNumber, boolean] & {
+    requestId: BigNumber;
+    existingRequest: boolean;
+  };
+}
+
 export interface KYCRequestsInterface extends utils.Interface {
   functions: {
     "KYCRole()": FunctionFragment;
@@ -34,11 +47,11 @@ export interface KYCRequestsInterface extends utils.Interface {
     "__KYCRequests_init(string)": FunctionFragment;
     "dropKYCRequest()": FunctionFragment;
     "getInjector()": FunctionFragment;
+    "getUserRequestInfo(address)": FunctionFragment;
     "requestKYC(string)": FunctionFragment;
-    "setDependencies(address)": FunctionFragment;
+    "setDependencies(address,bytes)": FunctionFragment;
     "setInjector(address)": FunctionFragment;
     "updateKYCRole(string)": FunctionFragment;
-    "usersRequestInfo(address)": FunctionFragment;
   };
 
   getFunction(
@@ -50,11 +63,11 @@ export interface KYCRequestsInterface extends utils.Interface {
       | "__KYCRequests_init"
       | "dropKYCRequest"
       | "getInjector"
+      | "getUserRequestInfo"
       | "requestKYC"
       | "setDependencies"
       | "setInjector"
       | "updateKYCRole"
-      | "usersRequestInfo"
   ): FunctionFragment;
 
   encodeFunctionData(functionFragment: "KYCRole", values?: undefined): string;
@@ -82,18 +95,18 @@ export interface KYCRequestsInterface extends utils.Interface {
     functionFragment: "getInjector",
     values?: undefined
   ): string;
+  encodeFunctionData(
+    functionFragment: "getUserRequestInfo",
+    values: [string]
+  ): string;
   encodeFunctionData(functionFragment: "requestKYC", values: [string]): string;
   encodeFunctionData(
     functionFragment: "setDependencies",
-    values: [string]
+    values: [string, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "setInjector", values: [string]): string;
   encodeFunctionData(
     functionFragment: "updateKYCRole",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "usersRequestInfo",
     values: [string]
   ): string;
 
@@ -122,6 +135,10 @@ export interface KYCRequestsInterface extends utils.Interface {
     functionFragment: "getInjector",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getUserRequestInfo",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "requestKYC", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setDependencies",
@@ -135,21 +152,26 @@ export interface KYCRequestsInterface extends utils.Interface {
     functionFragment: "updateKYCRole",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "usersRequestInfo",
-    data: BytesLike
-  ): Result;
 
   events: {
+    "Initialized(uint8)": EventFragment;
     "KYCRequestDropped(address,uint256)": EventFragment;
     "KYCRoleRequested(address,uint256)": EventFragment;
     "KYCRoleUpdated(string)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "KYCRequestDropped"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "KYCRoleRequested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "KYCRoleUpdated"): EventFragment;
 }
+
+export interface InitializedEventObject {
+  version: number;
+}
+export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
+
+export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
 
 export interface KYCRequestDroppedEventObject {
   userAddr: string;
@@ -231,7 +253,12 @@ export interface KYCRequests extends BaseContract {
 
     getInjector(
       overrides?: CallOverrides
-    ): Promise<[string] & { _injector: string }>;
+    ): Promise<[string] & { injector_: string }>;
+
+    getUserRequestInfo(
+      user_: string,
+      overrides?: CallOverrides
+    ): Promise<[IKYCRequests.UserRequestInfoStructOutput]>;
 
     requestKYC(
       KYCHash_: string,
@@ -240,11 +267,12 @@ export interface KYCRequests extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -252,13 +280,6 @@ export interface KYCRequests extends BaseContract {
       newKYCRole_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
-
-    usersRequestInfo(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, boolean] & { requestId: BigNumber; existingRequest: boolean }
-    >;
   };
 
   KYCRole(overrides?: CallOverrides): Promise<string>;
@@ -280,6 +301,11 @@ export interface KYCRequests extends BaseContract {
 
   getInjector(overrides?: CallOverrides): Promise<string>;
 
+  getUserRequestInfo(
+    user_: string,
+    overrides?: CallOverrides
+  ): Promise<IKYCRequests.UserRequestInfoStructOutput>;
+
   requestKYC(
     KYCHash_: string,
     overrides?: Overrides & { from?: string }
@@ -287,11 +313,12 @@ export interface KYCRequests extends BaseContract {
 
   setDependencies(
     registryAddress_: string,
+    arg1: BytesLike,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
   setInjector(
-    _injector: string,
+    injector_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -299,13 +326,6 @@ export interface KYCRequests extends BaseContract {
     newKYCRole_: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
-
-  usersRequestInfo(
-    arg0: string,
-    overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, boolean] & { requestId: BigNumber; existingRequest: boolean }
-  >;
 
   callStatic: {
     KYCRole(overrides?: CallOverrides): Promise<string>;
@@ -325,29 +345,31 @@ export interface KYCRequests extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<string>;
 
+    getUserRequestInfo(
+      user_: string,
+      overrides?: CallOverrides
+    ): Promise<IKYCRequests.UserRequestInfoStructOutput>;
+
     requestKYC(KYCHash_: string, overrides?: CallOverrides): Promise<void>;
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
-    setInjector(_injector: string, overrides?: CallOverrides): Promise<void>;
+    setInjector(injector_: string, overrides?: CallOverrides): Promise<void>;
 
     updateKYCRole(
       newKYCRole_: string,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    usersRequestInfo(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, boolean] & { requestId: BigNumber; existingRequest: boolean }
-    >;
   };
 
   filters: {
+    "Initialized(uint8)"(version?: null): InitializedEventFilter;
+    Initialized(version?: null): InitializedEventFilter;
+
     "KYCRequestDropped(address,uint256)"(
       userAddr?: null,
       requestId?: null
@@ -390,6 +412,11 @@ export interface KYCRequests extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<BigNumber>;
 
+    getUserRequestInfo(
+      user_: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     requestKYC(
       KYCHash_: string,
       overrides?: Overrides & { from?: string }
@@ -397,22 +424,18 @@ export interface KYCRequests extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
     updateKYCRole(
       newKYCRole_: string,
       overrides?: Overrides & { from?: string }
-    ): Promise<BigNumber>;
-
-    usersRequestInfo(
-      arg0: string,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -438,6 +461,11 @@ export interface KYCRequests extends BaseContract {
 
     getInjector(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    getUserRequestInfo(
+      user_: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     requestKYC(
       KYCHash_: string,
       overrides?: Overrides & { from?: string }
@@ -445,22 +473,18 @@ export interface KYCRequests extends BaseContract {
 
     setDependencies(
       registryAddress_: string,
+      arg1: BytesLike,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     setInjector(
-      _injector: string,
+      injector_: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 
     updateKYCRole(
       newKYCRole_: string,
       overrides?: Overrides & { from?: string }
-    ): Promise<PopulatedTransaction>;
-
-    usersRequestInfo(
-      arg0: string,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

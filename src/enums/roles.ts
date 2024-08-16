@@ -1,6 +1,7 @@
 export enum Roles {
-  USER = 'USER',
+  VERIFIED = 'VERIFIED',
   ADMIN = 'ADMIN',
-  COMPANY = 'COMPANY',
+  CORPORATE = 'CORPORATE',
   MASTER = 'MASTER',
+  UNVERIFIED = 'UNVERIFIED',
 }

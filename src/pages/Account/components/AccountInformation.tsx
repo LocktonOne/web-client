@@ -11,22 +11,16 @@ import {
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
-import { BusEvents, Icons, RoutePaths } from '@/enums'
+import { BusEvents, Icons, Roles, RoutePaths } from '@/enums'
 import { bus, formatDid } from '@/helpers'
-import { useCopyToClipboard } from '@/hooks'
+import { useAuth, useCopyToClipboard } from '@/hooks'
 import { FontWeight } from '@/theme/constants'
+import { Kyc } from '@/types'
 import { UiIcon } from '@/ui'
 
 interface Props extends StackProps {
   address: string
-  userInfo: {
-    type: string
-    firstName: string
-    lastName: string
-    passportNumber: string
-    passportDate: string
-    DID: string
-  }
+  userInfo?: Kyc
 }
 
 const PART_LENGTH = 16
@@ -35,6 +29,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
   const { palette } = useTheme()
   const { t } = useTranslation()
   const { copy, isCopied } = useCopyToClipboard()
+  const { role } = useAuth()
 
   const copyUserAddr = async () => {
     try {
@@ -75,7 +70,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               fontSize: 18,
               fontWeight: FontWeight.Medium,
             }}
-            label={userInfo.type}
+            label={role}
           />
         </Stack>
         <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 7 }}>
@@ -90,7 +85,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
           </IconButton>
         </Stack>
         <Divider sx={{ my: 5 }} />
-        {userInfo.type === 'unverified' ? (
+        {role === Roles.UNVERIFIED ? (
           <>
             <Stack direction='row' gap={3}>
               <UiIcon name={Icons.WarningInSquare} size={14} />
@@ -129,7 +124,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               overflow='hidden'
               textOverflow='ellipsis'
             >
-              {userInfo.firstName}
+              {userInfo?.firstName}
             </Typography>
             <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.last-name')}
@@ -141,7 +136,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               overflow='hidden'
               textOverflow='ellipsis'
             >
-              {userInfo.lastName}
+              {userInfo?.lastName}
             </Typography>
             <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.passport-number')}
@@ -153,7 +148,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               overflow='hidden'
               textOverflow='ellipsis'
             >
-              {userInfo.passportNumber}
+              {userInfo?.passportSerialNumber}
             </Typography>
             <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
               {t('account-info.passport-date')}
@@ -165,19 +160,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               overflow='hidden'
               textOverflow='ellipsis'
             >
-              {userInfo.passportDate}
-            </Typography>
-            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.user-did')}
-            </Typography>
-            <Typography
-              sx={{ mt: 1 }}
-              variant='subtitle4'
-              fontSize={18}
-              overflow='hidden'
-              textOverflow='ellipsis'
-            >
-              {userInfo.DID}
+              {userInfo?.passportIssuanceDate}
             </Typography>
           </Stack>
         )}

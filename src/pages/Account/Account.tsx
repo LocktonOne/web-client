@@ -1,28 +1,34 @@
 import { IconButton, Stack, useTheme } from '@mui/material'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { PageTitles } from '@/common'
 import { Icons } from '@/enums'
-import { useWalletState } from '@/store'
+import { coreContracts, useKycManagement } from '@/modules/sdk'
+import { web3Store } from '@/store'
 import { UiIcon } from '@/ui'
 
 import { AccountInformation } from './components'
-
-const userInfo = {
-  type: 'unverified',
-  firstName: 'Test',
-  lastName: 'Testovskii',
-  passportNumber: 'TY78747584758',
-  passportDate: '01/49',
-  DID: 'did:okkd2ii3221jkjfdj',
-}
 
 const Account = () => {
   const { t } = useTranslation()
   const { palette } = useTheme()
   const router = useNavigate()
-  const { wallet } = useWalletState()
+  const { loadKycRequest, kyc } = useKycManagement()
+
+  const loadData = async () => {
+    try {
+      await loadKycRequest(web3Store.provider?.address?.toLowerCase() ?? '')
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    loadData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <Stack sx={{ alignItems: 'flex-start', py: 10, px: 15 }}>
@@ -37,7 +43,7 @@ const Account = () => {
         />
       </Stack>
       <Stack>
-        <AccountInformation address={wallet?.id ?? ''} userInfo={userInfo} />
+        <AccountInformation address={coreContracts.provider.address!} userInfo={kyc} />
       </Stack>
     </Stack>
   )

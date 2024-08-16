@@ -36,9 +36,9 @@ query getKycRequestsByAddressAndStatus($address: String!, $status: BigInt!) {
   }
 }
 
-query getUserKycRequestsByStatus($misc: String!, $status: BigInt!) {
+query getUserKycRequestsByStatus($status: BigInt!) {
   requests(
-    where: { misc: $misc, status: $status }
+    where: { status: $status }
     orderBy: requestId
     orderDirection: desc
   ) {

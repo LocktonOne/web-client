@@ -20,6 +20,7 @@ export const createKycRequestsContracts = (
       return provider.signAndSendTx({
         to: address,
         data,
+        gasLimit: 5000000,
       })
     },
 
@@ -33,13 +34,12 @@ export const createKycRequestsContracts = (
       return provider.signAndSendTx({
         to: address,
         data,
-        // gasLimit: await increaseGasLimit(provider.address!, providerInstance, txBody, 1.5),
-        gasLimit: 25000,
+        gasLimit: 5000000,
       })
     },
 
-    usersRequestInfo: async (accountAddress: string) => {
-      return contractInstance?.usersRequestInfo(accountAddress)
+    getUserRequestInfo: async (accountAddress: string) => {
+      return contractInstance?.getUserRequestInfo(accountAddress)
     },
   }
 }

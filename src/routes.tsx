@@ -108,7 +108,7 @@ export const AppRoutes = () => {
         },
         {
           path: RoutePaths.Root,
-          element: <Navigate replace to={RoutePaths.Roles} />,
+          element: <Navigate replace to={RoutePaths.Dashboard} />,
         },
         {
           path: createDeepPath(RoutePaths.Login),

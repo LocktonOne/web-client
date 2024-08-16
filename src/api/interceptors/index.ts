@@ -49,7 +49,7 @@ export const refreshTokenInterceptor: (
       !isUnauthorized &&
       // Add if you use a refresh token (as 'refresh_token_url' there should be
       // refresh token endpoint)
-      !config.url.includes('refresh_token')
+      config.url.includes('refresh_token')
     )
       return Promise.reject(response)
 
