@@ -80,7 +80,6 @@ const KycRequests = ({ ...rest }: Props) => {
           <Table sx={{ minWidth: 650 }} aria-label='simple table'>
             <TableHead>
               <TableRow>
-                <TableCell>Email</TableCell>
                 <TableCell>Address</TableCell>
                 <TableCell>Creation Date</TableCell>
               </TableRow>
@@ -92,9 +91,6 @@ const KycRequests = ({ ...rest }: Props) => {
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   onClick={() => setActiveKyc(item)}
                 >
-                  <TableCell component='th' scope='row'>
-                    {item.email}
-                  </TableCell>
                   <TableCell component='th' scope='row'>
                     {item.address}
                   </TableCell>

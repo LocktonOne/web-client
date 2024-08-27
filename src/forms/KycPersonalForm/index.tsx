@@ -8,7 +8,7 @@ import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
 import { BlobUtil, useKycUser } from '@/modules/sdk'
-import { useWalletState, web3Store } from '@/store'
+import { web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
 import { RequestDescriptionKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
@@ -30,7 +30,6 @@ const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) =>
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
   const { requestKYCRole, init } = useKycUser()
-  const { wallet } = useWalletState()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.Name]: string
@@ -77,7 +76,6 @@ const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) =>
           lastName: formState[FieldNames.Surname],
           passportSerialNumber: formState[FieldNames.PassportSerialNumber],
           passportIssuanceDate: formState[FieldNames.PassportIssuanceDate],
-          email: wallet?.email ?? '',
           requestType: 'personal',
         },
         owner: web3Store.provider?.address,

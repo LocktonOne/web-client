@@ -29,7 +29,8 @@
     "title": "Log In to your account",
     "desc": "Enter your details to login.",
     "submit-btn": "Sign In",
-    "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet."
+    "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet.",
+    "metamask-title": "Log In to Lockton One With MetaMask"
   },
   "roles-page": {
     "title": "Roles",

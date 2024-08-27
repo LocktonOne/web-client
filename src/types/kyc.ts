@@ -8,7 +8,7 @@ export type RequestDescriptionKyc = {
   companyName?: string
   companyAddress?: string
   companyMainActivity?: string
-  email: string
+  email?: string
   requestType: string
 }
 

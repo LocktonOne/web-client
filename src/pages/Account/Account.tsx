@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { PageTitles } from '@/common'
-import { Icons } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
 import { coreContracts, useKycManagement } from '@/modules/sdk'
 import { web3Store } from '@/store'
 import { UiIcon } from '@/ui'
@@ -33,7 +33,7 @@ const Account = () => {
   return (
     <Stack sx={{ alignItems: 'flex-start', py: 10, px: 15 }}>
       <Stack sx={{ alignItems: 'flex-start', justifyContent: 'center' }} direction='row' gap={4}>
-        <IconButton aria-label='back' onClick={() => router(-1)}>
+        <IconButton aria-label='back' onClick={() => router(RoutePaths.Dashboard)}>
           <UiIcon name={Icons.ArrowLeft} size={6} color={palette.primary.dark} />
         </IconButton>
         <PageTitles
