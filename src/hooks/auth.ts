@@ -1,8 +1,10 @@
-import { PROVIDERS } from '@distributedlab/w3p'
+import { EthereumProvider, PROVIDERS } from '@distributedlab/w3p'
+import { ethers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 
 import { useWallet } from '@/api/modules'
 import { getAuthPair, refreshToken } from '@/api/modules/doorman'
+import { getToken } from '@/api/modules/faucet'
 import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
 import { coreContracts, initCoreContracts } from '@/modules/sdk'
@@ -15,7 +17,7 @@ export const useAuth = () => {
   const { roles } = useRolesState()
 
   const isLoggedIn = useMemo(() => {
-    return Boolean(wallet) && Boolean(metamaskAddress)
+    return Boolean(wallet) || Boolean(metamaskAddress)
   }, [metamaskAddress, wallet])
 
   const role = useMemo(() => {
@@ -35,6 +37,16 @@ export const useAuth = () => {
     walletStore.setWallet(null)
     walletStore.setMetamaskAddress(null)
   }, [])
+
+  const getTokenForKYC = async (addr: string) => {
+    const provider = new ethers.providers.Web3Provider(
+      web3Store.provider?.rawProvider as EthereumProvider,
+    )
+    const balance = await provider.getBalance(addr)
+    if (balance.lte(0)) {
+      await getToken(addr)
+    }
+  }
 
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
@@ -59,8 +71,9 @@ export const useAuth = () => {
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setMetamaskAddress(web3Store.provider.address)
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    await getTokenForKYC(web3Store.provider.address)
   }
 
   const register = async (email: string, password: string) => {
@@ -91,6 +104,7 @@ export const useAuth = () => {
     login,
     logout,
     register,
+    getRoles,
     loginWithMetamask,
     getAccessToken,
     refreshAccessToken,
