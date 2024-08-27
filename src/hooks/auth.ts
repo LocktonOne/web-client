@@ -5,18 +5,18 @@ import { useWallet } from '@/api/modules'
 import { getAuthPair, refreshToken } from '@/api/modules/doorman'
 import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
-import { coreContracts, initCoreContracts } from "@/modules/sdk";
+import { coreContracts, initCoreContracts } from '@/modules/sdk'
 import { rolesStore, useRolesState, useWalletState, walletStore, web3Store } from '@/store'
 import { authStore } from '@/store/modules/auth.module'
 
 export const useAuth = () => {
-  const { wallet } = useWalletState()
+  const { wallet, metamaskAddress } = useWalletState()
   const _wallet = useWallet()
   const { roles } = useRolesState()
 
   const isLoggedIn = useMemo(() => {
-    return Boolean(wallet)
-  }, [wallet])
+    return Boolean(wallet) && Boolean(metamaskAddress)
+  }, [metamaskAddress, wallet])
 
   const role = useMemo(() => {
     switch (true) {
@@ -33,6 +33,7 @@ export const useAuth = () => {
 
   const logout = useCallback(async () => {
     walletStore.setWallet(null)
+    walletStore.setMetamaskAddress(null)
   }, [])
 
   const login = async (email: string, password: string) => {
@@ -59,7 +60,7 @@ export const useAuth = () => {
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
-    walletStore.setWallet(web3Store.provider.address)
+    walletStore.setMetamaskAddress(web3Store.provider.address)
   }
 
   const register = async (email: string, password: string) => {
