@@ -9,7 +9,7 @@ export type AuthTokensGroup = {
 }
 
 type AuthState = {
-  wallet: Wallet | null
+  wallet: Wallet | string | null
 }
 
 const [walletStore, useWalletState] = createStore(
@@ -18,7 +18,7 @@ const [walletStore, useWalletState] = createStore(
     wallet: null,
   } as AuthState,
   state => ({
-    setWallet(wallet: Wallet | null) {
+    setWallet(wallet: Wallet | string | null) {
       state.wallet = wallet
     },
   }),

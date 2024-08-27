@@ -4,7 +4,8 @@ import { useCallback, useMemo } from 'react'
 import { useWallet } from '@/api/modules'
 import { getAuthPair, refreshToken } from '@/api/modules/doorman'
 import { Roles } from '@/enums'
-import { coreContracts } from '@/modules/sdk'
+import { sleep } from '@/helpers'
+import { coreContracts, initCoreContracts } from "@/modules/sdk";
 import { rolesStore, useRolesState, useWalletState, walletStore, web3Store } from '@/store'
 import { authStore } from '@/store/modules/auth.module'
 
@@ -36,20 +37,33 @@ export const useAuth = () => {
 
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
-    if (!web3Store.provider?.address) {
-      await web3Store.connect(PROVIDERS.Metamask)
-    }
     await getRoles()
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
   }
 
+  const loginWithMetamask = async () => {
+    await web3Store.connect(PROVIDERS.Metamask)
+
+    if (!web3Store.provider?.address) {
+      await sleep(1000)
+    }
+
+    if (!web3Store.provider?.address) {
+      throw new Error('Provider address is undefined')
+    }
+
+    const tokens = await getAuthPair(web3Store.provider?.address ?? '')
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
+    await getRoles()
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    walletStore.setWallet(web3Store.provider.address)
+  }
+
   const register = async (email: string, password: string) => {
     const generatedWallet = await _wallet.create(email, password)
-    if (!web3Store.provider?.address) {
-      await web3Store.connect(PROVIDERS.Metamask)
-    }
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
     await getRoles()
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
@@ -76,6 +90,7 @@ export const useAuth = () => {
     login,
     logout,
     register,
+    loginWithMetamask,
     getAccessToken,
     refreshAccessToken,
   }

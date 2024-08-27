@@ -8,7 +8,7 @@ import { tokensListContext } from '@/contexts'
 import { Roles, RoutePaths } from '@/enums'
 import { useAuth, useTokens } from '@/hooks'
 import { useKycManagement } from '@/modules/sdk'
-import { useWalletState, web3Store } from '@/store'
+import { web3Store } from '@/store'
 
 import { DeployedContracts, UserBalance } from './components'
 
@@ -16,7 +16,6 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0)
   const { t } = useTranslation()
   const { palette } = useTheme()
-  const { wallet } = useWalletState()
   const { loadTokens, isLoading, tokensList, setTokensList, setIsLoading } = useTokens()
   const { role } = useAuth()
 
@@ -57,7 +56,6 @@ const Dashboard = () => {
               color: palette.primary.dark,
             }}
             type='user'
-            email={wallet?.email ?? ''}
             name={`${role} User`}
           />
         </NavLink>

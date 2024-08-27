@@ -1,7 +1,7 @@
 import { config } from '@config'
 import { PROVIDERS } from '@distributedlab/w3p'
 import { CircularProgress, CssBaseline, Stack, ThemeProvider } from '@mui/material'
-import { FC, HTMLAttributes, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { FC, HTMLAttributes, memo, useEffect, useMemo, useState } from 'react'
 
 import { initApi } from '@/api/clients'
 import { bearerAttachInterceptor, refreshTokenInterceptor } from '@/api/interceptors'
@@ -17,11 +17,13 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
   const [isAppInitialized, setIsAppInitialized] = useState(false)
 
   const { paletteMode } = useUiState()
-  const { getAccessToken, refreshAccessToken, logout } = useAuth()
+  const { getAccessToken, refreshAccessToken, logout, isLoggedIn } = useAuth()
 
   useViewportSizes()
 
-  const init = useCallback(async () => {
+  const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
+
+  const init = async () => {
     try {
       initApi(config.API_URL, [
         {
@@ -29,20 +31,20 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
           error: refreshTokenInterceptor(getAccessToken, refreshAccessToken, logout),
         },
       ])
-      if (!web3Store.provider?.address) {
+      initGraph()
+      if (!web3Store.provider?.address && isLoggedIn) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
-      initGraph()
-      await initCoreContracts(web3Store.provider!, web3Store.provider!.rawProvider!)
-      await coreContracts.loadCoreContractsAddresses()
+      if (web3Store.provider) {
+        await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+        await coreContracts.loadCoreContractsAddresses()
+      }
     } catch (error) {
       ErrorHandler.processWithoutFeedback(error)
     }
 
     setIsAppInitialized(true)
-  }, [getAccessToken, logout, refreshAccessToken])
-
-  const theme = useMemo(() => createTheme(paletteMode), [paletteMode])
+  }
 
   useEffect(() => {
     init()

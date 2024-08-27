@@ -107,7 +107,7 @@ const AdminNavbar = () => {
       </Stack>
 
       <Stack spacing={4}>
-        <ProfileMenu type='admin' email='adminsmail@gmail.com' name='Master Admin' />
+        <ProfileMenu type='admin' name='Master Admin' />
       </Stack>
     </Stack>
   )
