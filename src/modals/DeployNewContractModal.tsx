@@ -8,20 +8,31 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-import { BusEvents, Icons } from '@/enums'
+import { BusEvents, Icons, Roles } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm, useTokensListContext } from '@/hooks'
 import { coreContracts } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
-import { UiIcon, UiTextField } from '@/ui'
+import { UiCheckbox, UiIcon, UiSelect, UiTextField } from '@/ui'
 
 type Props = {
   isOpen: boolean
   handleClose: () => void
+}
+
+interface Permissions {
+  mint: boolean
+  burn: boolean
+  spend: boolean
+  receive: boolean
+}
+
+type RolePermissions = {
+  [key: string]: Permissions
 }
 
 const style = {
@@ -36,6 +47,12 @@ const style = {
   p: 4,
 }
 
+const roleOptions = [
+  { value: Roles.CORPORATE, label: 'Corporate' },
+  { value: Roles.VERIFIED, label: 'Verification' },
+  { value: Roles.UNVERIFIED, label: 'Unverified' },
+]
+
 enum FieldNames {
   TokenName = 'tokenName',
   TokenSymbol = 'tokenSymbol',
@@ -43,6 +60,14 @@ enum FieldNames {
 }
 
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
+  const rolePermissions: RolePermissions = {
+    [Roles.UNVERIFIED]: { mint: true, burn: true, spend: true, receive: true },
+    [Roles.VERIFIED]: { mint: true, burn: false, spend: true, receive: true },
+    [Roles.CORPORATE]: { mint: false, burn: false, spend: false, receive: true },
+  }
+
+  const [role, setRole] = useState<string>(Roles.UNVERIFIED)
+  const [permissions, setPermissions] = useState<RolePermissions>(rolePermissions)
   const { palette } = useTheme()
   const { t } = useTranslation()
   const { loadTokens } = useTokensListContext()
@@ -98,6 +123,21 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
       ErrorHandler.process(error)
     }
     enableForm()
+  }
+
+  const handleRoleChange = (value: string) => {
+    setRole(value)
+  }
+
+  const handleCheckboxChange = (permission: keyof Permissions) => {
+    // TODO: remove checkbox logic after demo
+    setPermissions(prevPermissions => ({
+      ...prevPermissions,
+      [role]: {
+        ...prevPermissions[role],
+        [permission]: !prevPermissions[role][permission],
+      },
+    }))
   }
 
   return (
@@ -163,6 +203,36 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
                   disabled={isFormDisabled}
                 />
               )}
+            />
+          </Stack>
+          <Stack mt={4}>
+            <UiSelect
+              label={t('admin-permission-modal.permission-type')}
+              value={role}
+              updateValue={handleRoleChange}
+              options={roleOptions}
+            />
+          </Stack>
+          <Stack mt={4} direction='row'>
+            <UiCheckbox
+              label='Mint'
+              checked={permissions[role].mint}
+              onChange={() => handleCheckboxChange('mint')}
+            />
+            <UiCheckbox
+              label='Burn'
+              checked={permissions[role].burn}
+              onChange={() => handleCheckboxChange('burn')}
+            />
+            <UiCheckbox
+              label='Spend'
+              checked={permissions[role].spend}
+              onChange={() => handleCheckboxChange('spend')}
+            />
+            <UiCheckbox
+              label='Receive'
+              checked={permissions[role].receive}
+              onChange={() => handleCheckboxChange('receive')}
             />
           </Stack>
           <Button type='submit' disabled={isFormDisabled} sx={{ mt: 8, width: 160 }}>
