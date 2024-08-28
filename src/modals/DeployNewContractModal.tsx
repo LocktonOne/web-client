@@ -53,6 +53,12 @@ const roleOptions = [
   { value: Roles.UNVERIFIED, label: 'Unverified' },
 ]
 
+const rolePermissions: RolePermissions = {
+  [Roles.UNVERIFIED]: { mint: true, burn: true, spend: true, receive: true },
+  [Roles.VERIFIED]: { mint: true, burn: false, spend: true, receive: true },
+  [Roles.CORPORATE]: { mint: false, burn: false, spend: false, receive: true },
+}
+
 enum FieldNames {
   TokenName = 'tokenName',
   TokenSymbol = 'tokenSymbol',
@@ -60,12 +66,6 @@ enum FieldNames {
 }
 
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
-  const rolePermissions: RolePermissions = {
-    [Roles.UNVERIFIED]: { mint: true, burn: true, spend: true, receive: true },
-    [Roles.VERIFIED]: { mint: true, burn: false, spend: true, receive: true },
-    [Roles.CORPORATE]: { mint: false, burn: false, spend: false, receive: true },
-  }
-
   const [role, setRole] = useState<string>(Roles.UNVERIFIED)
   const [permissions, setPermissions] = useState<RolePermissions>(rolePermissions)
   const { palette } = useTheme()
