@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { ethers } from 'ethers'
 import { useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -65,6 +66,8 @@ enum FieldNames {
   AmountToken = 'amountTokens',
 }
 
+const DEFAULT_DECIMALS = 18
+
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const [role, setRole] = useState<string>(Roles.UNVERIFIED)
   const [permissions, setPermissions] = useState<RolePermissions>(rolePermissions)
@@ -110,8 +113,11 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
         name: formState[FieldNames.TokenName],
         symbol: formState[FieldNames.TokenSymbol],
         contractURI: 'https://example.com/token-metadata',
-        decimals: 18,
-        totalSupplyCap: formState[FieldNames.AmountToken],
+        decimals: DEFAULT_DECIMALS,
+        totalSupplyCap: ethers.utils.parseUnits(
+          formState[FieldNames.AmountToken].toString(),
+          DEFAULT_DECIMALS,
+        ),
         permissions: 15,
       }
       await tokenFactory.deployTERC20(tokenParams)

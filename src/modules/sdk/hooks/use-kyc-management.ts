@@ -210,6 +210,7 @@ export const useKycManagement = (queryParams?: {
         companyAddress: kycBlob.rawData?.companyAddress,
         companyName: kycBlob.rawData?.companyName,
         companyMainActivity: kycBlob.rawData?.companyMainActivity,
+        DID: kycBlob.rawData?.DID,
       } as Kyc
     } catch (error) {
       return {
@@ -221,6 +222,7 @@ export const useKycManagement = (queryParams?: {
         email: '',
         companyAddress: '',
         companyName: '',
+        DID: '',
       } as Kyc
     }
   }

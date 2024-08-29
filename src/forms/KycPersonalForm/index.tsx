@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { createIdentity, getIdentity } from '@/api/modules/polygonId'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
@@ -70,6 +71,8 @@ const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) =>
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
+      await createIdentity()
+      const DID = await getIdentity(web3Store.provider!.address!)
       const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
           firstName: formState[FieldNames.Name],
@@ -77,6 +80,7 @@ const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) =>
           passportSerialNumber: formState[FieldNames.PassportSerialNumber],
           passportIssuanceDate: formState[FieldNames.PassportIssuanceDate],
           requestType: 'personal',
+          DID,
         },
         owner: web3Store.provider?.address,
       })

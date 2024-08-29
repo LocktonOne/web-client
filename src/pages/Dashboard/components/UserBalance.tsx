@@ -12,16 +12,11 @@ import { SendTokensModal } from '@/modals'
 import { coreContracts } from '@/modules/sdk'
 import { createTERC20Factory } from '@/modules/sdk/contracts/terc20'
 import { web3Store } from '@/store'
+import { SelectOption } from '@/types'
 import { UiIcon, UiSelect } from '@/ui'
 
 const EXCHANGE_RATE = 1
-const DEFAULT_AMOUNT_MINT = 1
-
-type SelectOption = {
-  label: string
-  value: string
-  addr: string
-}
+const DEFAULT_AMOUNT_MINT = '1'
 
 const defaultSelectOptions = [{ label: config.NATIVE_TOKEN, value: config.NATIVE_TOKEN, addr: '0' }]
 
@@ -54,9 +49,10 @@ const UserBalance = () => {
   const checkOtherTokenBalance = async (addr: string) => {
     const tokenFactory = coreContracts.getTokenFactoryContract()
     const balance = await tokenFactory.getTokenBalance(addr, coreContracts.provider.address!)
+    const formattedBalance = parseFloat(balance).toFixed(4)
     const _balanceInUSD = (parseFloat(balance.toString()) * EXCHANGE_RATE).toFixed(2)
     setBalanceInUSD(_balanceInUSD)
-    setBalance(balance)
+    setBalance(formattedBalance)
   }
 
   const checkBalance = async (activeToken: string) => {
@@ -83,7 +79,9 @@ const UserBalance = () => {
         coreContracts.rawProvider,
         coreContracts.provider,
       )
-      await tokenContract.mintToken(DEFAULT_AMOUNT_MINT)
+      const decimals = await tokenContract.contractInstance.decimals()
+      const amountInWei = ethers.utils.parseUnits(DEFAULT_AMOUNT_MINT, decimals)
+      await tokenContract.mintToken(amountInWei)
       await checkBalance(activeToken)
       bus.emit(BusEvents.success, { message: 'Success minting 1 token' })
     } catch (e) {
@@ -168,7 +166,10 @@ const UserBalance = () => {
       </Stack>
       <SendTokensModal
         isOpen={isSendTokenModalOpen}
-        handleClose={() => setIsOpenModalOpen(false)}
+        handleClose={() => {
+          checkBalance(activeToken)
+          setIsOpenModalOpen(false)
+        }}
       />
     </Stack>
   )

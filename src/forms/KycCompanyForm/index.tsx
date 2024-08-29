@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
+import { createIdentity, getIdentity } from '@/api/modules/polygonId'
 import { BusEvents, Icons } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useForm } from '@/hooks'
@@ -66,11 +67,14 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
+      await createIdentity()
+      const DID = await getIdentity(web3Store.provider!.address!)
       const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
           companyName: formState[FieldNames.CompanyName],
           companyAddress: formState[FieldNames.CompanyAddress],
           companyMainActivity: formState[FieldNames.CompanyMainActivity],
+          DID,
           requestType: 'company',
         },
         owner: web3Store.provider?.address,

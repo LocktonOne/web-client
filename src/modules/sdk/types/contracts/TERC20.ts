@@ -179,6 +179,10 @@ export interface TERC20Interface extends utils.Interface {
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "mintTo",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setContractMetadata",
@@ -209,10 +213,6 @@ export interface TERC20Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintTo",
-    values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
@@ -397,7 +397,7 @@ export interface TERC20 extends BaseContract {
 
     __TERC20_init(
       params_: ITERC20.ConstructorParamsStruct,
-      resource_: string,
+      arg1: string,
       overrides?: Overrides & { from?: string }
     ): Promise<ContractTransaction>;
 
@@ -505,7 +505,7 @@ export interface TERC20 extends BaseContract {
 
   __TERC20_init(
     params_: ITERC20.ConstructorParamsStruct,
-    resource_: string,
+    arg1: string,
     overrides?: Overrides & { from?: string }
   ): Promise<ContractTransaction>;
 
@@ -609,7 +609,7 @@ export interface TERC20 extends BaseContract {
 
     __TERC20_init(
       params_: ITERC20.ConstructorParamsStruct,
-      resource_: string,
+      arg1: string,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -743,7 +743,7 @@ export interface TERC20 extends BaseContract {
 
     __TERC20_init(
       params_: ITERC20.ConstructorParamsStruct,
-      resource_: string,
+      arg1: string,
       overrides?: Overrides & { from?: string }
     ): Promise<BigNumber>;
 
@@ -852,7 +852,7 @@ export interface TERC20 extends BaseContract {
 
     __TERC20_init(
       params_: ITERC20.ConstructorParamsStruct,
-      resource_: string,
+      arg1: string,
       overrides?: Overrides & { from?: string }
     ): Promise<PopulatedTransaction>;
 

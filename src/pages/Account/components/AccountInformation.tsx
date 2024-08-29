@@ -162,6 +162,17 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             >
               {userInfo?.passportIssuanceDate}
             </Typography>
+            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+              {t('account-info.DID')}
+            </Typography>
+            <Typography
+              sx={{ mt: 1, wordBreak: 'break-word', lineHeight: 1.5 }}
+              variant='subtitle4'
+              fontSize={18}
+              overflow='hidden'
+            >
+              {userInfo?.DID}
+            </Typography>
           </Stack>
         )}
       </Stack>

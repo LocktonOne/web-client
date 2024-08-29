@@ -27,6 +27,16 @@ export const createTERC20Factory = (
       return provider.signAndSendTx({
         to: contractAddress,
         data,
+        gasLimit: 5000000,
+      })
+    },
+
+    transferTo: async (amount: BigNumberish, toAddress: string) => {
+      const data = contractInterface.encodeFunctionData('transfer', [toAddress, amount])
+      return provider.signAndSendTx({
+        to: contractAddress,
+        data,
+        gasLimit: 5000000,
       })
     },
   }
