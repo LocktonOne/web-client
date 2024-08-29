@@ -11,7 +11,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BusEvents, Icons, Roles } from '@/enums'
+import { BusEvents, Icons, RequestsStatuses, Roles } from '@/enums'
 import { bus, formatDateTime } from '@/helpers'
 import { coreContracts, useKycManagement } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
@@ -164,23 +164,25 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
                 </>
               )}
             </Grid>
-            <Stack direction='row' spacing={3} mt={8} alignItems='flex-start'>
-              <Button sx={{ width: 160 }} onClick={() => handleAccept()}>
-                {t('request-kyc-modal.approve')}
-              </Button>
-              <Button
-                sx={{
-                  width: 160,
-                  background: palette.common.white,
-                  color: palette.common.black,
-                  border: '1px solid',
-                  '&:hover': { bgcolor: 'transparent', borderColor: palette.action.hover },
-                }}
-                onClick={() => handleReject()}
-              >
-                {t('request-kyc-modal.reject')}
-              </Button>
-            </Stack>
+            {info.status === RequestsStatuses.PENDING && (
+              <Stack direction='row' spacing={3} mt={8} alignItems='flex-start'>
+                <Button sx={{ width: 160 }} onClick={() => handleAccept()}>
+                  {t('request-kyc-modal.approve')}
+                </Button>
+                <Button
+                  sx={{
+                    width: 160,
+                    background: palette.common.white,
+                    color: palette.common.black,
+                    border: '1px solid',
+                    '&:hover': { bgcolor: 'transparent', borderColor: palette.action.hover },
+                  }}
+                  onClick={() => handleReject()}
+                >
+                  {t('request-kyc-modal.reject')}
+                </Button>
+              </Stack>
+            )}
           </Stack>
         </Stack>
         {isSubmitting && (

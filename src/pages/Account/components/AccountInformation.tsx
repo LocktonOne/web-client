@@ -114,56 +114,99 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
           </>
         ) : (
           <Stack>
+            {role === Roles.CORPORATE ? (
+              <Stack>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.company-name')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.companyName}
+                </Typography>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.company-address')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.companyAddress}
+                </Typography>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.company-activity')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.companyMainActivity}
+                </Typography>
+              </Stack>
+            ) : (
+              <Stack>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.first-name')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.firstName}
+                </Typography>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.last-name')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.lastName}
+                </Typography>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.passport-number')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.passportSerialNumber}
+                </Typography>
+                <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
+                  {t('account-info.passport-date')}
+                </Typography>
+                <Typography
+                  sx={{ mt: 1 }}
+                  variant='subtitle4'
+                  fontSize={18}
+                  overflow='hidden'
+                  textOverflow='ellipsis'
+                >
+                  {userInfo?.passportIssuanceDate}
+                </Typography>
+              </Stack>
+            )}
             <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.first-name')}
-            </Typography>
-            <Typography
-              sx={{ mt: 1 }}
-              variant='subtitle4'
-              fontSize={18}
-              overflow='hidden'
-              textOverflow='ellipsis'
-            >
-              {userInfo?.firstName}
-            </Typography>
-            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.last-name')}
-            </Typography>
-            <Typography
-              sx={{ mt: 1 }}
-              variant='subtitle4'
-              fontSize={18}
-              overflow='hidden'
-              textOverflow='ellipsis'
-            >
-              {userInfo?.lastName}
-            </Typography>
-            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.passport-number')}
-            </Typography>
-            <Typography
-              sx={{ mt: 1 }}
-              variant='subtitle4'
-              fontSize={18}
-              overflow='hidden'
-              textOverflow='ellipsis'
-            >
-              {userInfo?.passportSerialNumber}
-            </Typography>
-            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.passport-date')}
-            </Typography>
-            <Typography
-              sx={{ mt: 1 }}
-              variant='subtitle4'
-              fontSize={18}
-              overflow='hidden'
-              textOverflow='ellipsis'
-            >
-              {userInfo?.passportIssuanceDate}
-            </Typography>
-            <Typography sx={{ fontSize: 18, color: palette.primary.light, mt: 5 }}>
-              {t('account-info.DID')}
+              {t('account-info.user-did')}
             </Typography>
             <Typography
               sx={{ mt: 1, wordBreak: 'break-word', lineHeight: 1.5 }}

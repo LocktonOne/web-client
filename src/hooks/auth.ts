@@ -28,9 +28,6 @@ export const useAuth = () => {
       case roles.includes(Roles.VERIFIED): {
         return Roles.VERIFIED
       }
-      case roles.includes(Roles.MASTER): {
-        return Roles.MASTER
-      }
       default:
         return Roles.UNVERIFIED
     }

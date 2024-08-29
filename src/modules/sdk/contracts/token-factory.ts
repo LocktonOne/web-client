@@ -1,5 +1,5 @@
 import { Provider, RawProvider } from '@distributedlab/w3p'
-import { BigNumberish, ethers } from "ethers";
+import { BigNumberish, ethers } from 'ethers'
 
 import {
   coreContracts,

@@ -96,7 +96,10 @@
     "last-name": "Last name",
     "passport-number": "Passport serial number",
     "passport-date": "Passport issuance date",
-    "user-did": "DID"
+    "user-did": "DID",
+    "company-name": "Company Name",
+    "company-address": "Company registration address",
+    "company-activity": "Company main activity"
   },
   "kyc-page": {
     "title": "KYC procedure",

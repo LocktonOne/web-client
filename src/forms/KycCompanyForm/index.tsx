@@ -1,5 +1,6 @@
+import { ConflictError } from '@distributedlab/jac'
 import { PROVIDERS } from '@distributedlab/w3p'
-import { Button, Stack, Typography, useTheme } from '@mui/material'
+import { Button, CircularProgress, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -67,7 +68,13 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
-      await createIdentity()
+      try {
+        await createIdentity()
+      } catch (error) {
+        if (!(error instanceof ConflictError)) {
+          throw new Error(error as string)
+        }
+      }
       const DID = await getIdentity(web3Store.provider!.address!)
       const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
@@ -117,6 +124,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           py: 2.5,
           px: 4,
           cursor: 'pointer',
+          position: 'relative',
         }}
       >
         <Stack direction='row' alignItems='center'>
@@ -132,7 +140,10 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           mr={3}
         />
       </Stack>
-      <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(submit)}
+        style={{ width: '100%', pointerEvents: isActive ? 'all' : 'none' }}
+      >
         <Stack
           width='100%'
           sx={{
@@ -196,14 +207,14 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           <Button
             type='submit'
             variant='contained'
-            disabled={!isActive}
+            disabled={!isActive || isFormDisabled}
             sx={{
               background: palette.primary.dark,
               fontWeight: typography.fontWeightBold,
               width: '50%',
               mt: 12,
               '&:disabled': {
-                backgroundColor: palette.common.black,
+                backgroundColor: palette.primary.light,
                 color: palette.common.white,
               },
             }}
@@ -212,6 +223,16 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           </Button>
         </Stack>
       </form>
+      {isFormDisabled && (
+        <Stack
+          alignItems='center'
+          justifyContent='center'
+          sx={{ position: 'absolute', top: '50%', left: '75%' }}
+          flex={1}
+        >
+          <CircularProgress color='secondary' />
+        </Stack>
+      )}
     </Stack>
   )
 }
