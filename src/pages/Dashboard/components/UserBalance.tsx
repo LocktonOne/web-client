@@ -1,18 +1,21 @@
 import { config } from '@config'
 import { EthereumProvider } from '@distributedlab/w3p'
-import { Button, Divider, Stack, Typography, useTheme } from '@mui/material'
+import { Button, CircularProgress, Divider, Stack, Typography, useTheme } from '@mui/material'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Icons, Roles } from '@/enums'
+import { BusEvents, Icons, Roles } from '@/enums'
+import { bus } from '@/helpers'
 import { useAuth, useTokensListContext } from '@/hooks'
 import { SendTokensModal } from '@/modals'
 import { coreContracts } from '@/modules/sdk'
+import { createTERC20Factory } from '@/modules/sdk/contracts/terc20'
 import { web3Store } from '@/store'
 import { UiIcon, UiSelect } from '@/ui'
 
 const EXCHANGE_RATE = 1
+const DEFAULT_AMOUNT_MINT = 1
 
 type SelectOption = {
   label: string
@@ -28,6 +31,7 @@ const UserBalance = () => {
   const [isSendTokenModalOpen, setIsOpenModalOpen] = useState(false)
   const [activeToken, setActiveToken] = useState(config.NATIVE_TOKEN)
   const [selectOptions, setSelectOptions] = useState<SelectOption[]>(defaultSelectOptions)
+  const [isMinting, setIsMinting] = useState(false)
 
   const { palette, spacing } = useTheme()
   const { t } = useTranslation()
@@ -68,6 +72,26 @@ const UserBalance = () => {
       _selectOptions.push({ label: token.symbol, value: token.symbol, addr: token.address })
     }
     setSelectOptions(_selectOptions)
+  }
+
+  const mint = async () => {
+    setIsMinting(true)
+    try {
+      const _token = selectOptions.find(token => token.value === activeToken)
+      const tokenContract = createTERC20Factory(
+        _token!.addr!,
+        coreContracts.rawProvider,
+        coreContracts.provider,
+      )
+      await tokenContract.mintToken(DEFAULT_AMOUNT_MINT)
+      await checkBalance(activeToken)
+      bus.emit(BusEvents.success, { message: 'Success minting 1 token' })
+    } catch (e) {
+      bus.emit(BusEvents.error, { message: 'Error' })
+      console.error(e)
+    }
+
+    setIsMinting(false)
   }
 
   useEffect(() => {
@@ -112,18 +136,34 @@ const UserBalance = () => {
             {`$${balanceInUSD}`}
           </Typography>
         </Stack>
-        <Stack direction='row' alignItems='center' spacing={5}>
-          <Button
-            sx={{ width: 200 }}
-            disabled={role === Roles.UNVERIFIED}
-            onClick={() => setIsOpenModalOpen(true)}
-          >
-            <UiIcon name={Icons.ArrowUpRight} size={5} mr={2} />
-            {t('user-balance.send')}
-          </Button>
-          {role === Roles.UNVERIFIED && (
-            <UiIcon name={Icons.LockFill} sx={{ color: palette.primary.light }} />
-          )}
+        <Stack direction='row' gap={6}>
+          <Stack direction='row' alignItems='center' spacing={5}>
+            <Button
+              sx={{ width: 200 }}
+              disabled={role === Roles.UNVERIFIED}
+              onClick={() => setIsOpenModalOpen(true)}
+            >
+              <UiIcon name={Icons.ArrowUpRight} size={5} mr={2} />
+              {t('user-balance.send')}
+            </Button>
+            {role === Roles.UNVERIFIED && (
+              <UiIcon name={Icons.LockFill} sx={{ color: palette.primary.light }} />
+            )}
+          </Stack>
+          <Stack direction='row' alignItems='center' spacing={5}>
+            <Button
+              sx={{ width: 200 }}
+              disabled={activeToken === config.NATIVE_TOKEN || isMinting}
+              onClick={() => mint()}
+            >
+              <UiIcon name={Icons.Cardholder} size={5} mr={2} />
+              {t('user-balance.mint')}
+            </Button>
+            {activeToken === config.NATIVE_TOKEN && (
+              <UiIcon name={Icons.LockFill} sx={{ color: palette.primary.light }} />
+            )}
+            {isMinting && <CircularProgress />}
+          </Stack>
         </Stack>
       </Stack>
       <SendTokensModal

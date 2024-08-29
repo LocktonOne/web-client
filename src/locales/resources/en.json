@@ -112,7 +112,8 @@
   },
   "user-balance": {
     "my-balance": "My Balance",
-    "send": "Send"
+    "send": "Send",
+    "mint": "Mint"
   },
   "deployed-contracts": {
     "title": "Deployed Contracts",

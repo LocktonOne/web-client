@@ -179,10 +179,6 @@ export interface TERC20Interface extends utils.Interface {
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "mintTo",
-    values: [string, BigNumberish]
-  ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "setContractMetadata",
@@ -213,6 +209,10 @@ export interface TERC20Interface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "mintTo",
+    values: [string, BigNumberish]
   ): string;
 
   decodeFunctionResult(
