@@ -70,14 +70,16 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
+      let DID: string
       try {
-        await createIdentity()
+        DID = await createIdentity()
       } catch (error) {
         if (!(error instanceof ConflictError)) {
           throw new Error(error as string)
         }
+        DID = await getIdentity(web3Store.provider!.address!)
       }
-      const DID = await getIdentity(web3Store.provider!.address!)
+
       const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
           companyName: formState[FieldNames.CompanyName],

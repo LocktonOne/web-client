@@ -5,19 +5,23 @@ type IdentityResponse = {
   id: string
 }
 
-export const createIdentity = async (): Promise<void> => {
-  await api.post('/integrations/polygonid-issuer-integration/identities', {
-    body: {
-      data: {
-        attributes: {
-          method: 'polygonid',
-          blockchain: 'polygon',
-          network: 'mumbai',
-          type: 'BJJ',
+export const createIdentity = async (): Promise<string> => {
+  const { data } = await api.post<{ id: string; type: string }>(
+    '/integrations/polygonid-issuer-integration/identities',
+    {
+      body: {
+        data: {
+          attributes: {
+            method: 'polygonid',
+            blockchain: 'polygon',
+            network: 'mumbai',
+            type: 'BJJ',
+          },
         },
       },
     },
-  })
+  )
+  return data.id
 }
 
 export const getIdentity = async (address: string): Promise<string> => {

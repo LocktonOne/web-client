@@ -123,7 +123,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.companyName}
@@ -135,7 +134,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.companyAddress}
@@ -147,7 +145,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.companyMainActivity}
@@ -162,7 +159,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.firstName}
@@ -174,7 +170,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.lastName}
@@ -186,7 +181,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.passportSerialNumber}
@@ -198,7 +192,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                   sx={{ mt: 1 }}
                   variant='subtitle4'
                   fontSize={18}
-                  overflow='hidden'
                   textOverflow='ellipsis'
                 >
                   {userInfo?.passportIssuanceDate}
@@ -212,7 +205,6 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
               sx={{ mt: 1, wordBreak: 'break-word', lineHeight: 1.5 }}
               variant='subtitle4'
               fontSize={18}
-              overflow='hidden'
             >
               {userInfo?.DID}
             </Typography>

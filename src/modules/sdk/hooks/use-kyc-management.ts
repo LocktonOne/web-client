@@ -44,6 +44,7 @@ export const useKycManagement = (queryParams?: {
   const [isLoadingError, setIsLoadingError] = useState(true)
 
   const loadKycRequests = async (creatorAddr: string) => {
+    setKycList([])
     setIsLoading(true)
     const { data } = await coreApolloClient.query<GetKycRequestsQuery>({
       query: GetKycRequests,
@@ -98,6 +99,7 @@ export const useKycManagement = (queryParams?: {
   }
 
   const loadActualKyc = async () => {
+    setActualKyc([])
     const { data } = await coreApolloClient.query<GetUserKycRequestsByStatusQuery>({
       query: GetUserKycRequestsByStatus,
       fetchPolicy: 'network-only',
@@ -123,6 +125,7 @@ export const useKycManagement = (queryParams?: {
   }
 
   const loadPendingKyc = async () => {
+    setPendingKyc([])
     const { data } = await coreApolloClient.query<GetUserKycRequestsByStatusQuery>({
       query: GetUserKycRequestsByStatus,
       fetchPolicy: 'network-only',
@@ -148,6 +151,7 @@ export const useKycManagement = (queryParams?: {
   }
 
   const loadRejectedKyc = async () => {
+    setRejectedKyc([])
     const { data } = await coreApolloClient.query<GetUserKycRequestsByStatusQuery>({
       query: GetUserKycRequestsByStatus,
       fetchPolicy: 'network-only',

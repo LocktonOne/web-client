@@ -65,6 +65,8 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
     setIsSubmitting(true)
     try {
       await rejectRequest(info.id, '')
+      bus.emit(BusEvents.success, { message: 'Success Reject' })
+      handleClose()
     } catch (e) {
       console.error(e)
     }
@@ -101,12 +103,6 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
                 <Typography variant='body2'>
                   {formatDateTime(new Date(info.timestamp * 1000))}
                 </Typography>
-              </Grid>
-              <Grid xs={10} direction='column' justifyContent='flex-start'>
-                <Typography sx={{ fontSize: 16, color: palette.primary.light }}>
-                  {t('request-kyc-modal.email')}
-                </Typography>
-                <Typography variant='body2'>{info.email}</Typography>
               </Grid>
               <Grid xs={10} direction='column' justifyContent='flex-start'>
                 <Typography sx={{ fontSize: 16, color: palette.primary.light }}>
