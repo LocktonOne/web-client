@@ -92,6 +92,11 @@ const UserBalance = () => {
     setIsMinting(false)
   }
 
+  const handleCloseSendModal = async () => {
+    await checkBalance(activeToken)
+    setIsOpenModalOpen(false)
+  }
+
   useEffect(() => {
     checkBalance(activeToken)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,26 +156,22 @@ const UserBalance = () => {
           <Stack direction='row' alignItems='center' spacing={5}>
             <Button
               sx={{ width: 200 }}
-              disabled={activeToken === config.NATIVE_TOKEN || isMinting}
+              disabled={
+                activeToken === config.NATIVE_TOKEN || isMinting || role !== Roles.CORPORATE
+              }
               onClick={() => mint()}
             >
               <UiIcon name={Icons.Cardholder} size={5} mr={2} />
               {t('user-balance.mint')}
             </Button>
-            {activeToken === config.NATIVE_TOKEN && (
+            {(activeToken === config.NATIVE_TOKEN || role !== Roles.CORPORATE) && (
               <UiIcon name={Icons.LockFill} sx={{ color: palette.primary.light }} />
             )}
             {isMinting && <CircularProgress />}
           </Stack>
         </Stack>
       </Stack>
-      <SendTokensModal
-        isOpen={isSendTokenModalOpen}
-        handleClose={() => {
-          checkBalance(activeToken)
-          setIsOpenModalOpen(false)
-        }}
-      />
+      <SendTokensModal isOpen={isSendTokenModalOpen} handleClose={handleCloseSendModal} />
     </Stack>
   )
 }

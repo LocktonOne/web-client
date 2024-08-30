@@ -69,6 +69,11 @@ const KycRequests = ({ ...rest }: Props) => {
     }
   }
 
+  const handleClose = async () => {
+    await loadAllKyc()
+    setActiveKyc(null)
+  }
+
   useEffect(() => {
     loadAllKyc()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -119,11 +124,7 @@ const KycRequests = ({ ...rest }: Props) => {
         </TableContainer>
       )}
       {activeKyc && (
-        <RequestKYCModal
-          isOpen={Boolean(activeKyc)}
-          handleClose={() => setActiveKyc(null)}
-          info={activeKyc!}
-        />
+        <RequestKYCModal isOpen={Boolean(activeKyc)} handleClose={handleClose} info={activeKyc!} />
       )}
     </Stack>
   )

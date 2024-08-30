@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
 import { PageTitles } from '@/common'
-import { Icons } from '@/enums'
+import { Icons, RoutePaths } from '@/enums'
 import KycCompanyForm from '@/forms/KycCompanyForm'
 import KycPersonalForm from '@/forms/KycPersonalForm'
 import { SuccessKYCModal } from '@/modals'
@@ -20,7 +20,7 @@ const Kyc = () => {
   return (
     <Stack sx={{ alignItems: 'flex-start', py: 10, px: 15 }}>
       <Stack sx={{ alignItems: 'flex-start', justifyContent: 'center' }} direction='row' gap={4}>
-        <IconButton aria-label='back' onClick={() => router(-1)}>
+        <IconButton aria-label='back' onClick={() => router(RoutePaths.Account)}>
           <UiIcon name={Icons.ArrowLeft} size={6} color={palette.primary.dark} />
         </IconButton>
         <PageTitles title={t('kyc-page.title')} subtitle={t('kyc-page.subtitle')} variant='h4' />

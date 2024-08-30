@@ -4,10 +4,11 @@ import { Button, CircularProgress, Stack, Typography, useTheme } from '@mui/mate
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
 import { createIdentity, getIdentity } from '@/api/modules/polygonId'
-import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
+import { bus, ErrorHandler, sleep } from '@/helpers'
 import { useForm } from '@/hooks'
 import { BlobUtil, useKycUser } from '@/modules/sdk'
 import { web3Store } from '@/store'
@@ -31,6 +32,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
   const { init, requestKYCRole } = useKycUser()
+  const router = useNavigate()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.CompanyName]: string
@@ -89,9 +91,11 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       await kycBlob.create()
       await init()
       await requestKYCRole(kycBlob.id!)
+      bus.emit(BusEvents.success, { message: 'Success' })
       openSuccessModal()
       reset()
-      bus.emit(BusEvents.success, { message: 'Success' })
+      await sleep(2000)
+      router(RoutePaths.Dashboard)
     } catch (error) {
       ErrorHandler.process(error)
     }
@@ -105,6 +109,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
         flexDirection: 'column',
         alignItems: 'center',
         mt: 8,
+        position: 'relative',
       }}
       width='100%'
       gap={6}
@@ -124,7 +129,6 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           py: 2.5,
           px: 4,
           cursor: 'pointer',
-          position: 'relative',
         }}
       >
         <Stack direction='row' alignItems='center'>
@@ -227,7 +231,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
         <Stack
           alignItems='center'
           justifyContent='center'
-          sx={{ position: 'absolute', top: '50%', left: '75%' }}
+          sx={{ position: 'absolute', top: '50%', left: '45%' }}
           flex={1}
         >
           <CircularProgress color='secondary' />

@@ -55,9 +55,9 @@ const roleOptions = [
 ]
 
 const rolePermissions: RolePermissions = {
-  [Roles.UNVERIFIED]: { mint: true, burn: true, spend: true, receive: true },
-  [Roles.VERIFIED]: { mint: true, burn: false, spend: true, receive: true },
-  [Roles.CORPORATE]: { mint: false, burn: false, spend: false, receive: true },
+  [Roles.UNVERIFIED]: { mint: false, burn: false, spend: false, receive: true },
+  [Roles.VERIFIED]: { mint: false, burn: false, spend: true, receive: true },
+  [Roles.CORPORATE]: { mint: true, burn: true, spend: true, receive: true },
 }
 
 enum FieldNames {
@@ -67,6 +67,7 @@ enum FieldNames {
 }
 
 const DEFAULT_DECIMALS = 18
+const DEFAULT_PERMISSION = 8
 
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const [role, setRole] = useState<string>(Roles.UNVERIFIED)
@@ -118,7 +119,7 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
           formState[FieldNames.AmountToken].toString(),
           DEFAULT_DECIMALS,
         ),
-        permissions: 15,
+        permissions: DEFAULT_PERMISSION,
       }
       await tokenFactory.deployTERC20(tokenParams)
       await loadTokens()
