@@ -7,7 +7,7 @@ import { initApi } from '@/api/clients'
 import { bearerAttachInterceptor, refreshTokenInterceptor } from '@/api/interceptors'
 import { ToastsManager } from '@/contexts'
 import { ErrorHandler } from '@/helpers'
-import { useAuth, useViewportSizes } from '@/hooks'
+import { useAdminAuth, useAuth, useViewportSizes } from '@/hooks'
 import { coreContracts, init as initGraph, initCoreContracts } from '@/modules/sdk'
 import { AppRoutes } from '@/routes'
 import { useUiState, web3Store } from '@/store'
@@ -18,6 +18,7 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
 
   const { paletteMode } = useUiState()
   const { getAccessToken, refreshAccessToken, logout, isLoggedIn } = useAuth()
+  const { isAuthorized } = useAdminAuth()
 
   useViewportSizes()
 
@@ -32,7 +33,7 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
         },
       ])
       initGraph()
-      if (!web3Store.provider?.address && isLoggedIn) {
+      if (!web3Store.provider?.address && (isLoggedIn || isAuthorized)) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
       if (web3Store.provider) {

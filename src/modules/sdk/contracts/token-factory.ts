@@ -1,5 +1,5 @@
 import { Provider, RawProvider } from '@distributedlab/w3p'
-import { BigNumberish } from 'ethers'
+import { BigNumberish, ethers } from 'ethers'
 
 import {
   coreContracts,
@@ -44,7 +44,6 @@ export const createTokenFactory = (
 
     deployTERC20: async (params: ConstructorParamsStruct) => {
       const data = contractInterface.encodeFunctionData('deployTERC20', [params])
-
       const txBody = {
         to: address,
         data,
@@ -90,8 +89,8 @@ export const createTokenFactory = (
         name,
         symbol,
         decimals,
-        totalSupply: totalSupply.toNumber(),
-        totalSupplyCap: totalSupplyCap.toNumber(),
+        totalSupply: ethers.utils.formatUnits(totalSupply, decimals),
+        totalSupplyCap: ethers.utils.formatUnits(totalSupplyCap, decimals),
         permissions,
       }
     },
@@ -103,7 +102,8 @@ export const createTokenFactory = (
         TERC20Factory,
       )
       const balance = await contractInstance.balanceOf(account)
-      return balance.toNumber()
+      const decimals = await contractInstance.decimals()
+      return ethers.utils.formatUnits(balance, decimals)
     },
   }
 }

@@ -10,6 +10,7 @@ export type RequestDescriptionKyc = {
   companyMainActivity?: string
   email?: string
   requestType: string
+  DID: string
 }
 
 export type Kyc = {
@@ -27,4 +28,5 @@ export type Kyc = {
   companyName?: string
   companyAddress?: string
   companyMainActivity?: string
+  DID: string
 }

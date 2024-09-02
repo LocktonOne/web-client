@@ -8,6 +8,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material'
+import { ethers } from 'ethers'
 import { useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -54,9 +55,9 @@ const roleOptions = [
 ]
 
 const rolePermissions: RolePermissions = {
-  [Roles.UNVERIFIED]: { mint: true, burn: true, spend: true, receive: true },
-  [Roles.VERIFIED]: { mint: true, burn: false, spend: true, receive: true },
-  [Roles.CORPORATE]: { mint: false, burn: false, spend: false, receive: true },
+  [Roles.UNVERIFIED]: { mint: false, burn: false, spend: false, receive: true },
+  [Roles.VERIFIED]: { mint: false, burn: false, spend: true, receive: true },
+  [Roles.CORPORATE]: { mint: true, burn: true, spend: true, receive: true },
 }
 
 enum FieldNames {
@@ -64,6 +65,9 @@ enum FieldNames {
   TokenSymbol = 'tokenSymbol',
   AmountToken = 'amountTokens',
 }
+
+const DEFAULT_DECIMALS = 18
+const DEFAULT_PERMISSION = 8
 
 const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
   const [role, setRole] = useState<string>(Roles.UNVERIFIED)
@@ -110,9 +114,12 @@ const DeployNewContractModal = ({ isOpen, handleClose }: Props) => {
         name: formState[FieldNames.TokenName],
         symbol: formState[FieldNames.TokenSymbol],
         contractURI: 'https://example.com/token-metadata',
-        decimals: 18,
-        totalSupplyCap: formState[FieldNames.AmountToken],
-        permissions: 15,
+        decimals: DEFAULT_DECIMALS,
+        totalSupplyCap: ethers.utils.parseUnits(
+          formState[FieldNames.AmountToken].toString(),
+          DEFAULT_DECIMALS,
+        ),
+        permissions: DEFAULT_PERMISSION,
       }
       await tokenFactory.deployTERC20(tokenParams)
       await loadTokens()

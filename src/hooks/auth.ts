@@ -36,6 +36,7 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     walletStore.setWallet(null)
     walletStore.setMetamaskAddress(null)
+    authStore.addTokensGroup({ id: '', type: 'token', refreshToken: '', accessToken: '' })
   }, [])
 
   const getTokenForKYC = async (addr: string) => {
@@ -44,7 +45,9 @@ export const useAuth = () => {
     )
     const balance = await provider.getBalance(addr)
     if (balance.lte(0)) {
-      await getToken(addr)
+      const txHash = await getToken(addr)
+      const tx = await provider.getTransaction(txHash)
+      await tx.wait()
     }
   }
 
@@ -70,10 +73,10 @@ export const useAuth = () => {
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
-    await getRoles()
-    walletStore.setMetamaskAddress(web3Store.provider.address)
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    await getRoles()
     await getTokenForKYC(web3Store.provider.address)
+    walletStore.setMetamaskAddress(web3Store.provider.address)
   }
 
   const register = async (email: string, password: string) => {

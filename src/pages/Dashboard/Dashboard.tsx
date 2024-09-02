@@ -17,7 +17,7 @@ const Dashboard = () => {
   const { t } = useTranslation()
   const { palette } = useTheme()
   const { loadTokens, isLoading, tokensList, setTokensList, setIsLoading } = useTokens()
-  const { role } = useAuth()
+  const { role, getRoles } = useAuth()
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue)
@@ -29,6 +29,7 @@ const Dashboard = () => {
     try {
       await loadTokens()
       await loadKycRequest(web3Store.provider?.address?.toLowerCase() ?? '')
+      await getRoles()
     } catch (e) {
       console.error(e)
     }
@@ -44,7 +45,7 @@ const Dashboard = () => {
       <Stack direction='row' justifyContent='space-between' width='100%'>
         <PageTitles
           title={t('dashboard-page.title')}
-          subtitle={`${t('dashboard-page.subtitle')}, ${role === Roles.UNVERIFIED ? 'Unverified User!' : kyc?.firstName}`}
+          subtitle={`${t('dashboard-page.subtitle')}, ${role === Roles.UNVERIFIED ? 'Unverified User!' : (kyc?.firstName ?? kyc?.companyName)}`}
           variant='h4'
         />
         <NavLink to={RoutePaths.Account}>

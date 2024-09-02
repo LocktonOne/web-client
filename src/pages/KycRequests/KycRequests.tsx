@@ -36,6 +36,21 @@ const KycRequests = ({ ...rest }: Props) => {
   } = useKycManagement()
   const [activeKyc, setActiveKyc] = useState<Kyc | null>(null)
 
+  const requestStatusToText = (status: RequestsStatuses) => {
+    switch (status) {
+      case RequestsStatuses.ACCEPTED:
+        return 'Accepted'
+      case RequestsStatuses.REJECTED:
+        return 'Rejected'
+      case RequestsStatuses.PENDING:
+        return 'Pending'
+      case RequestsStatuses.DROPPED:
+        return 'Dropped'
+      default:
+        return 'None'
+    }
+  }
+
   const handleChange = (event: SyntheticEvent, newValue: RequestsStatuses) => {
     setActiveTab(newValue)
     switch (newValue) {
@@ -52,6 +67,11 @@ const KycRequests = ({ ...rest }: Props) => {
         setKycList(rejectedKyc)
         break
     }
+  }
+
+  const handleClose = async () => {
+    await loadAllKyc()
+    setActiveKyc(null)
   }
 
   useEffect(() => {
@@ -81,6 +101,7 @@ const KycRequests = ({ ...rest }: Props) => {
             <TableHead>
               <TableRow>
                 <TableCell>Address</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell>Creation Date</TableCell>
               </TableRow>
             </TableHead>
@@ -94,6 +115,7 @@ const KycRequests = ({ ...rest }: Props) => {
                   <TableCell component='th' scope='row'>
                     {item.address}
                   </TableCell>
+                  <TableCell>{requestStatusToText(item.status)}</TableCell>
                   <TableCell>{formatDateTime(new Date(item.timestamp * 1000))}</TableCell>
                 </TableRow>
               ))}
@@ -102,11 +124,7 @@ const KycRequests = ({ ...rest }: Props) => {
         </TableContainer>
       )}
       {activeKyc && (
-        <RequestKYCModal
-          isOpen={Boolean(activeKyc)}
-          handleClose={() => setActiveKyc(null)}
-          info={activeKyc!}
-        />
+        <RequestKYCModal isOpen={Boolean(activeKyc)} handleClose={handleClose} info={activeKyc!} />
       )}
     </Stack>
   )

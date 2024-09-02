@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { PageTitles } from '@/common'
 import { Icons, RoutePaths } from '@/enums'
+import { useAuth } from '@/hooks'
 import { coreContracts, useKycManagement } from '@/modules/sdk'
 import { web3Store } from '@/store'
 import { UiIcon } from '@/ui'
@@ -16,10 +17,12 @@ const Account = () => {
   const { palette } = useTheme()
   const router = useNavigate()
   const { loadKycRequest, kyc } = useKycManagement()
+  const { getRoles } = useAuth()
 
   const loadData = async () => {
     try {
       await loadKycRequest(web3Store.provider?.address?.toLowerCase() ?? '')
+      await getRoles()
     } catch (e) {
       console.error(e)
     }
