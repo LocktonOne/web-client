@@ -43,6 +43,11 @@ const Administrators = ({ ...rest }: Props) => {
     setIsLoading(false)
   }
 
+  const handleClose = async () => {
+    await loadData()
+    setIsInviteAdminModalOpen(false)
+  }
+
   useEffect(() => {
     loadData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -116,10 +121,7 @@ const Administrators = ({ ...rest }: Props) => {
           </Table>
         </TableContainer>
       )}
-      <InviteNewAdministratorModal
-        isOpen={isInviteAdminModalOpen}
-        handleClose={() => setIsInviteAdminModalOpen(false)}
-      />
+      <InviteNewAdministratorModal isOpen={isInviteAdminModalOpen} handleClose={handleClose} />
     </Stack>
   )
 }

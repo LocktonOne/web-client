@@ -10,7 +10,7 @@ import {
 } from '@/api/modules'
 import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
-import { coreContracts } from '@/modules/sdk'
+import { coreContracts, initCoreContracts } from '@/modules/sdk'
 import { rolesStore, useRolesState, useWeb3State, web3Store } from '@/store'
 import { authStore, useAuthState } from '@/store/modules/auth.module'
 
@@ -70,6 +70,8 @@ export const useAdminAuth = () => {
     if (!web3Store.provider?.address) {
       throw new Error('Provider address is undefined')
     }
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
     const authNonce = await getAuthNonce(web3Store.provider.address)
     const signedMessage = await web3Store.provider.signMessage(authNonce)
     await login(web3Store.provider.address, signedMessage!)

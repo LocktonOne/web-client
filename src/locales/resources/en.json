@@ -29,7 +29,8 @@
     "title": "Log In to your account",
     "desc": "Enter your details to login.",
     "submit-btn": "Sign In",
-    "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet."
+    "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet.",
+    "metamask-title": "Log In to Lockton One With MetaMask"
   },
   "roles-page": {
     "title": "Roles",
@@ -95,7 +96,10 @@
     "last-name": "Last name",
     "passport-number": "Passport serial number",
     "passport-date": "Passport issuance date",
-    "user-did": "DID"
+    "user-did": "DID",
+    "company-name": "Company Name",
+    "company-address": "Company registration address",
+    "company-activity": "Company main activity"
   },
   "kyc-page": {
     "title": "KYC procedure",
@@ -111,7 +115,8 @@
   },
   "user-balance": {
     "my-balance": "My Balance",
-    "send": "Send"
+    "send": "Send",
+    "mint": "Mint"
   },
   "deployed-contracts": {
     "title": "Deployed Contracts",

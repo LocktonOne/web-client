@@ -8,18 +8,22 @@ export type AuthTokensGroup = {
   refreshToken: string
 }
 
-type AuthState = {
+type WalletState = {
   wallet: Wallet | null
+  metamaskAddress: string | null
 }
 
 const [walletStore, useWalletState] = createStore(
   'wallet',
   {
     wallet: null,
-  } as AuthState,
+  } as WalletState,
   state => ({
     setWallet(wallet: Wallet | null) {
       state.wallet = wallet
+    },
+    setMetamaskAddress: (address: string | null) => {
+      state.metamaskAddress = address
     },
   }),
 )

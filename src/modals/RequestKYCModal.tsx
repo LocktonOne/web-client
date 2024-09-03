@@ -11,7 +11,7 @@ import {
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { BusEvents, Icons, Roles } from '@/enums'
+import { BusEvents, Icons, RequestsStatuses, Roles } from '@/enums'
 import { bus, formatDateTime } from '@/helpers'
 import { coreContracts, useKycManagement } from '@/modules/sdk'
 import { FontWeight } from '@/theme/constants'
@@ -65,6 +65,8 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
     setIsSubmitting(true)
     try {
       await rejectRequest(info.id, '')
+      bus.emit(BusEvents.success, { message: 'Success Reject' })
+      handleClose()
     } catch (e) {
       console.error(e)
     }
@@ -101,12 +103,6 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
                 <Typography variant='body2'>
                   {formatDateTime(new Date(info.timestamp * 1000))}
                 </Typography>
-              </Grid>
-              <Grid xs={10} direction='column' justifyContent='flex-start'>
-                <Typography sx={{ fontSize: 16, color: palette.primary.light }}>
-                  {t('request-kyc-modal.email')}
-                </Typography>
-                <Typography variant='body2'>{info.email}</Typography>
               </Grid>
               <Grid xs={10} direction='column' justifyContent='flex-start'>
                 <Typography sx={{ fontSize: 16, color: palette.primary.light }}>
@@ -164,23 +160,25 @@ const RequestKYCModal = ({ isOpen, handleClose, info }: Props) => {
                 </>
               )}
             </Grid>
-            <Stack direction='row' spacing={3} mt={8} alignItems='flex-start'>
-              <Button sx={{ width: 160 }} onClick={() => handleAccept()}>
-                {t('request-kyc-modal.approve')}
-              </Button>
-              <Button
-                sx={{
-                  width: 160,
-                  background: palette.common.white,
-                  color: palette.common.black,
-                  border: '1px solid',
-                  '&:hover': { bgcolor: 'transparent', borderColor: palette.action.hover },
-                }}
-                onClick={() => handleReject()}
-              >
-                {t('request-kyc-modal.reject')}
-              </Button>
-            </Stack>
+            {info.status === RequestsStatuses.PENDING && (
+              <Stack direction='row' spacing={3} mt={8} alignItems='flex-start'>
+                <Button sx={{ width: 160 }} onClick={() => handleAccept()}>
+                  {t('request-kyc-modal.approve')}
+                </Button>
+                <Button
+                  sx={{
+                    width: 160,
+                    background: palette.common.white,
+                    color: palette.common.black,
+                    border: '1px solid',
+                    '&:hover': { bgcolor: 'transparent', borderColor: palette.action.hover },
+                  }}
+                  onClick={() => handleReject()}
+                >
+                  {t('request-kyc-modal.reject')}
+                </Button>
+              </Stack>
+            )}
           </Stack>
         </Stack>
         {isSubmitting && (

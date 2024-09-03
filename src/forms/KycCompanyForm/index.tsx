@@ -1,14 +1,17 @@
+import { ConflictError } from '@distributedlab/jac'
 import { PROVIDERS } from '@distributedlab/w3p'
-import { Button, Stack, Typography, useTheme } from '@mui/material'
+import { Button, CircularProgress, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 
-import { BusEvents, Icons } from '@/enums'
-import { bus, ErrorHandler } from '@/helpers'
+import { createIdentity, getIdentity } from '@/api/modules/polygonId'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
+import { bus, ErrorHandler, sleep } from '@/helpers'
 import { useForm } from '@/hooks'
 import { BlobUtil, useKycUser } from '@/modules/sdk'
-import { useWalletState, web3Store } from '@/store'
+import { web3Store } from '@/store'
 import { FontWeight } from '@/theme/constants'
 import { RequestDescriptionKyc } from '@/types'
 import { UiIcon, UiTextField } from '@/ui'
@@ -29,7 +32,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
   const { t } = useTranslation()
   const { palette, typography } = useTheme()
   const { init, requestKYCRole } = useKycUser()
-  const { wallet } = useWalletState()
+  const router = useNavigate()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.CompanyName]: string
@@ -67,12 +70,22 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       if (!web3Store.provider?.address) {
         await web3Store.connect(PROVIDERS.Metamask)
       }
+      let DID: string
+      try {
+        DID = await createIdentity()
+      } catch (error) {
+        if (!(error instanceof ConflictError)) {
+          throw new Error(error as string)
+        }
+        DID = await getIdentity(web3Store.provider!.address!)
+      }
+
       const kycBlob = new BlobUtil<RequestDescriptionKyc>({
         rawData: {
           companyName: formState[FieldNames.CompanyName],
           companyAddress: formState[FieldNames.CompanyAddress],
           companyMainActivity: formState[FieldNames.CompanyMainActivity],
-          email: wallet?.email ?? '',
+          DID,
           requestType: 'company',
         },
         owner: web3Store.provider?.address,
@@ -80,9 +93,11 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
       await kycBlob.create()
       await init()
       await requestKYCRole(kycBlob.id!)
+      bus.emit(BusEvents.success, { message: 'Success' })
       openSuccessModal()
       reset()
-      bus.emit(BusEvents.success, { message: 'Success' })
+      await sleep(2000)
+      router(RoutePaths.Dashboard)
     } catch (error) {
       ErrorHandler.process(error)
     }
@@ -96,6 +111,7 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
         flexDirection: 'column',
         alignItems: 'center',
         mt: 8,
+        position: 'relative',
       }}
       width='100%'
       gap={6}
@@ -130,7 +146,10 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           mr={3}
         />
       </Stack>
-      <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(submit)}
+        style={{ width: '100%', pointerEvents: isActive ? 'all' : 'none' }}
+      >
         <Stack
           width='100%'
           sx={{
@@ -194,14 +213,14 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           <Button
             type='submit'
             variant='contained'
-            disabled={!isActive}
+            disabled={!isActive || isFormDisabled}
             sx={{
               background: palette.primary.dark,
               fontWeight: typography.fontWeightBold,
               width: '50%',
               mt: 12,
               '&:disabled': {
-                backgroundColor: palette.common.black,
+                backgroundColor: palette.primary.light,
                 color: palette.common.white,
               },
             }}
@@ -210,6 +229,16 @@ const KycCompanyForm = ({ isActive, handleChange, openSuccessModal }: Props) => 
           </Button>
         </Stack>
       </form>
+      {isFormDisabled && (
+        <Stack
+          alignItems='center'
+          justifyContent='center'
+          sx={{ position: 'absolute', top: '50%', left: '45%' }}
+          flex={1}
+        >
+          <CircularProgress color='secondary' />
+        </Stack>
+      )}
     </Stack>
   )
 }
