@@ -22,6 +22,7 @@ export const AppRoutes = () => {
   const LoginWithMetamask = lazy(() => import('@/pages/LoginWithMetamask'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
+  const Contracts = lazy(() => import('@/pages/Contracts'))
   const Users = lazy(() => import('@/pages/Users'))
   const Administrators = lazy(() => import('@/pages/Administrators'))
   const KycRequests = lazy(() => import('@/pages/KycRequests'))
@@ -154,6 +155,15 @@ export const AppRoutes = () => {
           element: (
             <AdminLayout>
               <Administrators />
+            </AdminLayout>
+          ),
+          loader: authProtectedGuardAdmin,
+        },
+        {
+          path: createDeepPath(RoutePaths.Contracts),
+          element: (
+            <AdminLayout>
+              <Contracts />
             </AdminLayout>
           ),
           loader: authProtectedGuardAdmin,

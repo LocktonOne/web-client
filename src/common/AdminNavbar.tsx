@@ -77,6 +77,11 @@ const AdminNavbar = () => {
         icon: Icons.KycFill,
         label: 'Kyc Requests',
       },
+      {
+        route: RoutePaths.Contracts,
+        icon: Icons.DeployedContracts,
+        label: 'Allowed Contracts',
+      },
     ],
     [],
   )

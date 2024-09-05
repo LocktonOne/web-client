@@ -1,3 +1,4 @@
+export * from './allowed-contract-registry'
 export * from './constants-registry'
 export * from './kyc-requests'
 export * from './master-acces-managment'

@@ -11,4 +11,5 @@ export enum RoutePaths {
   KycRequests = '/kyc-requests',
   Account = '/account',
   Kyc = '/kyc',
+  Contracts = '/contracts',
 }

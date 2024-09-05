@@ -4,6 +4,7 @@ import { config } from '@/config'
 
 import { coreApolloClient } from '../api'
 import {
+  createAllowedContractRegistryContract,
   createConstantsRegistryContract,
   createMasterAccessManagement,
   createMasterContractsRegistry,
@@ -20,6 +21,7 @@ export class CoreContracts {
   #constantsRegistryContractAddress = ''
   #reviewableRequestsContractAddress = ''
   #tokenFactoryContractAddress = ''
+  #allowedContractRegistryAddress = ''
 
   public masterRoleId = ''
   public bannedRoleId = ''
@@ -58,6 +60,10 @@ export class CoreContracts {
     this.#tokenFactoryContractAddress =
       data?.contracts?.find(el => el.id === 'TOKEN_FACTORY')?.address ||
       (await masterContractsRegistry.getTokenFactory())
+
+    this.#allowedContractRegistryAddress =
+      data?.contracts?.find(el => el.id === 'ALLOWED_CONTRACT_REGISTRY')?.address ||
+      (await masterContractsRegistry.getAllowedContractRegistry())
   }
 
   async getContractAddressByName(name: string) {
@@ -105,6 +111,14 @@ export class CoreContracts {
 
   getTokenFactoryContract() {
     return createTokenFactory(this.#tokenFactoryContractAddress, this.#rawProvider, this.#provider)
+  }
+
+  getAllowedContractRegistry() {
+    return createAllowedContractRegistryContract(
+      this.#allowedContractRegistryAddress,
+      this.#rawProvider,
+      this.#provider,
+    )
   }
 }
 
