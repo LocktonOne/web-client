@@ -31,5 +31,8 @@ export const createMasterContractsRegistry = (address: string, rawProvider: RawP
     getTokenFactory: async () => {
       return contractInstance.getContract('TOKEN_FACTORY')
     },
+    getAllowedContractRegistry: async () => {
+      return contractInstance.getContract('ALLOWED_CONTRACT_REGISTRY')
+    },
   }
 }

@@ -38,6 +38,10 @@
     "search": "Search",
     "create-role": "Create role"
   },
+  "contracts-page": {
+    "title": "Allowed Contracts",
+    "subtitle": "On this page, you can allow deploy contracts of a specific type"
+  },
   "users-page": {
     "title": "Users",
     "subtitle": "All existing Locton One system users can be seen in the table below"
@@ -165,5 +169,9 @@
     "company-name": "Company name",
     "company-address": "Company registration address",
     "company-activity": "Company main activity"
+  },
+  "allow-contract-form": {
+    "byte-code": "Byte Code",
+    "submit-btn": "Submit"
   }
 }
