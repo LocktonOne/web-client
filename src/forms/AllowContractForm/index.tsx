@@ -33,6 +33,7 @@ const AllowContractForm = () => {
     enableForm,
     getErrorMessage,
     control,
+    reset,
   } = useForm(DEFAULT_VALUES, yup =>
     yup.object().shape({
       [FieldNames.ByteCode]: yup.string().required(),
@@ -49,6 +50,7 @@ const AllowContractForm = () => {
       bus.emit(BusEvents.error, { message: 'Error' })
       ErrorHandler.process(error)
     }
+    reset()
     enableForm()
   }
 
