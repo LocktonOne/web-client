@@ -1,5 +1,4 @@
 import { Button, CircularProgress, Stack } from '@mui/material'
-import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -13,17 +12,12 @@ enum FieldNames {
   ByteCode = 'byteCode',
 }
 
+const DEFAULT_VALUES = {
+  [FieldNames.ByteCode]: '',
+}
+
 const AllowContractForm = () => {
   const { t } = useTranslation()
-
-  const DEFAULT_VALUES = useMemo<{
-    [FieldNames.ByteCode]: string
-  }>(
-    () => ({
-      [FieldNames.ByteCode]: '',
-    }),
-    [],
-  )
 
   const {
     formState,
