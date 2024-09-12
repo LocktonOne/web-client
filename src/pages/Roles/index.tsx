@@ -2,10 +2,10 @@ import { Grid, IconButton, InputAdornment, Stack, useTheme } from '@mui/material
 import { HTMLAttributes } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { getListRoles } from '@/callers'
 import { PageTitles } from '@/common'
 import { Icons } from '@/enums'
 import { useLoading } from '@/hooks'
+import { getListRoles } from '@/modules/sdk'
 import { RoleCard } from '@/pages/Roles/components'
 import { UiIcon, UiTextField } from '@/ui'
 

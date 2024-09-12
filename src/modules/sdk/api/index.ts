@@ -1,1 +1,2 @@
-export * from './core.graphql'
+export * from './clients'
+export * from './modules'
