@@ -70,6 +70,9 @@
     "submit-btn": "Confirm",
     "permissions": "Permissions"
   },
+  "role-card": {
+    "resources": "Resources"
+  },
   "register-form": {
     "title": "Create a new account",
     "desc": "Enter your details to register.",
