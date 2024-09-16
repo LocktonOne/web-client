@@ -29,7 +29,7 @@ export async function calculateKeys(
   const hashedSalt = sjcl.hash.sha256.hash(rawSalt)
   const biteSalt = sjcl.codec.bytes.fromBits(hashedSalt)
 
-  const cypherKey = await script.scrypt(
+  let cypherKey = await script.scrypt(
     Buffer.from(password),
     biteSalt,
     kdfParams.n,
@@ -38,8 +38,18 @@ export async function calculateKeys(
     kdfParams.bits,
   )
 
-  const keyPair = EC.keyFromSecret(Buffer.from(cypherKey))
 
+  // Генерация ключевой пары из приватного ключа
+  const keyPair = EC.keyFromSecret(cypherKey);
+
+  // Получение приватного ключа в формате hex
+  const secret = keyPair.getSecret('hex');
+  const publicKey = keyPair.getPublic('hex')
+  const privateKeyHex = EC.keyFromSecret(secret)
+  console.log(privateKeyHex, 'privete');
+  console.log(publicKey, 'public');
+  // const keyPair = EC.keyFromSecret(Buffer.from(cypherKey))
+  // console.log(keyPair.getPublic('hex'));
   return keyPair
 }
 

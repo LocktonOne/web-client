@@ -53,7 +53,18 @@ export const useAuth = () => {
 
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
-    await getRoles()
+    console.log(generatedWallet)
+    const provider = new ethers.providers.JsonRpcProvider('http://localhost:8554', {
+      chainId: 9,
+      name: 'Loctone dev 8554',
+    })
+    // fab20be82b2e8a643de937f96d7ca1170b30a9ba78bce45649199984571e9474
+    const privateKey =
+      '11f32b741bab3255b4fe81f0dc7442028a7317f30d353576ce1e5728eca48dcee5dfcbd330e5eea271b51602d5cf0320d6e86489e160517dec60893078182ea1f564b765ab62b8dda53b26ae0cc3ce40806ff6c7eb28c9b162e7938874c447cdaa08eb0fe59422640bd8a28df726dd3ff41b894b04819ba2e6b5de02ad626afbffd6952caefa88523bb7ff33869a292d12ea93f25e67b51080b5117603f2829bc54e34cd0518549645e9075371fc392e99c15fd1b6ac7b1f35941a747b2c08c1563214dc0e2b225e8b731ff88b85a9028ca568d4f60e0e73263243b2ce9025139dc300bd8efd847a690fbe7e47a3fd15d05bb768615820365ed937955cd5ada6' // Вставь свой приватный ключ здесь
+    const wallet = new ethers.Wallet(privateKey, provider)
+    return console.log(wallet, 'walet')
+    // await getRoles()
+    return
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
