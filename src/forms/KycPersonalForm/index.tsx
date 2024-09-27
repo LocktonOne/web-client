@@ -1,5 +1,4 @@
 import { ConflictError } from '@distributedlab/jac'
-import { PROVIDERS } from '@distributedlab/w3p'
 import { Button, CircularProgress, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
@@ -71,9 +70,6 @@ const KycPersonalForm = ({ isActive, handleChange, openSuccessModal }: Props) =>
   const submit = async () => {
     disableForm()
     try {
-      if (!web3Store.provider?.address) {
-        await web3Store.connect(PROVIDERS.Metamask)
-      }
       let DID: string
       try {
         DID = await createIdentity()

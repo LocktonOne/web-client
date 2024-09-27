@@ -10,7 +10,7 @@ import { ErrorHandler } from '@/helpers'
 import { useAdminAuth, useAuth, useViewportSizes } from '@/hooks'
 import { coreContracts, init as initGraph, initCoreContracts } from '@/modules/sdk'
 import { AppRoutes } from '@/routes'
-import { useUiState, web3Store } from '@/store'
+import { identityStore, useUiState, walletStore, web3Store } from '@/store'
 import { createTheme } from '@/theme'
 
 const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
@@ -34,9 +34,13 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
       ])
       initGraph()
       if (!web3Store.provider?.address && (isLoggedIn || isAuthorized)) {
-        await web3Store.connect(PROVIDERS.Metamask)
+        if (identityStore.privateKey) {
+          await web3Store.init('united-space')
+        } else if (walletStore.metamaskAddress) {
+          await web3Store.init(PROVIDERS.Metamask)
+        }
       }
-      if (web3Store.provider) {
+      if (web3Store.provider.address) {
         await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
         await coreContracts.loadCoreContractsAddresses()
       }

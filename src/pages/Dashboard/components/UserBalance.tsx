@@ -1,7 +1,7 @@
 import { config } from '@config'
-import { EthereumProvider } from '@distributedlab/w3p'
+import { PROVIDERS } from '@distributedlab/w3p'
 import { Button, CircularProgress, Divider, Stack, Typography, useTheme } from '@mui/material'
-import { ethers } from 'ethers'
+import { ethers, providers } from 'ethers'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -34,13 +34,17 @@ const UserBalance = () => {
   const { role } = useAuth()
 
   const checkNativeBalance = async () => {
-    const provider = new ethers.providers.Web3Provider(
-      web3Store.provider?.rawProvider as EthereumProvider,
-    )
-    const balance = await provider.getBalance(coreContracts.provider.address!)
+    const providerInstance =
+      web3Store.provider.providerType === PROVIDERS.Fallback ||
+      web3Store.provider.providerType === ('united-space' as PROVIDERS)
+        ? (web3Store.provider.rawProvider as unknown as providers.JsonRpcProvider)
+        : new providers.Web3Provider(
+            web3Store.provider.rawProvider as providers.ExternalProvider,
+            'any',
+          )
+    const balance = await providerInstance.getBalance(coreContracts.provider.address!)
     const balanceInNativeToken = ethers.utils.formatEther(balance)
     const formattedBalanceInNativeToken = parseFloat(balanceInNativeToken).toFixed(4)
-
     const _balanceInUSD = (parseFloat(balanceInNativeToken) * EXCHANGE_RATE).toFixed(2)
     setBalanceInUSD(_balanceInUSD)
     setBalance(formattedBalanceInNativeToken)

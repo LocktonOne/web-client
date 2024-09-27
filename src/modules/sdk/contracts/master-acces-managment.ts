@@ -17,9 +17,10 @@ export const createMasterAccessManagement = (
   )
 
   const providerInstance =
-    provider.providerType !== PROVIDERS.Fallback
-      ? new providers.Web3Provider(rawProvider as providers.ExternalProvider, 'any')
-      : (rawProvider as unknown as providers.JsonRpcProvider)
+    provider.providerType === PROVIDERS.Fallback ||
+    provider.providerType === ('united-space' as PROVIDERS)
+      ? (rawProvider as unknown as providers.JsonRpcProvider)
+      : new providers.Web3Provider(rawProvider as providers.ExternalProvider, 'any')
 
   return {
     contractInstance,

@@ -83,7 +83,7 @@ export const AppRoutes = () => {
         const requestUrl = new URL(request.url)
         requestUrl.searchParams.set('from', requestUrl.pathname)
 
-        return redirect(`${RoutePaths.LoginWithMetamask}${requestUrl.search}`)
+        return redirect(`${RoutePaths.Login}${requestUrl.search}`)
       }
 
       return null

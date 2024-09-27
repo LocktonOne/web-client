@@ -1,5 +1,5 @@
-import { EthereumProvider, PROVIDERS } from '@distributedlab/w3p'
-import { ethers } from 'ethers'
+import { PROVIDERS } from '@distributedlab/w3p'
+import { providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 
 import { useWallet } from '@/api/modules'
@@ -8,7 +8,14 @@ import { getToken } from '@/api/modules/faucet'
 import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
 import { coreContracts, initCoreContracts } from '@/modules/sdk'
-import { rolesStore, useRolesState, useWalletState, walletStore, web3Store } from '@/store'
+import {
+  identityStore,
+  rolesStore,
+  useRolesState,
+  useWalletState,
+  walletStore,
+  web3Store,
+} from '@/store'
 import { authStore } from '@/store/modules/auth.module'
 
 export const useAuth = () => {
@@ -36,42 +43,43 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     walletStore.setWallet(null)
     walletStore.setMetamaskAddress(null)
+    identityStore.clear()
+    await web3Store.disconnect()
     authStore.addTokensGroup({ id: '', type: 'token', refreshToken: '', accessToken: '' })
   }, [])
 
   const getTokenForKYC = async (addr: string) => {
-    const provider = new ethers.providers.Web3Provider(
-      web3Store.provider?.rawProvider as EthereumProvider,
-    )
-    const balance = await provider.getBalance(addr)
+    const providerInstance =
+      web3Store.provider.providerType === PROVIDERS.Fallback ||
+      web3Store.provider.providerType === ('united-space' as PROVIDERS)
+        ? (web3Store.provider.rawProvider as unknown as providers.JsonRpcProvider)
+        : new providers.Web3Provider(
+            web3Store.provider.rawProvider as providers.ExternalProvider,
+            'any',
+          )
+    const balance = await providerInstance.getBalance(addr)
     if (balance.lte(0)) {
       const txHash = await getToken(addr)
-      const tx = await provider.getTransaction(txHash)
+      const tx = await providerInstance.getTransaction(txHash)
       await tx.wait()
     }
   }
 
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
-    console.log(generatedWallet)
-    const provider = new ethers.providers.JsonRpcProvider('http://localhost:8554', {
-      chainId: 9,
-      name: 'Loctone dev 8554',
-    })
-    // fab20be82b2e8a643de937f96d7ca1170b30a9ba78bce45649199984571e9474
-    const privateKey =
-      '11f32b741bab3255b4fe81f0dc7442028a7317f30d353576ce1e5728eca48dcee5dfcbd330e5eea271b51602d5cf0320d6e86489e160517dec60893078182ea1f564b765ab62b8dda53b26ae0cc3ce40806ff6c7eb28c9b162e7938874c447cdaa08eb0fe59422640bd8a28df726dd3ff41b894b04819ba2e6b5de02ad626afbffd6952caefa88523bb7ff33869a292d12ea93f25e67b51080b5117603f2829bc54e34cd0518549645e9075371fc392e99c15fd1b6ac7b1f35941a747b2c08c1563214dc0e2b225e8b731ff88b85a9028ca568d4f60e0e73263243b2ce9025139dc300bd8efd847a690fbe7e47a3fd15d05bb768615820365ed937955cd5ada6' // Вставь свой приватный ключ здесь
-    const wallet = new ethers.Wallet(privateKey, provider)
-    return console.log(wallet, 'walet')
-    // await getRoles()
-    return
-    const tokens = await getAuthPair(web3Store.provider?.address ?? '')
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    identityStore.setPrivateKey(generatedWallet.keypair.secret())
+    await web3Store.init('united-space')
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
+    await getRoles()
     walletStore.setWallet(generatedWallet)
+    const tokens = await getAuthPair(coreContracts.provider.address ?? '')
+    await getTokenForKYC(web3Store.provider.address!)
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
   }
 
   const loginWithMetamask = async () => {
-    await web3Store.connect(PROVIDERS.Metamask)
+    await web3Store.init(PROVIDERS.Metamask)
 
     if (!web3Store.provider?.address) {
       await sleep(1000)
@@ -92,10 +100,16 @@ export const useAuth = () => {
 
   const register = async (email: string, password: string) => {
     const generatedWallet = await _wallet.create(email, password)
-    const tokens = await getAuthPair(web3Store.provider?.address ?? '')
+    identityStore.setPrivateKey(generatedWallet.keypair.secret())
+    await web3Store.init('united-space')
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
+    const tokens = await getAuthPair(coreContracts.provider.address ?? '')
+    await getTokenForKYC(web3Store.provider.address!)
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    await web3Store.init()
   }
 
   const getAccessToken = () => authStore.tokens.accessToken
