@@ -7,6 +7,9 @@ export type Config = {
   CORE_GRAPH_URL: string
   MASTER_CONTRACTS_REGISTRY_CONTRACT_ADDRESS: string
   NATIVE_TOKEN: string
+  RPC_URL: string
+  DEFAULT_CHAIN: string
+  DEFAULT_NETWORK_NAME: string
 }
 
 export const config: Config = {
@@ -17,4 +20,7 @@ export const config: Config = {
     .VITE_MASTER_CONTRACTS_REGISTRY_CONTRACT_ADDRESS,
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_BUILD_VERSION,
   NATIVE_TOKEN: import.meta.env.VITE_NATIVE_TOKEN,
+  RPC_URL: import.meta.env.VITE_RPC_URL,
+  DEFAULT_CHAIN: import.meta.env.VITE_DEFAULT_CHAIN,
+  DEFAULT_NETWORK_NAME: import.meta.env.VITE_DEFAULT_NETWORK_NAME,
 }

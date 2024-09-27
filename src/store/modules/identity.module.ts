@@ -1,3 +1,4 @@
+import { config } from '@config'
 import {
   Chain,
   CHAIN_TYPES,
@@ -39,9 +40,9 @@ const [identityStore, useIdentityState] = createStore(
     getIdentityWeb3Wallet: (privateKey: string) => {
       const wallet = new Wallet(
         privateKey,
-        new providers.JsonRpcProvider('http://localhost:8554', {
-          name: 'Loct',
-          chainId: 9,
+        new providers.JsonRpcProvider(config.RPC_URL, {
+          name: config.DEFAULT_NETWORK_NAME,
+          chainId: Number(config.DEFAULT_CHAIN),
         }),
       )
 
