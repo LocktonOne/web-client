@@ -18,6 +18,7 @@ const [walletStore, useWalletState] = createStore(
   {
     wallet: null,
   } as WalletState,
+  () => ({}),
   state => ({
     setWallet(wallet: Wallet | null) {
       state.wallet = wallet

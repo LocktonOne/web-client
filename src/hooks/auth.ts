@@ -1,5 +1,5 @@
-import { EthereumProvider, PROVIDERS } from '@distributedlab/w3p'
-import { ethers } from 'ethers'
+import { PROVIDERS } from '@distributedlab/w3p'
+import { providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 
 import { useWallet } from '@/api/modules'
@@ -8,7 +8,14 @@ import { getToken } from '@/api/modules/faucet'
 import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
 import { coreContracts, initCoreContracts } from '@/modules/sdk'
-import { rolesStore, useRolesState, useWalletState, walletStore, web3Store } from '@/store'
+import {
+  identityStore,
+  rolesStore,
+  useRolesState,
+  useWalletState,
+  walletStore,
+  web3Store,
+} from '@/store'
 import { authStore } from '@/store/modules/auth.module'
 
 export const useAuth = () => {
@@ -36,31 +43,43 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     walletStore.setWallet(null)
     walletStore.setMetamaskAddress(null)
+    identityStore.clear()
+    await web3Store.disconnect()
     authStore.addTokensGroup({ id: '', type: 'token', refreshToken: '', accessToken: '' })
   }, [])
 
   const getTokenForKYC = async (addr: string) => {
-    const provider = new ethers.providers.Web3Provider(
-      web3Store.provider?.rawProvider as EthereumProvider,
-    )
-    const balance = await provider.getBalance(addr)
+    const providerInstance =
+      web3Store.provider.providerType === PROVIDERS.Fallback ||
+      web3Store.provider.providerType === ('wallet' as PROVIDERS)
+        ? (web3Store.provider.rawProvider as unknown as providers.JsonRpcProvider)
+        : new providers.Web3Provider(
+            web3Store.provider.rawProvider as providers.ExternalProvider,
+            'any',
+          )
+    const balance = await providerInstance.getBalance(addr)
     if (balance.lte(0)) {
       const txHash = await getToken(addr)
-      const tx = await provider.getTransaction(txHash)
+      const tx = await providerInstance.getTransaction(txHash)
       await tx.wait()
     }
   }
 
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
+    identityStore.setPrivateKey(generatedWallet.keypair.secret())
+    await web3Store.init('wallet')
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    const tokens = await getAuthPair(web3Store.provider?.address ?? '')
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
+    const tokens = await getAuthPair(coreContracts.provider.address ?? '')
+    await getTokenForKYC(web3Store.provider.address!)
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
   }
 
   const loginWithMetamask = async () => {
-    await web3Store.connect(PROVIDERS.Metamask)
+    await web3Store.init(PROVIDERS.Metamask)
 
     if (!web3Store.provider?.address) {
       await sleep(1000)
@@ -81,10 +100,16 @@ export const useAuth = () => {
 
   const register = async (email: string, password: string) => {
     const generatedWallet = await _wallet.create(email, password)
-    const tokens = await getAuthPair(web3Store.provider?.address ?? '')
+    identityStore.setPrivateKey(generatedWallet.keypair.secret())
+    await web3Store.init('wallet')
+    await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     walletStore.setWallet(generatedWallet)
+    const tokens = await getAuthPair(coreContracts.provider.address ?? '')
+    await getTokenForKYC(web3Store.provider.address!)
+    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
+    await web3Store.init()
   }
 
   const getAccessToken = () => authStore.tokens.accessToken

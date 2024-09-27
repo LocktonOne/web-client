@@ -9,6 +9,7 @@ const [rolesStore, useRolesState] = createStore(
   {
     roles: [''],
   } as rolesState,
+  () => ({}),
   state => ({
     addRoles(roles: string[]) {
       state.roles = roles

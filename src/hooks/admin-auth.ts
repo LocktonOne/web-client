@@ -61,7 +61,7 @@ export const useAdminAuth = () => {
   }
 
   const authorize = async (providerType: PROVIDERS) => {
-    await web3Store.connect(providerType)
+    await web3Store.init(providerType)
 
     if (!web3Store.provider?.address) {
       await sleep(1000)

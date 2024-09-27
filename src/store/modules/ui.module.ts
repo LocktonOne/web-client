@@ -13,6 +13,7 @@ export const [uiStore, useUiState] = createStore(
     viewportWidth: 0,
     paletteMode: 'light',
   } as UiStore,
+  () => ({}),
   state => ({
     setViewportWidth: (width: number) => {
       state.viewportWidth = width

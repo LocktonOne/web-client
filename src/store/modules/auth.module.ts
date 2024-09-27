@@ -19,6 +19,7 @@ const [authStore, useAuthState] = createStore(
   {
     tokens: {},
   } as AuthState,
+  () => ({}),
   state => ({
     addTokensGroup: (authTokensGroup: AuthTokensGroup) => {
       state.tokens = {

@@ -17,8 +17,8 @@ import PublicLayout from './layouts/PublicLayout'
 
 export const AppRoutes = () => {
   // TODO: add this functional to the next version
-  // const Login = lazy(() => import('@/pages/Login'))
-  // const Register = lazy(() => import('@/pages/Register'))
+  const Login = lazy(() => import('@/pages/Login'))
+  const Register = lazy(() => import('@/pages/Register'))
   const LoginWithMetamask = lazy(() => import('@/pages/LoginWithMetamask'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
@@ -83,7 +83,7 @@ export const AppRoutes = () => {
         const requestUrl = new URL(request.url)
         requestUrl.searchParams.set('from', requestUrl.pathname)
 
-        return redirect(`${RoutePaths.LoginWithMetamask}${requestUrl.search}`)
+        return redirect(`${RoutePaths.Login}${requestUrl.search}`)
       }
 
       return null
@@ -123,24 +123,24 @@ export const AppRoutes = () => {
           loader: signInGuard,
         },
         // TODO: add this functional to the next version
-        // {
-        //   path: createDeepPath(RoutePaths.Login),
-        //   element: (
-        //     <PublicLayout>
-        //       <Login />
-        //     </PublicLayout>
-        //   ),
-        //   loader: signInGuard,
-        // },
-        // {
-        //   path: createDeepPath(RoutePaths.Register),
-        //   element: (
-        //     <PublicLayout>
-        //       <Register />
-        //     </PublicLayout>
-        //   ),
-        //   loader: signInGuard,
-        // },
+        {
+          path: createDeepPath(RoutePaths.Login),
+          element: (
+            <PublicLayout>
+              <Login />
+            </PublicLayout>
+          ),
+          loader: signInGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.Register),
+          element: (
+            <PublicLayout>
+              <Register />
+            </PublicLayout>
+          ),
+          loader: signInGuard,
+        },
         {
           path: createDeepPath(RoutePaths.AdminLogin),
           element: (
