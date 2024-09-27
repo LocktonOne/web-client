@@ -57,7 +57,7 @@ const [identityStore, useIdentityState] = createStore(
 
 export { identityStore, useIdentityState }
 
-export class UnitedSpaceProvider extends ProviderEventBus implements ProviderProxy {
+export class WalletProvider extends ProviderEventBus implements ProviderProxy {
   readonly wallet: Wallet
   rawProvider: RawProvider
   nullifier: string
@@ -179,6 +179,6 @@ export class UnitedSpaceProvider extends ProviderEventBus implements ProviderPro
   }
 
   static get providerType(): PROVIDERS {
-    return 'united-space' as PROVIDERS
+    return 'wallet' as PROVIDERS
   }
 }

@@ -13,9 +13,9 @@ import {
 import { ref } from 'valtio'
 
 import { createStore, sleep } from '@/helpers'
-import { identityStore, UnitedSpaceProvider } from '@/store/modules'
+import { identityStore, WalletProvider } from '@/store/modules'
 
-export type SupportedProviders = PROVIDERS | 'united-space'
+export type SupportedProviders = PROVIDERS | 'wallet'
 
 type Web3Store = {
   provider: Provider
@@ -30,7 +30,7 @@ const providerDetector = new ProviderDetector<SupportedProviders>()
 const PROVIDERS_PROXIES: { [key in SupportedProviders]?: ProviderProxyConstructor } = {
   [PROVIDERS.Metamask]: MetamaskProvider,
   [PROVIDERS.Coinbase]: CoinbaseProvider,
-  ['united-space']: UnitedSpaceProvider,
+  ['wallet']: WalletProvider,
 }
 
 export const [web3Store, useWeb3State] = createStore(
@@ -62,12 +62,12 @@ export const [web3Store, useWeb3State] = createStore(
         throw new TypeError('Provider not supported')
 
       if (
-        providerType === 'united-space' &&
-        !providerDetector.providers['united-space'] &&
+        providerType === 'wallet' &&
+        !providerDetector.providers['wallet'] &&
         identityStore.privateKey
       ) {
         providerDetector.addProvider({
-          name: 'united-space',
+          name: 'wallet',
           instance: {
             wallet: identityStore.getIdentityWeb3Wallet(identityStore.privateKey),
           } as unknown as RawProvider,
@@ -155,10 +155,10 @@ export const [web3Store, useWeb3State] = createStore(
     disconnect: async () => {
       await state.provider?.disconnect()
       if (
-        state.provider.providerType === ('united-space' as PROVIDERS) &&
-        providerDetector.providers['united-space']
+        state.provider.providerType === ('wallet' as PROVIDERS) &&
+        providerDetector.providers['wallet']
       ) {
-        providerDetector.removeProvider({ name: 'united-space' })
+        providerDetector.removeProvider({ name: 'wallet' })
       }
 
       state.providerType = undefined

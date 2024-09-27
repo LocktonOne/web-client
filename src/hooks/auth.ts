@@ -51,7 +51,7 @@ export const useAuth = () => {
   const getTokenForKYC = async (addr: string) => {
     const providerInstance =
       web3Store.provider.providerType === PROVIDERS.Fallback ||
-      web3Store.provider.providerType === ('united-space' as PROVIDERS)
+      web3Store.provider.providerType === ('wallet' as PROVIDERS)
         ? (web3Store.provider.rawProvider as unknown as providers.JsonRpcProvider)
         : new providers.Web3Provider(
             web3Store.provider.rawProvider as providers.ExternalProvider,
@@ -68,7 +68,7 @@ export const useAuth = () => {
   const login = async (email: string, password: string) => {
     const generatedWallet = await _wallet.login(email, password)
     identityStore.setPrivateKey(generatedWallet.keypair.secret())
-    await web3Store.init('united-space')
+    await web3Store.init('wallet')
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()
@@ -101,7 +101,7 @@ export const useAuth = () => {
   const register = async (email: string, password: string) => {
     const generatedWallet = await _wallet.create(email, password)
     identityStore.setPrivateKey(generatedWallet.keypair.secret())
-    await web3Store.init('united-space')
+    await web3Store.init('wallet')
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()

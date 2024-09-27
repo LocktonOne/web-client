@@ -35,7 +35,7 @@ const App: FC<HTMLAttributes<HTMLDivElement>> = () => {
       initGraph()
       if (!web3Store.provider?.address && (isLoggedIn || isAuthorized)) {
         if (identityStore.privateKey) {
-          await web3Store.init('united-space')
+          await web3Store.init('wallet')
         } else if (walletStore.metamaskAddress) {
           await web3Store.init(PROVIDERS.Metamask)
         }

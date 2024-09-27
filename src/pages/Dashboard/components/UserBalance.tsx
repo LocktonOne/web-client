@@ -36,7 +36,7 @@ const UserBalance = () => {
   const checkNativeBalance = async () => {
     const providerInstance =
       web3Store.provider.providerType === PROVIDERS.Fallback ||
-      web3Store.provider.providerType === ('united-space' as PROVIDERS)
+      web3Store.provider.providerType === ('wallet' as PROVIDERS)
         ? (web3Store.provider.rawProvider as unknown as providers.JsonRpcProvider)
         : new providers.Web3Provider(
             web3Store.provider.rawProvider as providers.ExternalProvider,
