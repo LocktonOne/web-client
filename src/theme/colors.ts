@@ -61,6 +61,7 @@ export const lightPalette: PaletteOptions = {
     secondary: '#0797F3',
     secondaryDark: '#027DCC',
     tertiary: '#FDFEFF',
+    additional: '#F6FBFF',
   },
   icon: {
     primaryLight: '#A4B5C9',

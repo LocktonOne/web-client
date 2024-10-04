@@ -46,7 +46,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
     },
     styleOverrides: {
       root: ({ theme }) => ({
-        borderRadius: theme.spacing(3),
+        borderRadius: theme.spacing(8),
         transition: Transitions.Default,
         color: theme.palette.secondary.light,
         backgroundColor: theme.palette.primary.dark,
@@ -100,7 +100,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         '& .MuiInputBase-root': {
           minHeight: theme.spacing(12),
           borderRadius: theme.spacing(3),
-          borderColor: theme.palette.primary.light,
+          borderColor: theme.palette.border.main,
           fontSize: theme.spacing(4),
           height: theme.spacing(10),
           '&.Mui-focused:not(.Mui-error) .MuiOutlinedInput-notchedOutline': {
@@ -117,7 +117,7 @@ export const components: Components<Omit<Theme, 'components'>> = {
         '& .MuiOutlinedInput-notchedOutline': {
           transition: Transitions.Default,
           borderRadius: theme.spacing(3),
-          borderColor: theme.palette.primary.light,
+          borderColor: theme.palette.border.dark,
         },
       }),
     },

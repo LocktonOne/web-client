@@ -53,5 +53,6 @@ declare module '@mui/material/styles' {
     secondary: string
     secondaryDark: string
     tertiary: string
+    additional: string
   }
 }

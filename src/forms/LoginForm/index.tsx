@@ -2,8 +2,9 @@ import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
 
-import { BusEvents, Icons } from '@/enums'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useAuth, useForm } from '@/hooks'
 import { UiIcon, UiTextField } from '@/ui'
@@ -64,23 +65,29 @@ const LoginForm = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        p: 6,
-        bgcolor: palette.background.default,
-        borderRadius: 4,
+        px: 54,
+        paddingTop: 10,
+        paddingBottom: 20,
+        bgcolor: palette.background.tertiary,
+        border: `1px solid ${palette.border.main}`,
+        borderRadius: 6,
         zIndex: 1,
         position: 'relative',
       }}
-      width={480}
-      gap={spacing(6)}
+      gap={spacing(10)}
     >
-      <UiIcon name={Icons.UserCircle} size={20} />
+      <UiIcon name={Icons.CompanyLogo} size={40} sx={{ height: 60, minHeight: 60 }} />
       <Stack sx={{ alignItems: 'center' }} gap={1}>
-        <Typography variant='h5'>{t('login-form.title')}</Typography>
-        <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} mt={2}>
-          {t('login-form.desc')}
+        <Typography variant='subtitle1'>{t('login-form.title')}</Typography>
+        <Typography variant='body3'>
+          {t('login-form.desc') + ' '}
+          <NavLink to={RoutePaths.Register}>{t('login-form.register')}</NavLink>
         </Typography>
       </Stack>
-      <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(submit)}
+        style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
         <Stack gap={4} width='100%'>
           <Controller
             name={FieldNames.Email}
@@ -89,8 +96,7 @@ const LoginForm = () => {
               <UiTextField
                 {...field}
                 fullWidth
-                label='Email'
-                placeholder='Ex:Johndoe@financial.com'
+                label='Email address'
                 errorMessage={getErrorMessage(FieldNames.Email)}
                 disabled={isFormDisabled}
               />
@@ -105,7 +111,6 @@ const LoginForm = () => {
                 fullWidth
                 type='password'
                 label='Password'
-                placeholder='Enter your password'
                 errorMessage={getErrorMessage(FieldNames.Password)}
                 disabled={isFormDisabled}
               />
@@ -115,9 +120,9 @@ const LoginForm = () => {
         <Button
           type='submit'
           variant='contained'
-          fullWidth
           sx={{
             background: palette.primary.dark,
+            px: 25,
             fontWeight: typography.fontWeightBold,
             mt: 12,
           }}

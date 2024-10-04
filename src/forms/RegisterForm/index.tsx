@@ -2,8 +2,9 @@ import { Button, Stack, Typography, useTheme } from '@mui/material'
 import { useMemo } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
 
-import { BusEvents, Icons } from '@/enums'
+import { BusEvents, Icons, RoutePaths } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useAuth, useForm } from '@/hooks'
 import { UiIcon, UiTextField } from '@/ui'
@@ -74,23 +75,28 @@ const RegisterForm = () => {
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        p: 6,
-        bgcolor: palette.background.default,
-        borderRadius: 4,
+        px: 54,
+        paddingTop: 10,
+        paddingBottom: 20,
+        bgcolor: palette.background.tertiary,
+        border: `1px solid ${palette.border.main}`,
+        borderRadius: 6,
         zIndex: 1,
-        position: 'relative',
       }}
-      width={480}
-      gap={spacing(6)}
+      gap={spacing(10)}
     >
-      <UiIcon name={Icons.UserCircle} size={20} />
+      <UiIcon name={Icons.CompanyLogo} size={40} sx={{ height: 60, minHeight: 60 }} />
       <Stack sx={{ alignItems: 'center' }} gap={1}>
-        <Typography variant='h5'>{t('register-form.title')}</Typography>
-        <Typography sx={{ fontSize: spacing(4.5), color: palette.primary.light }} mt={2}>
-          {t('register-form.desc')}
+        <Typography variant='subtitle1'>{t('register-form.title')}</Typography>
+        <Typography variant='body3'>
+          {t('register-form.desc') + ' '}
+          <NavLink to={RoutePaths.Login}>{t('register-form.login')}</NavLink>
         </Typography>
       </Stack>
-      <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
+      <form
+        onSubmit={handleSubmit(submit)}
+        style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
         <Stack gap={4} width='100%'>
           <Controller
             name={FieldNames.Email}
@@ -100,50 +106,49 @@ const RegisterForm = () => {
                 {...field}
                 fullWidth
                 label='Email'
-                placeholder='Ex:Johndoe@financial.com'
                 errorMessage={getErrorMessage(FieldNames.Email)}
                 disabled={isFormDisabled}
               />
             )}
           />
-          <Controller
-            name={FieldNames.Password}
-            control={control}
-            render={({ field }) => (
-              <UiTextField
-                {...field}
-                fullWidth
-                type='password'
-                label='Password'
-                placeholder='Enter your password'
-                errorMessage={getErrorMessage(FieldNames.Password)}
-                disabled={isFormDisabled}
-              />
-            )}
-          />
+          <Stack direction='row' gap={4}>
+            <Controller
+              name={FieldNames.Password}
+              control={control}
+              render={({ field }) => (
+                <UiTextField
+                  {...field}
+                  fullWidth
+                  type='password'
+                  label='Password'
+                  errorMessage={getErrorMessage(FieldNames.Password)}
+                  disabled={isFormDisabled}
+                />
+              )}
+            />
 
-          <Controller
-            name={FieldNames.RepeatPassword}
-            control={control}
-            render={({ field }) => (
-              <UiTextField
-                {...field}
-                fullWidth
-                type='password'
-                label='Confirm your password'
-                placeholder='Confirm your password'
-                disabled={isFormDisabled}
-                errorMessage={getErrorMessage(FieldNames.RepeatPassword)}
-              />
-            )}
-          />
+            <Controller
+              name={FieldNames.RepeatPassword}
+              control={control}
+              render={({ field }) => (
+                <UiTextField
+                  {...field}
+                  fullWidth
+                  type='password'
+                  label='Confirm your password'
+                  disabled={isFormDisabled}
+                  errorMessage={getErrorMessage(FieldNames.RepeatPassword)}
+                />
+              )}
+            />
+          </Stack>
         </Stack>
         <Button
           type='submit'
           variant='contained'
-          fullWidth
           sx={{
             background: palette.primary.dark,
+            px: 10,
             fontWeight: typography.fontWeightBold,
             mt: 12,
           }}
