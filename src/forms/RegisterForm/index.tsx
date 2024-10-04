@@ -4,6 +4,7 @@ import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 
+import { WalletConnect } from '@/common'
 import { BusEvents, Icons, RoutePaths } from '@/enums'
 import { bus, ErrorHandler } from '@/helpers'
 import { useAuth, useForm } from '@/hooks'
@@ -143,6 +144,7 @@ const RegisterForm = () => {
             />
           </Stack>
         </Stack>
+        <WalletConnect />
         <Button
           type='submit'
           variant='contained'

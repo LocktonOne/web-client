@@ -1,6 +1,5 @@
 import {
   type ChainId,
-  CoinbaseProvider,
   createProvider,
   errors,
   MetamaskProvider,
@@ -29,7 +28,6 @@ const providerDetector = new ProviderDetector<SupportedProviders>()
 
 const PROVIDERS_PROXIES: { [key in SupportedProviders]?: ProviderProxyConstructor } = {
   [PROVIDERS.Metamask]: MetamaskProvider,
-  [PROVIDERS.Coinbase]: CoinbaseProvider,
   ['wallet']: WalletProvider,
 }
 
