@@ -1,17 +1,17 @@
 import { Stack, useTheme } from '@mui/material'
 
-import LoginForm from '@/forms/LoginForm'
+import VerifyEmailForm from '@/forms/VerifyEmailForm'
 
-const Login = () => {
+const Verification = () => {
   const { palette } = useTheme()
 
   return (
     <Stack height='100%' bgcolor={palette.background.additional}>
       <Stack sx={{ alignItems: 'center', height: '100%', mt: 20 }}>
-        <LoginForm />
+        <VerifyEmailForm />
       </Stack>
     </Stack>
   )
 }
 
-export default Login
+export default Verification

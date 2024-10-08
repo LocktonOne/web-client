@@ -16,7 +16,7 @@ export default function UiCopyField({ label, value }: Props) {
 
   return (
     <Stack spacing={2}>
-      <Typography variant='subtitle4'>{label}</Typography>
+      <Typography variant='subtitle3'>{label}</Typography>
 
       <Paper sx={{ py: 3.5, px: 4, background: palette.action.disabled, border: 0 }}>
         <Stack direction='row' spacing={4}>

@@ -1,3 +1,4 @@
+export * from './auth.module'
 export * from './identity.module'
 export * from './roles.module'
 export * from './ui.module'

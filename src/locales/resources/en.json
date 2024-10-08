@@ -26,9 +26,10 @@
   "login-form": {
     "admin-title": "Log In to Lockton One Admin Account",
     "admin-login-btn": "Sign In",
-    "title": "Log In to your account",
-    "desc": "Enter your details to login.",
-    "submit-btn": "Sign In",
+    "title": "Sign in to your account ",
+    "desc": "Don’t have an account?",
+    "register": "Create it",
+    "submit-btn": "Log In",
     "admin-error-msg": "This address is not an administrator. Please log in with a user account or change your wallet.",
     "metamask-title": "Log In to Lockton One With MetaMask"
   },
@@ -74,9 +75,10 @@
     "resources": "Resources"
   },
   "register-form": {
-    "title": "Create a new account",
-    "desc": "Enter your details to register.",
-    "submit-btn": "Sign Up"
+    "title": "Create an account",
+    "desc": "Already have an account?",
+    "login": "Log in",
+    "submit-btn": "Create an account?"
   },
   "login": {
     "register": "Register",
@@ -176,5 +178,10 @@
   "allow-contract-form": {
     "byte-code": "Byte Code",
     "submit-btn": "Submit"
+  },
+  "verify-email-form": {
+    "title": "Verify your email",
+    "time": "Please check your inbox and enter the verification code below to verify your email address. The code will expire in ",
+    "submit-btn": "Verify"
   }
 }

@@ -19,7 +19,6 @@ export const AppRoutes = () => {
   // TODO: add this functional to the next version
   const Login = lazy(() => import('@/pages/Login'))
   const Register = lazy(() => import('@/pages/Register'))
-  const LoginWithMetamask = lazy(() => import('@/pages/LoginWithMetamask'))
   const AdminLogin = lazy(() => import('@/pages/AdminLogin'))
   const Roles = lazy(() => import('@/pages/Roles'))
   const Contracts = lazy(() => import('@/pages/Contracts'))
@@ -29,6 +28,7 @@ export const AppRoutes = () => {
   const Dashboard = lazy(() => import('@/pages/Dashboard'))
   const Account = lazy(() => import('@/pages/Account'))
   const Kyc = lazy(() => import('@/pages/Kyc'))
+  const Verification = lazy(() => import('@/pages/Verification'))
 
   const { isAuthorized, isAdmin } = useAdminAuth()
   const { isLoggedIn } = useAuth()
@@ -36,7 +36,6 @@ export const AppRoutes = () => {
   const signInGuardAdmin = useCallback(
     ({ request }: LoaderFunctionArgs) => {
       const requestUrl = new URL(request.url)
-
       const from = requestUrl.searchParams.get('from')
       return isAuthorized && isAdmin
         ? redirect(from ? `${from}${requestUrl.search}` : RoutePaths.Roles)
@@ -114,16 +113,6 @@ export const AppRoutes = () => {
           element: <Navigate replace to={RoutePaths.Dashboard} />,
         },
         {
-          path: createDeepPath(RoutePaths.LoginWithMetamask),
-          element: (
-            <PublicLayout>
-              <LoginWithMetamask />
-            </PublicLayout>
-          ),
-          loader: signInGuard,
-        },
-        // TODO: add this functional to the next version
-        {
           path: createDeepPath(RoutePaths.Login),
           element: (
             <PublicLayout>
@@ -140,6 +129,14 @@ export const AppRoutes = () => {
             </PublicLayout>
           ),
           loader: signInGuard,
+        },
+        {
+          path: createDeepPath(RoutePaths.Verification),
+          element: (
+            <PublicLayout>
+              <Verification />
+            </PublicLayout>
+          ),
         },
         {
           path: createDeepPath(RoutePaths.AdminLogin),

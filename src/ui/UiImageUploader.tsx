@@ -72,7 +72,7 @@ const UiImageUploader = forwardRef<HTMLInputElement, Props>(
             <UiIcon name={Icons.Image} size={6} />
           </Stack>
         )}
-        <Typography variant='subtitle4'>{value?.name || label || 'Upload image'}</Typography>
+        <Typography variant='subtitle3'>{value?.name || label || 'Upload image'}</Typography>
         <Input
           {...rest}
           onChange={handleChange}

@@ -15,7 +15,7 @@ export class Keypair {
   }
 
   static fromSecret(secretKey: string): Keypair {
-    const rawSeed = Buffer.from(secretKey.slice(2), 'hex') // Преобразуем из hex-строки
+    const rawSeed = Buffer.from(secretKey.slice(2), 'hex')
     return this.fromRawSeed(rawSeed)
   }
 

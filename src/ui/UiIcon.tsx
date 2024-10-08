@@ -20,13 +20,13 @@ type Props = {
 
 const UiIcon = forwardRef<SVGSVGElement, Props>(({ size = 6, ...props }, ref) => {
   const sx: SxProps<Theme> = {
-    ...props.sx,
     width: theme => theme.spacing(size),
     height: theme => theme.spacing(size),
     minWidth: theme => theme.spacing(size),
     minHeight: theme => theme.spacing(size),
     maxWidth: theme => theme.spacing(size),
     maxHeight: theme => theme.spacing(size),
+    ...props.sx,
   }
 
   if (props.componentName) {

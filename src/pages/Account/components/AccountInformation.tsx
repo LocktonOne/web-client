@@ -77,7 +77,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
           {t('account-info.account-id')}
         </Typography>
         <Stack direction='row' spacing={1} alignItems='center'>
-          <Typography variant='subtitle4' fontSize={18} overflow='hidden' textOverflow='ellipsis'>
+          <Typography variant='subtitle3' fontSize={18} overflow='hidden' textOverflow='ellipsis'>
             {formatDid(address, PART_LENGTH)}
           </Typography>
           <IconButton onClick={copyUserAddr} color={isCopied ? 'success' : 'primary'}>
@@ -121,7 +121,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -132,7 +132,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -143,7 +143,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -157,7 +157,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -168,7 +168,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -179,7 +179,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -190,7 +190,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
                 </Typography>
                 <Typography
                   sx={{ mt: 1 }}
-                  variant='subtitle4'
+                  variant='subtitle3'
                   fontSize={18}
                   textOverflow='ellipsis'
                 >
@@ -203,7 +203,7 @@ export default function AccountInformation({ address, userInfo, ...rest }: Props
             </Typography>
             <Typography
               sx={{ mt: 1, wordBreak: 'break-word', lineHeight: 1.5 }}
-              variant='subtitle4'
+              variant='subtitle3'
               fontSize={18}
             >
               {userInfo?.DID}

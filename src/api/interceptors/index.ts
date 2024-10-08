@@ -79,8 +79,8 @@ export const refreshTokenInterceptor: (
        * We can logout user and redirect him to the login page and
        * emit bus error event to show user that session expired
        */
-
-      await logoutFn()
+      // FIXME: Refresh token fn always throws error
+      // await logoutFn()
 
       await errorHandlerFn?.(error)
 

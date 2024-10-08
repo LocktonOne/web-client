@@ -5,11 +5,10 @@ import { CSSProperties } from 'react'
 
 export interface ExtendedTypographyOptions extends TypographyOptions {
   subtitle3: CSSProperties
-  subtitle4: CSSProperties
-  subtitle5: CSSProperties
 
   body3: CSSProperties
   body4: CSSProperties
+  body5: CSSProperties
 
   buttonLarge: CSSProperties
   buttonMedium: CSSProperties
@@ -27,11 +26,10 @@ export interface ExtendedTypographyOptions extends TypographyOptions {
 declare module '@mui/material/Typography/Typography' {
   interface TypographyPropsVariantOverrides {
     subtitle3: true
-    subtitle4: true
-    subtitle5: true
 
     body3: true
     body4: true
+    body5: true
 
     buttonLarge: true
     buttonMedium: true
