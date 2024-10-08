@@ -77,8 +77,9 @@ const RegisterForm = () => {
   useEffect(() => {
     if (isRegistered) {
       router(RoutePaths.Verification)
-      bus.emit(BusEvents.success, { message: 'Success log in' })
+      bus.emit(BusEvents.success, { message: t('notifications.default-message-success') })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRegistered, router])
 
   return (

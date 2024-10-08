@@ -4,7 +4,7 @@ import { Icons } from '@/enums'
 import { useAuth } from '@/hooks'
 import { UiIcon } from '@/ui'
 
-export default function WalletConnect() {
+export default function WalletConnectButtonBlock() {
   const { palette } = useTheme()
   const { loginWithMetamask } = useAuth()
 
