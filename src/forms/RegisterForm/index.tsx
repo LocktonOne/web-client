@@ -1,8 +1,8 @@
 import { Button, Stack, Typography, useTheme } from '@mui/material'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { WalletConnect } from '@/common'
 import { BusEvents, Icons, RoutePaths } from '@/enums'
@@ -17,10 +17,13 @@ enum FieldNames {
 }
 
 const RegisterForm = () => {
+  const [isRegistered, setIsRegistered] = useState(false)
+
   const { t } = useTranslation()
   const { spacing } = useTheme()
   const { palette, typography } = useTheme()
   const { register } = useAuth()
+  const router = useNavigate()
 
   const DEFAULT_VALUES = useMemo<{
     [FieldNames.Email]: string
@@ -63,12 +66,20 @@ const RegisterForm = () => {
     disableForm()
     try {
       await register(formState[FieldNames.Email], formState[FieldNames.Password])
-      bus.emit(BusEvents.success, { message: 'Success log in' })
+      setIsRegistered(true)
     } catch (error) {
       ErrorHandler.process(error)
+    } finally {
+      enableForm()
     }
-    enableForm()
   }
+
+  useEffect(() => {
+    if (isRegistered) {
+      router(RoutePaths.Verification)
+      bus.emit(BusEvents.success, { message: 'Success log in' })
+    }
+  }, [isRegistered, router])
 
   return (
     <Stack

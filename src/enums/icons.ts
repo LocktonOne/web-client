@@ -139,6 +139,7 @@ export enum Icons {
   TwitterX = 'twitter-x',
   UserFocus = 'user-focus',
   User = 'user',
+  UserCircle = 'user-circle',
   UserBtn = 'user-btn',
   UserPlus = 'user-plus',
   Users = 'users',

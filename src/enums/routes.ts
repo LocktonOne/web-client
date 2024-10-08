@@ -12,4 +12,5 @@ export enum RoutePaths {
   Account = '/account',
   Kyc = '/kyc',
   Contracts = '/contracts',
+  Verification = '/verification',
 }

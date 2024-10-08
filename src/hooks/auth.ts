@@ -9,23 +9,25 @@ import { Roles } from '@/enums'
 import { sleep } from '@/helpers'
 import { coreContracts, initCoreContracts } from '@/modules/sdk'
 import {
+  authStore,
   identityStore,
   rolesStore,
+  useAuthState,
   useRolesState,
   useWalletState,
   walletStore,
   web3Store,
 } from '@/store'
-import { authStore } from '@/store/modules/auth.module'
 
 export const useAuth = () => {
-  const { wallet, metamaskAddress } = useWalletState()
+  const { walletId, metamaskAddress } = useWalletState()
+  const { tokens } = useAuthState()
   const _wallet = useWallet()
   const { roles } = useRolesState()
 
   const isLoggedIn = useMemo(() => {
-    return Boolean(wallet) || Boolean(metamaskAddress)
-  }, [metamaskAddress, wallet])
+    return (Boolean(walletId) || Boolean(metamaskAddress)) && Boolean(tokens.accessToken)
+  }, [metamaskAddress, walletId, tokens.accessToken])
 
   const role = useMemo(() => {
     switch (true) {
@@ -41,7 +43,7 @@ export const useAuth = () => {
   }, [roles])
 
   const logout = useCallback(async () => {
-    walletStore.setWallet(null)
+    walletStore.setWalletId(null)
     walletStore.setMetamaskAddress(null)
     identityStore.clear()
     await web3Store.disconnect()
@@ -72,9 +74,8 @@ export const useAuth = () => {
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    walletStore.setWallet(generatedWallet)
+    walletStore.setWalletId(generatedWallet.id)
     const tokens = await getAuthPair(coreContracts.provider.address ?? '')
-    await getTokenForKYC(web3Store.provider.address!)
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
   }
 
@@ -105,11 +106,7 @@ export const useAuth = () => {
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
     await coreContracts.loadCoreContractsAddresses()
     await getRoles()
-    walletStore.setWallet(generatedWallet)
-    const tokens = await getAuthPair(coreContracts.provider.address ?? '')
-    await getTokenForKYC(web3Store.provider.address!)
-    authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
-    await web3Store.init()
+    walletStore.setWalletId(generatedWallet.id)
   }
 
   const getAccessToken = () => authStore.tokens.accessToken
