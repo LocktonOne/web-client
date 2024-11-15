@@ -18,6 +18,10 @@
       "node",
       "vite/client",
     ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/typings"
+    ],
     "paths": {
       "@/*": ["src/*"],
       "@config": ["src/config.ts"],

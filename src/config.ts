@@ -1,5 +1,7 @@
 import packageJson from '../package.json'
 
+import { pickBy, mapKeys } from 'lodash-es'
+
 export type Config = {
   APP_NAME: string
   API_URL: string
@@ -18,3 +20,17 @@ export const config: Config = {
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_BUILD_VERSION,
   NATIVE_TOKEN: import.meta.env.VITE_NATIVE_TOKEN,
 }
+
+
+function _mapEnvCfg(env: ImportMetaEnv): {
+  [k: string]: string | boolean | undefined
+} {
+  return mapKeys(
+    pickBy(env, (v, k) => k.startsWith('VITE_')),
+    (v, k) => k.replace(/^VITE_/, ''),
+  )
+}
+
+Object.assign(config, _mapEnvCfg(import.meta.env))
+// @ts-expect-error because idk
+Object.assign(config, _mapEnvCfg(document.ENV))
