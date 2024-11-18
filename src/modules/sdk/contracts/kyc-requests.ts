@@ -34,7 +34,6 @@ export const createKycRequestsContracts = (
       return provider.signAndSendTx({
         to: address,
         data,
-        gasLimit: 5000000,
       })
     },
 

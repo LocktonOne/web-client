@@ -1,6 +1,6 @@
-import packageJson from '../package.json'
+import { mapKeys, pickBy } from 'lodash-es'
 
-import { pickBy, mapKeys } from 'lodash-es'
+import packageJson from '../package.json'
 
 export type Config = {
   APP_NAME: string
@@ -20,7 +20,6 @@ export const config: Config = {
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_BUILD_VERSION,
   NATIVE_TOKEN: import.meta.env.VITE_NATIVE_TOKEN,
 }
-
 
 function _mapEnvCfg(env: ImportMetaEnv): {
   [k: string]: string | boolean | undefined
