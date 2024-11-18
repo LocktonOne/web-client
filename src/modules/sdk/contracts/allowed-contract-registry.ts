@@ -25,7 +25,6 @@ export const createAllowedContractRegistryContract = (
       return provider.signAndSendTx({
         to: address,
         data,
-        gasLimit: 1500000,
       })
     },
 
@@ -35,7 +34,6 @@ export const createAllowedContractRegistryContract = (
       return provider.signAndSendTx({
         to: address,
         data,
-        gasLimit: 1500000,
       })
     },
 

@@ -69,10 +69,13 @@ export const useAuth = () => {
     if (!web3Store.provider?.address) {
       throw new Error('Provider address is undefined')
     }
-
+    console.log("Provider is set")
     const tokens = await getAuthPair(web3Store.provider?.address ?? '')
+    console.log("Initiating contracts")
     await initCoreContracts(web3Store.provider, web3Store.provider.rawProvider!)
+    console.log("Contracts initiated")
     await coreContracts.loadCoreContractsAddresses()
+    console.log("Contracts load")
     authStore.addTokensGroup({ id: '', type: 'token', ...tokens })
     await getRoles()
     await getTokenForKYC(web3Store.provider.address)

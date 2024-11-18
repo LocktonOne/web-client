@@ -44,11 +44,11 @@ export class CoreContracts {
     const { data } = await coreApolloClient.query<GetCoreContractsQuery>({
       query: GetCoreContracts,
     })
-
+    console.log(data?.contracts)
     this.#masterAccessManagementContractAddress =
       data?.contracts?.find(el => el.id === 'MASTER_ACCESS_MANAGEMENT')?.address ||
       (await masterContractsRegistry.getMasterAccessManagement())
-
+    console.log("MASTER_ACCESS_MANAGEMENT")
     this.#constantsRegistryContractAddress =
       data?.contracts?.find(el => el.id === 'CONSTANTS_REGISTRY')?.address ||
       (await masterContractsRegistry.getConstantsRegistry())

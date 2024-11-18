@@ -175,6 +175,7 @@
   },
   "allow-contract-form": {
     "byte-code": "Byte Code",
-    "submit-btn": "Submit"
+    "submit-btn": "Submit",
+    "deploy-btn": "Deploy new contract"
   }
 }

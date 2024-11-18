@@ -1,4 +1,5 @@
 import { Button, CircularProgress, Stack } from '@mui/material'
+import { ethers, providers } from 'ethers'
 import { Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
@@ -48,6 +49,25 @@ const AllowContractForm = () => {
     enableForm()
   }
 
+  const deployContract = async () => {
+    disableForm()
+    try {
+      const provider = new ethers.providers.Web3Provider(
+        coreContracts.rawProvider as providers.ExternalProvider,
+      )
+      const signer = provider.getSigner()
+      const factory = new ethers.ContractFactory([], formState[FieldNames.ByteCode], signer)
+      const contract =
+        await factory.deploy(/* передайте параметры конструктора сюда, если они есть */)
+      await contract.deployTransaction.wait()
+      bus.emit(BusEvents.success, { message: `Contract deployed, address: ${contract.address}` })
+    } catch (e) {
+      bus.emit(BusEvents.error, { message: 'Error deploying contract' })
+    }
+    reset()
+    enableForm()
+  }
+
   return (
     <form onSubmit={handleSubmit(submit)} style={{ width: '100%' }}>
       <Stack sx={{ opacity: isFormDisabled ? 0.5 : 1 }}>
@@ -71,6 +91,9 @@ const AllowContractForm = () => {
         </Stack>
         <Button type='submit' disabled={isFormDisabled} sx={{ mt: 8, width: 160 }}>
           {t('allow-contract-form.submit-btn')}
+        </Button>
+        <Button sx={{ width: 200, mt: 4 }} disabled={isFormDisabled} onClick={deployContract}>
+          {t('allow-contract-form.deploy-btn')}
         </Button>
         {isFormDisabled && (
           <CircularProgress sx={{ position: 'absolute', top: '50%', left: '50%' }} />

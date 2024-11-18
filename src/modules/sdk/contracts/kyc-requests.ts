@@ -20,7 +20,6 @@ export const createKycRequestsContracts = (
       return provider.signAndSendTx({
         to: address,
         data,
-        gasLimit: 5000000,
       })
     },
 
@@ -30,7 +29,6 @@ export const createKycRequestsContracts = (
      */
     requestKYC: async (storageId: string) => {
       const data = contractInterface.encodeFunctionData('requestKYC', [storageId])
-      // TODO: Fix gasLimit
       return provider.signAndSendTx({
         to: address,
         data,

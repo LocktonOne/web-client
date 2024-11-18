@@ -18,6 +18,7 @@ export const createMasterContractsRegistry = (address: string, rawProvider: RawP
     },
 
     getMasterAccessManagement: async () => {
+      console.log("Start getting master access")
       return contractInstance.getMasterAccessManagement()
     },
 
